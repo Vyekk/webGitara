@@ -1,5 +1,6 @@
 @import 'variables.scss';
 .title {
+    margin: 0;
     &White {
         @extend .title;
         color: $white;
