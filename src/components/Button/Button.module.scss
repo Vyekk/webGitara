@@ -1,7 +1,9 @@
+@import 'variables.scss';
+
 .button {
-    color: #000;
+    color: $black;
     text-decoration: none;
-    background-color: #F5513B;
+    background-color: $primary-color;
     padding: 15px 20px;
     &:hover {
         background-color: #7e291d;
@@ -14,6 +16,6 @@
     }
     &Dark {
         background-color: #050C18;
-        color: #fff;
+        color: $white;
     }
 }
