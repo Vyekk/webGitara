@@ -1,0 +1,16 @@
+@import 'variables.scss';
+.wrapper {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    position:static;
+    width: 100%;
+    .logo {
+        font-size: $bigger-font-size;
+        font-weight: 700;
+        color: $white;
+        &Primary {
+            color: $primary-color;
+        }
+    }
+}
