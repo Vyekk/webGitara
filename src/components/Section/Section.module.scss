@@ -1,0 +1,9 @@
+@import "variables.scss";
+.wrapper {
+    background-color: $white;
+    min-height: 434px;
+    &Dark {
+        @extend .wrapper;
+        background-color: $secondary-color;
+    }
+}
