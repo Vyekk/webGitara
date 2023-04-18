@@ -1,0 +1,17 @@
+@import 'variables.scss';
+.title {
+    &White {
+        @extend .title;
+        color: $white;
+    }
+    &Orange {
+        @extend .title;
+        color: $primary-color;
+    }
+    h1.title {
+        font-size: $the-biggest-font-size;
+    }
+    h2.title {
+        font-size: $bigger-font-size;
+    }
+}
