@@ -1,11 +1,12 @@
 import React from "react";
 import styles from "components/Title/Title.module.scss";
 
-const Title = ({children, tag: Tag, orange, white}) => {
+const Title = ({children, center, tag: Tag, orange, black}) => {
     let titleStyle = orange ? styles.titleOrange : styles.title;
-    titleStyle = white ? styles.titleWhite : titleStyle;
+    titleStyle = black ? styles.titleBlack : titleStyle;
+    const textCenter = center ? {textAlign: 'center'} : {};
     return (
-        <Tag className={titleStyle}>{children}</Tag>
+        <Tag style={textCenter} className={titleStyle}>{children}</Tag>
     )
 }
 
