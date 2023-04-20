@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import styles from "components/Button/Button.module.scss";
 
 const Button = ({children, href, circle, dark, ...props}) => {
@@ -7,7 +8,7 @@ const Button = ({children, href, circle, dark, ...props}) => {
     const darkStyle = dark ? styles.buttonDark : "";
     return (
         <>
-            {href ? (<a href={href} className={buttonStyle + " " + darkStyle}>{children}</a>) : (<button {...props} className={buttonStyle + " " + darkStyle}>{children}</button>)}
+            {href ? (<Link to={href} className={buttonStyle + " " + darkStyle}>{children}</Link>) : (<button {...props} className={buttonStyle + " " + darkStyle}>{children}</button>)}
         </>
     )
 }
