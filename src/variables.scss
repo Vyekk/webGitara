@@ -1,11 +1,20 @@
 $primary-color: #F5513B;
-$secondary-color: #0D2548;
+$secondary-color: radial-gradient(50% 50% at 50% 50%, #102F5C 0%, #07111F 100%);
 $black: #000;
 $white: #fff;
 $secondary-color-dark: #050C18;
+
+$desktop: 992px;
 
 $font-size-web: 20px;
 $font-size-app: 24px;
 $bigger-font-size: 32px;
 $bigger-font-size-form: 56px;
 $the-biggest-font-size: 96px;
+
+$mobile-font-size-web: $font-size-web * 0.8;
+$mobile-bigger-font-size: $bigger-font-size * 0.8;
+$mobile-bigger-font-size-form: $bigger-font-size-form * 0.8;
+$mobile-the-biggest-font-size: $the-biggest-font-size * 0.8;
+
+$section-height: 434px;
