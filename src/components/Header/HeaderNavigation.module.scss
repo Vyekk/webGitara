@@ -1,18 +1,24 @@
 @import 'variables.scss';
 .wrapper {
     display: flex;
-    align-items: center;
     flex-basis: 70%;
     justify-content: flex-end;
     .navList {
+        align-items: center;
         display: flex;
+        padding: 0;
         &Item {
             list-style: none;
             padding: 0 20px;
             .hashLink {
-                text-decoration: none;
                 color: $white;
-            }   
+            }
+            @media screen and (max-width: $desktop) {
+                padding: 20px 0;
+            }
+        }
+        @media screen and (max-width: $desktop) {
+            flex-direction: column;
         }
     }
 }
