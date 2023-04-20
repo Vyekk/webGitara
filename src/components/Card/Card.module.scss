@@ -1,0 +1,15 @@
+@import "variables.scss";
+.wrapper {
+    min-height: 250px;
+    border: 1px solid $white;
+    width: 28%;
+    padding: 1%;
+    margin: 40px 0 0;
+    h2 {
+        border-bottom: 1px solid $white;
+        text-align: center;
+    }
+    @media screen and (max-width: $desktop) {
+        width: 100%;
+    }
+}
