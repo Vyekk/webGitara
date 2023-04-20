@@ -5,9 +5,14 @@
     text-decoration: none;
     background-color: $primary-color;
     padding: 15px 20px;
+    display: block;
+    width: 10em;
+    border: 0;
+    font-weight: 700;
     &:hover {
         background-color: #7e291d;
         color: #fff;
+        cursor: pointer;
     }
     &Circle {
         @extend .button;
