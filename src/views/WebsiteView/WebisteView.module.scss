@@ -52,10 +52,13 @@
     min-height: $section-height;
     ul {
         list-style: none;
-        margin: 0;
+        margin: 20px 0;
         padding: 0;
         a {
             color: $primary-color;
         }
+    }
+    @media screen and (max-width: $desktop) {
+        flex-direction: column;
     }
 }
