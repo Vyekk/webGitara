@@ -1,18 +1,27 @@
 @import 'variables.scss';
 .title {
     margin: 0;
-    &White {
+    @at-root h1#{&} {
+        font-size: $the-biggest-font-size;
+    }
+    @at-root h2#{&} {
+        font-size: $bigger-font-size;
+        padding: 10px 0 15px;
+    }
+    &Black {
         @extend .title;
-        color: $white;
+        color: $black;
     }
     &Orange {
         @extend .title;
         color: $primary-color;
     }
-    h1.title {
-        font-size: $the-biggest-font-size;
-    }
-    h2.title {
-        font-size: $bigger-font-size;
+    @media screen and (max-width: $desktop) {
+        @at-root h1#{&} {
+            font-size: $mobile-the-biggest-font-size;
+        }
+        @at-root h2#{&} {
+            font-size: $mobile-bigger-font-size;
+        }
     }
 }
