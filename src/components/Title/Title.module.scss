@@ -3,6 +3,7 @@
     margin: 0;
     @at-root h1#{&} {
         font-size: $the-biggest-font-size;
+        margin: 0.2em 0;
     }
     @at-root h2#{&} {
         font-size: $bigger-font-size;
