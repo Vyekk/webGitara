@@ -1,0 +1,9 @@
+@import "variables.scss";
+.logo {
+    font-size: $bigger-font-size;
+    font-weight: 700;
+    color: $white;
+    &Primary {
+        color: $primary-color;
+    }
+}
