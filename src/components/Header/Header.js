@@ -1,11 +1,12 @@
 import React from "react";
 import styles from "components/Header/Header.module.scss";
 import HeaderNavigation from "components/Header/HeaderNavigation";
+import Logo from "components/Logo/Logo";
 const Header = () => (
-    <nav className={styles.wrapper}>
-        <p className={styles.logo}>web<span className={styles.logoPrimary}>Gitara</span></p>
+    <header className={styles.wrapper}>
+        <Logo />
         <HeaderNavigation />
-    </nav>
+    </header>
 );
 
 export default Header;
