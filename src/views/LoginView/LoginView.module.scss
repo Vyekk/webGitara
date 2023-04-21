@@ -1,5 +1,14 @@
+@import "variables.scss";
 .wrapper {
-    height: 100vh;
     display: flex;
-    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    height: 100vh;
+    .loginRegisterWrapper {
+        display: flex;
+    }
+    a {
+        color: $white;
+        margin: 50px 0 20px;
+    }
 }
