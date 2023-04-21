@@ -4,7 +4,7 @@ import HeaderNavigation from "components/Header/HeaderNavigation";
 import Logo from "components/Logo/Logo";
 import Button from "components/Button/Button";
 
-const desktopSize = parseInt(window.getComputedStyle(document.querySelector(`.${styles.desktopSize}`)).width, 10);
+let desktopSize;
 
 class Header extends React.Component {
     state = {
@@ -21,6 +21,7 @@ class Header extends React.Component {
     }
 
     componentDidMount() {
+        desktopSize = parseInt(window.getComputedStyle(document.querySelector(`.${styles.desktopSize}`)).width, 10);
         window.addEventListener("resize", this.handleResize);
     }
 
