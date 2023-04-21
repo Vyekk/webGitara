@@ -21,13 +21,4 @@
             flex-direction: column;
         }
     }
-    @media screen and (max-width: $desktop) {
-        
-    }
-}
-.wrapperHide {
-    @extend .wrapper;
-    @media screen and (max-width: $desktop) {
-        display: none;
-    }
 }

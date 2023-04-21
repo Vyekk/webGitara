@@ -3,10 +3,9 @@ import {HashLink} from 'react-router-hash-link';
 import styles from "components/Header/HeaderNavigation.module.scss";
 
 
-const HeaderNavigation = ({visible}) => {
-    const wrapperStyle = visible ? styles.wrapper : styles.wrapperHide;
+const HeaderNavigation = () => {
     return (
-        <nav className={wrapperStyle}>
+        <nav className={styles.wrapper}>
             <ul className={styles.navList}>
                 <li className={styles.navListItem}><HashLink className={styles.hashLink} to="/#about">O projekcie</HashLink></li>
                 <li className={styles.navListItem}><HashLink className={styles.hashLink} to="/#demo">Demo</HashLink></li>

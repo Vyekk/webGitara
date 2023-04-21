@@ -25,4 +25,8 @@
             width: 100%;
         }
     }
+    .desktopSize {
+        width: $desktop;
+        display: none;
+    }
 }

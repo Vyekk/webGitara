@@ -4,25 +4,41 @@ import HeaderNavigation from "components/Header/HeaderNavigation";
 import Logo from "components/Logo/Logo";
 import Button from "components/Button/Button";
 
+const desktopSize = parseInt(window.getComputedStyle(document.querySelector(`.${styles.desktopSize}`)).width, 10);
+
 class Header extends React.Component {
     state = {
         isVisible: false,
+        isDesktop: window.innerWidth >= desktopSize,
     }
+
     changeVisibility = () => {
-        if(this.state.isVisible == true) {
-            this.setState({isVisible: false});
-        } else {
-            this.setState({isVisible: true});
-        }
+        this.setState(prevState => ({ isVisible: !prevState.isVisible }));
     }
+
+    handleResize = () => {
+        this.setState({ isDesktop: window.innerWidth >= desktopSize });
+    }
+
+    componentDidMount() {
+        window.addEventListener("resize", this.handleResize);
+    }
+
+    componentWillUnmount() {
+        window.removeEventListener("resize", this.handleResize);
+    }
+
     render() {
+        const { isVisible, isDesktop } = this.state;
+
         return (
             <header className={styles.wrapper}>
+                <div className={styles.desktopSize}></div>
                 <div className={styles.logoNav}>
                     <Logo />
                     <Button onClick={this.changeVisibility}>&equiv;</Button>
                 </div>
-                <HeaderNavigation visible={this.state.isVisible} />
+                { (isVisible || isDesktop) && <HeaderNavigation />}
             </header>
         );
     }
