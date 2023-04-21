@@ -1,0 +1,18 @@
+@import "variables.scss";
+
+.form {
+    margin-top: 20px;
+}
+
+.inputWrapper {
+    display: flex;
+    flex-direction: column;
+    width: 30%;
+    margin: 10px 0 0;
+}
+.labelRadio {
+    font-size: 0.7em;
+}
+.radioWrapper {
+    display: flex;
+}
