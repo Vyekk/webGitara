@@ -24,6 +24,9 @@ a {
 ul li {
   margin-top: 10px;
 }
+input[type=checkbox] {
+  accent-color: $primary-color;
+}
 
 @media screen and (max-width: $desktop) {
   body {
