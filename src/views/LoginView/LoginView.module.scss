@@ -3,7 +3,7 @@
     display: flex;
     align-items: center;
     flex-direction: column;
-    height: 100vh;
+    height: calc(100vh - 70px);
     a {
         color: $white;
         margin: 50px 0 20px;

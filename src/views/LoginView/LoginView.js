@@ -7,7 +7,13 @@ import styles from "views/LoginView/LoginView.module.scss";
 import Modal from "components/Modal/Modal";
 import Form from "components/Form/Form";
 
+
 class LoginView extends React.Component {
+    loadUser = (e) => {
+        e.preventDefault();
+        
+    }
+
     render() {
         return (
             <Section url={loginPageImage}>
@@ -15,7 +21,7 @@ class LoginView extends React.Component {
                     <Logo />
                     <Link to="/">&lt; Wróć do strony głównej</Link>
                     <Modal>
-                        <Form />
+                        <Form submitFn={this.loadUser}/>
                     </Modal>
                 </div>
             </Section>
