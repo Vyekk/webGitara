@@ -1,5 +1,5 @@
 import React from "react";
-import styles from "components/Radio/Radio.module.scss";
+import styles from "components/Form/FormRadio.module.scss";
 
 const Radio = ({name, value, ...props}) => (
     <div className={styles.wrapper}>
