@@ -1,6 +1,10 @@
 @import "variables.scss";
 
 .wrapper {
+    max-width: 70%;
     background: $secondary-color;
     padding: 2em 3em;
+    @media screen and (max-width: $desktop) {
+        max-width: 100%;
+    }
 }
