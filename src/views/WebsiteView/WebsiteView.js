@@ -52,26 +52,17 @@ class WebsiteView extends React.Component {
             <Title tag="h2" center>O projekcie</Title>
             <p>WebGitara to innowacyjna aplikacja internetowa, która daje użytkownikom możliwość tworzenia i udostępniania swoich własnych utworów muzycznych z wykorzystaniem tabulatury i ich wizualizację na wirtualnym gryfie. Jest to doskonałe rozwiązanie dla osób, które chcą rozwijać swoje umiejętności gry na gitarze . O to korzyści jakie możesz wynieść korzystając z naszej platoformy:</p>
             <div className={styles.cardsWrapper}>
-              <Card>
-                <Title tag="h2" orange>Edukacja</Title>
-                <ul>
+              <Card title="Edukacja">
                   <li>Użytkownicy mogą nauczyć się gry na gitarze</li>
                   <li>Możliwość udostępniania i oceniania utworów innych użytkowników pozwala na wymianę doświadczeń i inspirację</li>
-                </ul>
               </Card>
-              <Card>
-                <Title tag="h2" orange>Kreatywność</Title>
-                <ul>
+              <Card title="Kreatywność">
                   <li>Możliwość tworzenia własnych utworów muzycznych pozwala na rozwijanie kreatywności i ekspresji</li>
                   <li>Możliwość czerpania inspiracja z szerokiej biblioteki gotowych utworów</li>
-                </ul>
               </Card>
-              <Card>
-                <Title tag="h2" orange>Zabawa</Title>
-                <ul>
+              <Card title="Zabawa">
                   <li>Gra na wirtualnej gitarze pozwala na czerpanie przyjemności z gry bez potrzeby posiadania instrumentu</li>
                   <li>Nie męcz swoich oczu ucząc się z tabulatury, tylko ciesz się z grania</li>
-                </ul>
               </Card>
             </div>
           </Section>
