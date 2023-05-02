@@ -1,9 +1,13 @@
 import React from "react";
 import styles from "components/Card/Card.module.scss";
+import Title from "components/Title/Title";
 
-const Card = ({children}) => (
+const Card = ({title, children}) => (
     <div className={styles.wrapper}>
-        {children}
+        <Title tag="h2" orange>{title}</Title>
+        <ul>
+            {children}
+        </ul>
     </div>
 );
 
