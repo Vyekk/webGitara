@@ -1,48 +1,43 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import styles from "components/Header/Header.module.scss";
 import HeaderNavigation from "components/Header/HeaderNavigation";
 import Logo from "components/Logo/Logo";
 import Button from "components/Button/Button";
 
-let desktopSize;
+const Header = () => {
+  const [isVisible, setIsVisible] = useState(false);
+  const [isDesktop, setIsDesktop] = useState(false);
 
-class Header extends React.Component {
-    state = {
-        isVisible: false,
-        isDesktop: window.innerWidth >= desktopSize,
-    }
+  useEffect(() => {
+    const updateIsDesktop = () => {
+      const desktopSize = parseInt(
+        window.getComputedStyle(
+          document.querySelector(`.${styles.desktopSize}`)
+        ).width,
+        10
+      );
+      setIsDesktop(window.innerWidth >= desktopSize);
+    };
 
-    changeVisibility = () => {
-        this.setState(prevState => ({ isVisible: !prevState.isVisible }));
-    }
+    updateIsDesktop();
 
-    handleResize = () => {
-        this.setState({ isDesktop: window.innerWidth >= desktopSize });
-    }
+    window.addEventListener("resize", updateIsDesktop);
 
-    componentDidMount() {
-        desktopSize = parseInt(window.getComputedStyle(document.querySelector(`.${styles.desktopSize}`)).width, 10);
-        window.addEventListener("resize", this.handleResize);
-    }
+    return () => {
+      window.removeEventListener("resize", updateIsDesktop);
+    };
+  }, []);
 
-    componentWillUnmount() {
-        window.removeEventListener("resize", this.handleResize);
-    }
-
-    render() {
-        const { isVisible, isDesktop } = this.state;
-
-        return (
-            <header className={styles.wrapper}>
-                <div className={styles.desktopSize}></div>
-                <div className={styles.logoNav}>
-                    <Logo />
-                    <Button onClick={this.changeVisibility}>&equiv;</Button>
-                </div>
-                { (isVisible || isDesktop) && <HeaderNavigation />}
-            </header>
-        );
-    }
-}
+  return (
+    <header className={styles.wrapper}>
+      <div className={styles.desktopSize}></div>
+      <div className={styles.logoNav}>
+        <Logo />
+        <Button onClick={() => setIsVisible(!isVisible)}>&equiv;</Button>
+      </div>
+      {(isVisible || isDesktop) && <HeaderNavigation />}
+    </header>
+  );
+};
 
 export default Header;
