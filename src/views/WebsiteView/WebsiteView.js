@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState} from "react";
 import Section from "components/Section/Section";
 import Title from "components/Title/Title";
 import headerImage from "assets/header_image.png";
@@ -12,36 +12,31 @@ import Card from "components/Card/Card";
 
 const profits = ['Rozszerzaj swoje horyzony', 'Rozwijaj słuch muzyczny', 'Naucz się pozycji dźwięków'];
 
-class WebsiteView extends React.Component {
-  state = {
-    profitNumber: 0,
-  }
-  nextProfit = () => {
-    this.setState(prevState => {
-      const activeProfit = prevState.profitNumber + 1;
-      if (activeProfit < profits.length) {
-        return { profitNumber: activeProfit };
-      } else {
-        return { profitNumber: 0 };
+const WebsiteView = () => {
+
+  const [profitNumber, setProfitNumber] = useState(0);
+
+  const nextProfit = (currentProfitNumber) => {
+      let activeProfit = currentProfitNumber + 1;
+      if (activeProfit > profits.length-1) {
+        activeProfit = 0;
       }
-    });
+      console.log(activeProfit);
+      return activeProfit;
   };
   
 
-  prevProfit = () => {
-    this.setState(prevState => {
-      const activeProfit = prevState.profitNumber - 1;
-      if (activeProfit > -1) {
-        return { profitNumber: activeProfit };
-      } else {
-        return { profitNumber: profits.length-1 };
+  const prevProfit = (currentProfitNumber) => {
+      let activeProfit = currentProfitNumber - 1;
+      if (activeProfit <= -1) {
+        activeProfit = profits.length - 1;
       }
-    });
+      console.log(activeProfit);
+      return activeProfit;
   };
 
-  render() {
-    return (
-      <>
+  return (
+    <>
           <Section url={headerImage}>
             <Header />
             <Title tag="h1">Naucz się grać <br /> na każdej <br /> gitarze</Title>
@@ -75,9 +70,9 @@ class WebsiteView extends React.Component {
           </Section>
           <Section id="profits" url={profitsImage}>
             <div className={styles.profits}>
-              <Button onClick={this.prevProfit}>&lt;</Button>
-              <p>{profits[this.state.profitNumber]}</p>
-              <Button onClick={this.nextProfit}>&gt;</Button>
+              <Button onClick={() => setProfitNumber(prevProfit(profitNumber))}>&lt;</Button>
+              <p>{profits[profitNumber]}</p>
+              <Button onClick={() => setProfitNumber(nextProfit(profitNumber))}>&gt;</Button>
             </div>
           </Section>
           <Section id="contact" dark>
@@ -104,7 +99,6 @@ class WebsiteView extends React.Component {
           <Footer />
       </>
   );
-  }
 }
 
 export default WebsiteView;
