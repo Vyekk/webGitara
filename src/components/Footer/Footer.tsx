@@ -1,5 +1,4 @@
-import React from "react";
-import styles from "components/Footer/Footer.module.scss";
+import styles from 'components/Footer/Footer.module.scss';
 
 const Footer = () => (
     <footer className={styles.wrapper}>
