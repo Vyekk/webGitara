@@ -43,7 +43,9 @@ const WebsiteView = () => {
                 <Title orange tag="h2">
                     Wystarczy jedno kliknęcie
                 </Title>
-                <Button href="/login">Zacznij grać &gt;</Button>
+                <Button className={styles.startButton} href="/login">
+                    Zacznij grać &gt;
+                </Button>
             </Section>
             <Section id="about" dark>
                 <Title tag="h2" center>
