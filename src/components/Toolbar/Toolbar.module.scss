@@ -1,0 +1,26 @@
+@import 'variables.scss';
+.wrapper {
+    width: 100%;
+    position: absolute;
+    bottom: 0;
+    display: flex;
+    justify-content: right;
+    background: $secondary-color;
+    padding: 20px;
+    height: 4em;
+    .settingsIcon {
+        width: 2em;
+    }
+    .playButton {
+        position: absolute;
+        bottom: 0;
+        left: calc(50% - 4.2em);
+        margin: 0 0 1em;
+        img {
+            width: 4em;
+        }
+    }
+    .secondOption {
+        margin: 0 20px;
+    }
+}
