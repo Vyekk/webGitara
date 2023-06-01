@@ -1,30 +1,41 @@
 import { ReactNode } from 'react';
 import { Link } from 'react-router-dom';
 import styles from 'components/Button/Button.module.scss';
+import classNames from 'classnames';
 
 interface IButtonProps {
     children: ReactNode;
     href?: string;
     circle?: boolean;
     dark?: boolean;
+    transparent?: boolean;
+    className?: string;
     [key: string]: any;
 }
 
-const Button = ({ children, href, circle, dark, ...props }: IButtonProps) => {
-    const buttonStyle = circle ? styles.buttonCircle : styles.button;
-    const darkStyle = dark ? styles.buttonDark : '';
+const Button = ({ children, href, circle, dark, transparent, className, ...props }: IButtonProps) => {
+    const buttonClassName = classNames(
+        styles.button,
+        {
+            [styles.buttonCircle]: circle,
+            [styles.buttonTransparent]: transparent,
+            [styles.buttonDark]: dark,
+        },
+        className,
+    );
+
+    if (href) {
+        return (
+            <Link to={href} className={buttonClassName}>
+                {children}
+            </Link>
+        );
+    }
+
     return (
-        <>
-            {href ? (
-                <Link to={href} className={buttonStyle + ' ' + darkStyle}>
-                    {children}
-                </Link>
-            ) : (
-                <button {...props} className={buttonStyle + ' ' + darkStyle}>
-                    {children}
-                </button>
-            )}
-        </>
+        <button {...props} className={buttonClassName}>
+            {children}
+        </button>
     );
 };
 

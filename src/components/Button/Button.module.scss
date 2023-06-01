@@ -6,21 +6,33 @@
     background-color: $primary-color;
     padding: 15px 20px;
     display: block;
-    width: 10em;
     border: 0;
     font-weight: 700;
     &:hover {
         background-color: #7e291d;
-        color: #fff;
+        color: $white;
         cursor: pointer;
     }
     &Circle {
         @extend .button;
         border-radius: 50%;
-        padding: 35px 40px;
+        width: 8.5em;
+        padding: 2em;
     }
     &Dark {
-        background-color: #050C18;
+        background-color: #050c18;
         color: $white;
+    }
+    &Transparent {
+        background-color: transparent;
+        color: $white;
+        border: 0;
+        display: flex;
+        align-items: center;
+        font-weight: 200;
+        padding: 0;
+    }
+    &Transparent:hover {
+        background-color: transparent;
     }
 }
