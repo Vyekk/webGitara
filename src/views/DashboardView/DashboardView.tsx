@@ -1,9 +1,7 @@
+import Toolbar from 'components/Toolbar/Toolbar';
+
 const DashboardView = () => {
-    return (
-        <>
-            <div>saddadssda</div>
-        </>
-    );
+    return <Toolbar />;
 };
 
 export default DashboardView;
