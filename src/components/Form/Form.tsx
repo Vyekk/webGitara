@@ -23,14 +23,16 @@ const Form = ({ submitFn }: any) => {
         <div className={styles.wrapper}>
             {isRegistered ? (
                 <>
-                    <p>Konto założone pomyślnie</p>
-                    <button onClick={() => setIsRegistered(false)}>Wróć do logowania</button>
+                    <p className={styles.info}>
+                        Konto założone <br /> pomyślnie
+                    </p>
+                    <Button onClick={() => setIsRegistered(false)}>Wróć do logowania</Button>
                 </>
             ) : (
                 <>
                     {activeOption === types.login ? <Title>Zaloguj się</Title> : <Title>Zarejestruj się</Title>}
                     {activeOption === types.login ? <p>i kontynuuj praktykę</p> : <p>i wkrocz do świata muzyki</p>}
-                    <form className={styles.form} onSubmit={submitFn}>
+                    <form className={styles.form} onSubmit={activeOption == types.login ? submitFn : handleRegister}>
                         <div className={styles.radioWrapper}>
                             <Radio
                                 name="formType"
@@ -77,7 +79,7 @@ const Form = ({ submitFn }: any) => {
                                 </div>
                             ) : null}
                         </div>
-                        <Button type="submit" onClick={handleRegister}>
+                        <Button type="submit" onSubmit={handleRegister}>
                             {activeOption === types.login ? 'Zaloguj' : 'Zarejestruj'}
                         </Button>
                     </form>

@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import Logo from 'components/Logo/Logo';
 import Section from 'components/Section/Section';
 import loginPageImage from 'assets/login-page-background.png';
@@ -8,8 +9,10 @@ import Modal from 'components/Modal/Modal';
 import Form from 'components/Form/Form';
 
 const LoginView = () => {
+    const navigate = useNavigate();
     const loadUser = (e: React.MouseEvent<HTMLButtonElement>) => {
         e.preventDefault();
+        navigate('/play/dashboard');
     };
     return (
         <Section url={loginPageImage}>
