@@ -66,16 +66,19 @@ const Form = ({ submitFn }: any) => {
                             </div>
                             {activeOption !== types.login ? (
                                 <div className={styles.approvalWrapper}>
-                                    <input id="statute" type="checkbox" />
-                                    <label htmlFor="statute">
-                                        Akceptuję regulamin platformy i zobowiązuje się do jego przestrzegania
-                                    </label>
-                                    <br />
-                                    <input id="privacyPolicy" type="checkbox" />
-                                    <label htmlFor="privacyPolicy">
-                                        Akceptuję politykę prywatności platformy i wyrażam zgodę na przetwarzanie moich
-                                        danych osobowych zgodnie z jej postanowieniami.
-                                    </label>
+                                    <div className={styles.agreement}>
+                                        <input id="statute" type="checkbox" />
+                                        <label htmlFor="statute">
+                                            Akceptuję regulamin platformy i zobowiązuje się do jego przestrzegania
+                                        </label>
+                                    </div>
+                                    <div className={styles.agreement}>
+                                        <input id="privacyPolicy" type="checkbox" />
+                                        <label htmlFor="privacyPolicy">
+                                            Akceptuję politykę prywatności platformy i wyrażam zgodę na przetwarzanie
+                                            moich danych osobowych zgodnie z jej postanowieniami.
+                                        </label>
+                                    </div>
                                 </div>
                             ) : null}
                         </div>
