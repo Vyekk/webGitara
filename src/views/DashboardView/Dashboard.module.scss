@@ -1,3 +1,14 @@
 .wrapper {
     padding: 2em 3em;
 }
+
+.dashboardContentWrapper {
+    margin-top: 30px;
+    display: flex;
+}
+
+.manualList {
+    li {
+        margin-bottom: 10px;
+    }
+}
