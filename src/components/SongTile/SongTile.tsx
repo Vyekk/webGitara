@@ -1,17 +1,21 @@
+import { Rating } from 'components/Rating/Rating';
 import styles from 'components/SongTile/SongTile.module.scss';
+import Title from 'components/Title/Title';
 
 interface SongTileProps {
-    isTop: boolean;
-    place: number;
+    place?: number;
+    rating?: number;
 }
 
-const SongTile = ({ isTop, place }: SongTileProps) => {
+const SongTile = ({ place, rating }: SongTileProps) => {
     return (
         <div className={styles.songTile}>
-            <div className={styles.songRating}></div>
-            <div className={styles.songTitle}>Tytuł utworu</div>
+            <Rating rating={rating} />
+            <Title tag="h3">Tytuł utworu</Title>
             <div className={styles.songAuthor}>Autor utworu</div>
-            {isTop ? <div className={styles.songTop}>{place}</div> : null}
+            {place === 1 && <div className={`${styles.songTop} ${styles.songTopGold}`}>{place}</div>}
+            {place === 2 && <div className={`${styles.songTop} ${styles.songTopSilver}`}>{place}</div>}
+            {place === 3 && <div className={`${styles.songTop} ${styles.songTopBronze}`}>{place}</div>}
         </div>
     );
 };
