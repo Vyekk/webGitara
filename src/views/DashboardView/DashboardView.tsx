@@ -1,5 +1,6 @@
 import Logo from 'components/Logo/Logo';
 import Modal from 'components/Modal/Modal';
+import { SongTile } from 'components/SongTile/SongTile';
 import Title from 'components/Title/Title';
 import Toolbar from 'components/Toolbar/Toolbar';
 import styles from 'views/DashboardView/Dashboard.module.scss';
@@ -12,7 +13,7 @@ const DashboardView = () => {
                 <Logo />
                 <div className={styles.dashboardContentWrapper}>
                     <div className={styles.dashboardContent}>
-                        <h1>sdfsd</h1>
+                        <SongTile rating={4.5} place={3} />
                     </div>
                     <Modal>
                         <Title tag="h2">Instrukcja</Title>
