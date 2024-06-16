@@ -1,19 +1,29 @@
 import Logo from 'components/Logo/Logo';
 import Modal from 'components/Modal/Modal';
-import { SongTile } from 'components/SongTile/SongTile';
+import { SongsList } from 'components/SongsList/SongsList';
 import Title from 'components/Title/Title';
 import Toolbar from 'components/Toolbar/Toolbar';
 import styles from 'views/DashboardView/Dashboard.module.scss';
 
 const DashboardView = () => {
+    const songsListTest = [
+        { songTitle: 'Hey Jude', author: 'The Beatles', rating: 4.5, place: 1 },
+        { songTitle: 'Stairway to Heaven', author: 'Led Zeppelin', rating: 4.3, place: 2 },
+        { songTitle: 'Hotel California', author: 'Eagles', rating: 4.2, place: 3 },
+    ];
     return (
         <>
             <Toolbar />
             <div className={styles.wrapper}>
                 <Logo />
                 <div className={styles.dashboardContentWrapper}>
-                    <div className={styles.dashboardContent}>
-                        <SongTile rating={4.5} place={3} />
+                    <div className={styles.dashboardList}>
+                        <Title tag="h2">Najpopularniejsze</Title>
+                        <SongsList isVertical songs={songsListTest} />
+                    </div>
+                    <div className={styles.dashboardList}>
+                        <Title tag="h2">Ostatnio grane</Title>
+                        <SongsList isVertical songs={songsListTest} />
                     </div>
                     <Modal>
                         <Title tag="h2">Instrukcja</Title>
