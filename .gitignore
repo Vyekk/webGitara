@@ -6,6 +6,9 @@
 .pnp.js
 .idea/
 
+# context
+/src/context
+
 # testing
 /coverage
 
