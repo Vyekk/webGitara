@@ -1,5 +1,9 @@
 @import 'variables.scss';
 
+.websiteViewWrapper {
+    font-size: $font-size-web;
+}
+
 .demo {
     display: flex;
     flex-wrap: wrap;
