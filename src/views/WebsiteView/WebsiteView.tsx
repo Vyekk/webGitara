@@ -34,7 +34,7 @@ const WebsiteView = () => {
     };
 
     return (
-        <>
+        <div className={styles.websiteViewWrapper}>
             <Section url={headerImage}>
                 <Header />
                 <Title tag="h1">
@@ -137,7 +137,7 @@ const WebsiteView = () => {
                 </div>
             </Section>
             <Footer />
-        </>
+        </div>
     );
 };
 
