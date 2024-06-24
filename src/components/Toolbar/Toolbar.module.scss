@@ -8,6 +8,7 @@
     background: $secondary-color;
     padding: 20px;
     height: 4em;
+    z-index: 1000000;
     .settingsIcon {
         width: 2em;
     }
