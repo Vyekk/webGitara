@@ -7,19 +7,19 @@ interface IButtonProps {
     children: ReactNode;
     href?: string;
     circle?: boolean;
-    dark?: boolean;
+    isDark?: boolean;
     transparent?: boolean;
     className?: string;
     [key: string]: any;
 }
 
-const Button = ({ children, href, circle, dark, transparent, className, ...props }: IButtonProps) => {
+const Button = ({ children, href, circle, isDark, transparent, className, ...props }: IButtonProps) => {
     const buttonClassName = classNames(
         styles.button,
         {
             [styles.buttonCircle]: circle,
             [styles.buttonTransparent]: transparent,
-            [styles.buttonDark]: dark,
+            [styles.buttonDark]: isDark,
         },
         className,
     );
