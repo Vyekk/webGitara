@@ -3,9 +3,14 @@ import styles from 'components/Toolbar/Toolbar.module.scss';
 import playIcon from 'assets/play-icon.png';
 import settingsIcon from 'assets/settings-icon.png';
 
-const Toolbar = () => {
+type ToolbarProps = {
+    hasControls?: boolean;
+};
+
+const Toolbar = ({ hasControls }: ToolbarProps) => {
     return (
         <div className={styles.wrapper}>
+            {hasControls && <Button isDark>BPM</Button>}
             <Button className={styles.playButton} circle>
                 <img src={playIcon} alt="play" />
             </Button>
