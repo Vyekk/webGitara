@@ -25,9 +25,12 @@
 .startButton {
     width: 10em;
 }
+.aboutParagraph {
+    text-align: justify;
+}
 .cardsWrapper {
     display: flex;
-    justify-content: space-around;
+    justify-content: space-between;
     flex-flow: row wrap;
     @media screen and (max-width: $desktop) {
         flex-flow: column;

@@ -51,7 +51,7 @@ const WebsiteView = () => {
                 <Title tag="h2" center>
                     O projekcie
                 </Title>
-                <p>
+                <p className={styles.aboutParagraph}>
                     WebGitara to innowacyjna aplikacja internetowa, która daje użytkownikom możliwość tworzenia i
                     udostępniania swoich własnych utworów muzycznych z wykorzystaniem tabulatury i ich wizualizację na
                     wirtualnym gryfie. Jest to doskonałe rozwiązanie dla osób, które chcą rozwijać swoje umiejętności
