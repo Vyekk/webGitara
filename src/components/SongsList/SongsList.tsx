@@ -17,6 +17,7 @@ const SongsList = ({ isVertical, songs }: SongsListProps) => {
                     author={song.author}
                     rating={song.rating}
                     place={song.place}
+                    liked={song.liked}
                 />
             ))}
         </div>

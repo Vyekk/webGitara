@@ -3,4 +3,5 @@ export type Song = {
     author: string;
     rating: number;
     place: number;
+    liked?: boolean;
 };
