@@ -9,7 +9,7 @@ const DashboardView = () => {
     const songsListTest = [
         { songTitle: 'Hey Jude', author: 'The Beatles', rating: 4.5, place: 1 },
         { songTitle: 'Stairway to Heaven', author: 'Led Zeppelin', rating: 4.3, place: 2 },
-        { songTitle: 'Hotel California', author: 'Eagles', rating: 4.2, place: 3 },
+        { songTitle: 'Hotel California', author: 'Eagles', rating: 4.2, place: 3, liked: true },
     ];
     return (
         <>
