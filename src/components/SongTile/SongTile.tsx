@@ -7,7 +7,7 @@ interface SongTileProps {
     songTitle: string;
     author: string;
     place?: number;
-    rating?: number;
+    rating?: number[];
     liked?: boolean;
 }
 
