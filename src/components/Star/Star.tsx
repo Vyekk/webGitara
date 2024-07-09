@@ -8,8 +8,8 @@ interface StarProps {
 }
 
 const Star = ({ fill = 'none', rating, rateSong }: StarProps) => {
-    const [songRating, setSongRating] = useState(rating);
-    <div className={`${styles.star} ${styles[fill]}`} onClick={() => rateSong(songRating)} />;
+    const [songRating] = useState(rating);
+    return <div className={`${styles.star} ${styles[fill]}`} onClick={() => rateSong(songRating)} />;
 };
 
 export { Star };
