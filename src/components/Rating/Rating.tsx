@@ -1,30 +1,32 @@
 import { Star } from 'components/Star/Star';
 import styles from './Rating.module.scss';
+import { useState } from 'react';
 
-const Rating = ({ rating = [] }: { rating?: number[] }) => {
-    const songRating = rating.reduce((a, b) => a + b, 0) / (rating.length || 1);
-    const fullStars = Math.floor(songRating);
-    const halfStars = songRating % 1 >= 0.5 ? 1 : 0;
-    const emptyStars = 5 - fullStars - halfStars;
+const Rating = ({ rating = [], isHover }: { rating?: number[]; isHover: boolean }) => {
+    const [userRating, setUserRating] = useState(0);
+
+    const calculateRating = (rating: number[]) => {
+        return rating.reduce((a, b) => a + b, 0) / (rating.length || 1);
+    };
+
+    const [socialRating, setSocialRating] = useState(calculateRating(rating));
+
+    const rateSong = (rate: number) => {
+        setUserRating(rate);
+        setSocialRating(calculateRating([...rating, rate]));
+    };
 
     return (
         <div className={styles.rating}>
-            {Array(fullStars)
-                .fill(null)
-                .map((_, i) => (
-                    <Star key={`full-${i}`} fill="full" />
+            {!isHover &&
+                Array.from({ length: 5 }, (_, i) => (
+                    <Star key={i} fill={i + 1 <= socialRating ? 'full' : 'none'} rating={i + 1} rateSong={rateSong} />
                 ))}
-            {Array(halfStars)
-                .fill(null)
-                .map((_, i) => (
-                    <Star key={`half-${i}`} fill="half" />
+            {isHover &&
+                Array.from({ length: 5 }, (_, i) => (
+                    <Star key={i} fill={i + 1 <= userRating ? 'full' : 'none'} rating={i + 1} rateSong={rateSong} />
                 ))}
-            {Array(emptyStars)
-                .fill(null)
-                .map((_, i) => (
-                    <Star key={`empty-${i}`} fill="none" />
-                ))}
-            <div className={styles.ratingNumber}>({songRating.toFixed(1)})</div>
+            <div className={styles.ratingNumber}>({socialRating.toFixed(1)})</div>
         </div>
     );
 };
