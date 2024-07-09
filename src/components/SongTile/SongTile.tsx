@@ -13,13 +13,16 @@ interface SongTileProps {
 
 const SongTile = ({ songTitle, author, rating, place, liked }: SongTileProps) => {
     const [songLiked, setSongLiked] = useState(liked);
+    const [isHover, setIsHover] = useState(false);
     const likedRef = useRef<HTMLDivElement>(null);
     const handleMouseOver = () => {
         likedRef.current?.classList.add(styles.likedHover);
+        setIsHover(true);
     };
 
     const handleMouseOut = () => {
         likedRef.current?.classList.remove(styles.likedHover);
+        setIsHover(false);
     };
 
     const handleLikeClick = () => {
@@ -29,7 +32,7 @@ const SongTile = ({ songTitle, author, rating, place, liked }: SongTileProps) =>
     return (
         <div className={styles.songTile} onMouseOver={handleMouseOver} onMouseOut={handleMouseOut}>
             <div className={songLiked ? styles.liked : styles.unliked} ref={likedRef} onClick={handleLikeClick}></div>
-            <Rating rating={rating} />
+            <Rating rating={rating} isHover={isHover} />
             <Title tag="h3">{songTitle}</Title>
             <div className={styles.songAuthor}>{author}</div>
             {place === 1 && <div className={`${styles.songTop} ${styles.songTopGold}`}>{place}</div>}
