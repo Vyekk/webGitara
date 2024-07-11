@@ -5,13 +5,14 @@ import settingsIcon from 'assets/settings-icon.png';
 
 type ToolbarProps = {
     hasControls?: boolean;
+    handleShowModal?: () => void;
 };
 
-const Toolbar = ({ hasControls }: ToolbarProps) => {
+const Toolbar = ({ hasControls, handleShowModal }: ToolbarProps) => {
     return (
         <div className={styles.wrapper}>
             {hasControls && <Button isDark>BPM</Button>}
-            <Button className={styles.playButton} circle>
+            <Button className={styles.playButton} onClick={handleShowModal} circle>
                 <img src={playIcon} alt="play" />
             </Button>
             <Button className={styles.secondOption} href="/login" transparent>
