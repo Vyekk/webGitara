@@ -3,13 +3,17 @@ import styles from 'components/Modal/Modal.module.scss';
 
 interface IModalProps {
     children: ReactNode;
-    onClose: () => void;
+    onClose?: () => void;
 }
 
 const Modal = ({ children, onClose }: IModalProps) => (
     <div className={styles.wrapper}>
         {children}
-        <button onClick={onClose}>Close Modal</button>
+        {onClose ? (
+            <button className={styles.closeButton} onClick={onClose}>
+                Close Modal
+            </button>
+        ) : null}
     </div>
 );
 

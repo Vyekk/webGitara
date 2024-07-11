@@ -1,7 +1,9 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { ModalContext } from 'components/Modal/ModalContext';
 
-const ModalProvider = ({ children }) => {
+import { ReactNode } from 'react';
+
+const ModalProvider = ({ children }: { children: ReactNode }) => {
     const [isModalOpen, setIsModalOpen] = useState(false);
 
     const openModal = () => setIsModalOpen(true);

@@ -11,9 +11,12 @@ const DashboardView = () => {
         { songTitle: 'Stairway to Heaven', author: 'Led Zeppelin', rating: [1, 1, 2, 2, 2, 5], place: 2 },
         { songTitle: 'Hotel California', author: 'Eagles', rating: [4, 4, 5, 5, 5], place: 3, liked: true },
     ];
+    const showModal = () => {
+        console.log('Show modal');
+    };
     return (
         <>
-            <Toolbar />
+            <Toolbar handleShowModal={showModal} />
             <div className={styles.wrapper}>
                 <Logo />
                 <div className={styles.dashboardContentWrapper}>
