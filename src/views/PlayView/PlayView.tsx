@@ -3,10 +3,15 @@ import styles from 'views/PlayView/PlayView.module.scss';
 import { Route, Routes } from 'react-router-dom';
 import DashboardView from 'views/DashboardView/DashboardView';
 import { GuitarView } from 'views/GuitarView/GuitarView';
+import Modal from 'components/Modal/Modal';
+import { useContext, useState } from 'react';
+import { ModalContext } from 'components/Modal/ModalContext';
 
 const PlayView = () => {
+    const { isModalOpen, closeModal } = useContext(ModalContext);
     return (
         <Section id={styles.playBackground}>
+            {isModalOpen && <Modal onClose={closeModal} />}
             <Routes>
                 <Route path="dashboard" element={<DashboardView />}></Route>
                 <Route path="guitar" element={<GuitarView />}></Route>

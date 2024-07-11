@@ -2,17 +2,20 @@ import Button from 'components/Button/Button';
 import styles from 'components/Toolbar/Toolbar.module.scss';
 import playIcon from 'assets/play-icon.png';
 import settingsIcon from 'assets/settings-icon.png';
+import { ModalContext } from 'components/Modal/ModalContext';
+import { useContext } from 'react';
 
 type ToolbarProps = {
     hasControls?: boolean;
     handleShowModal?: () => void;
 };
 
-const Toolbar = ({ hasControls, handleShowModal }: ToolbarProps) => {
+const Toolbar = ({ hasControls }: ToolbarProps) => {
+    const { openModal } = useContext(ModalContext);
     return (
         <div className={styles.wrapper}>
             {hasControls && <Button isDark>BPM</Button>}
-            <Button className={styles.playButton} onClick={handleShowModal} circle>
+            <Button className={styles.playButton} onClick={openModal} circle>
                 <img src={playIcon} alt="play" />
             </Button>
             <Button className={styles.secondOption} href="/login" transparent>
