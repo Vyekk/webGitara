@@ -9,13 +9,13 @@
     }
 }
 .closeableWrapper {
-    position: fixed; // zmieniamy na fixed, aby modal był na środku ekranu
-    top: 50%; // ustawiamy na środku ekranu
-    left: 50%; // ustawiamy na środku ekranu
-    transform: translate(-50%, -50%); // przesuwamy modal o połowę jego wysokości i szerokości, aby był dokładnie na środku
-    width: 80%; // ustawiamy szerokość modala
-    max-width: 500px; // ustawiamy maksymalną szerokość modala
-    height: auto; // ustawiamy wysokość modala
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 80%;
+    max-width: 850px;
+    height: 500px;
     z-index: 1000000;
 }
 
@@ -28,6 +28,7 @@
     background: none;
     border: none;
     cursor: pointer;
-    font-size: 20px; // ustawiamy rozmiar fontu
-    color: #fff; // ustawiamy kolor fontu
+    font-size: 20px;
+    color: #fff;
+    z-index: 10000000000000000;
 }

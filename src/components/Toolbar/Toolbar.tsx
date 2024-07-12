@@ -4,6 +4,7 @@ import playIcon from 'assets/play-icon.png';
 import settingsIcon from 'assets/settings-icon.png';
 import { ModalContext } from 'components/Modal/ModalContext';
 import { useContext } from 'react';
+import { SongsList } from 'components/SongsList/SongsList';
 
 type ToolbarProps = {
     hasControls?: boolean;
@@ -12,8 +13,33 @@ type ToolbarProps = {
 
 const Toolbar = ({ hasControls }: ToolbarProps) => {
     const { openModal, setModal } = useContext(ModalContext);
+    const songsListTest = [
+        { songTitle: 'Hey Jude', author: 'The Beatles', rating: [1, 2, 3, 4, 5, 4, 5, 5], place: 4 },
+        { songTitle: 'Stairway to Heaven', author: 'Led Zeppelin', rating: [1, 1, 2, 2, 2, 5], place: 6 },
+        { songTitle: 'Hotel California', author: 'Eagles', rating: [4, 4, 5, 5, 5], place: 9, liked: true },
+        { songTitle: 'Hey Jude', author: 'The Beatles', rating: [1, 2, 3, 4, 5, 4, 5, 5], place: 4 },
+        { songTitle: 'Stairway to Heaven', author: 'Led Zeppelin', rating: [1, 1, 2, 2, 2, 5], place: 6 },
+        { songTitle: 'Hotel California', author: 'Eagles', rating: [4, 4, 5, 5, 5], place: 9, liked: true },
+        { songTitle: 'Hey Jude', author: 'The Beatles', rating: [1, 2, 3, 4, 5, 4, 5, 5], place: 4 },
+        { songTitle: 'Stairway to Heaven', author: 'Led Zeppelin', rating: [1, 1, 2, 2, 2, 5], place: 6 },
+        { songTitle: 'Hotel California', author: 'Eagles', rating: [4, 4, 5, 5, 5], place: 9, liked: true },
+        { songTitle: 'Hey Jude', author: 'The Beatles', rating: [1, 2, 3, 4, 5, 4, 5, 5], place: 4 },
+        { songTitle: 'Stairway to Heaven', author: 'Led Zeppelin', rating: [1, 1, 2, 2, 2, 5], place: 6 },
+        { songTitle: 'Hotel California', author: 'Eagles', rating: [4, 4, 5, 5, 5], place: 9, liked: true },
+    ];
     const handlePlayButtonClick = () => {
-        setModal(<p>Hejka</p>);
+        const content = (
+            <div>
+                <div className={styles.playTopWrapper}>
+                    <Button transparent>Moje utwory</Button>
+                    <Button transparent>Wszyskie utwory</Button>
+                </div>
+                <div className={styles.songsWrapper}>
+                    <SongsList songs={songsListTest} />
+                </div>
+            </div>
+        );
+        setModal(content);
         openModal();
     };
     return (
