@@ -8,3 +8,26 @@
         max-width: 100%;
     }
 }
+.closeableWrapper {
+    position: fixed; // zmieniamy na fixed, aby modal był na środku ekranu
+    top: 50%; // ustawiamy na środku ekranu
+    left: 50%; // ustawiamy na środku ekranu
+    transform: translate(-50%, -50%); // przesuwamy modal o połowę jego wysokości i szerokości, aby był dokładnie na środku
+    width: 80%; // ustawiamy szerokość modala
+    max-width: 500px; // ustawiamy maksymalną szerokość modala
+    height: auto; // ustawiamy wysokość modala
+    z-index: 1000000;
+}
+
+.closeButton {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 30px;
+    height: 30px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 20px; // ustawiamy rozmiar fontu
+    color: #fff; // ustawiamy kolor fontu
+}
