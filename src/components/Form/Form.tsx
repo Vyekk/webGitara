@@ -15,7 +15,7 @@ const Form = ({ submitFn }: any) => {
     const [isRegistered, setIsRegistered] = useState(false);
 
     const handleRegister = () => {
-        // Tutaj powinna być logika rejestracji, ale na razie ustawiamy stan na true
+        // Tutaj powinna być logika rejestracji
         setIsRegistered(true);
     };
 
