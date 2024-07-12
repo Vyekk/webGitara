@@ -3,7 +3,7 @@ import { SongTile } from 'components/SongTile/SongTile';
 import { Song } from 'types';
 
 type SongsListProps = {
-    isVertical: boolean;
+    isVertical?: boolean;
     songs: Song[];
 };
 
