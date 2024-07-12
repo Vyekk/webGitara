@@ -3,3 +3,11 @@
     flex-direction: column;
     gap: 1rem;
 }
+.horizontalList {
+    display: flex;
+    flex-wrap: wrap;
+    overflow-y: auto;
+    gap: 20px;
+    max-width: calc(100% - 40px);
+    padding: 10px;
+}
