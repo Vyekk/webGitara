@@ -7,11 +7,11 @@ interface IModalProps {
 }
 
 const Modal = ({ children, onClose }: IModalProps) => (
-    <div className={styles.wrapper}>
+    <div className={`${styles.wrapper} ${onClose ? styles.closeableWrapper : ''}`}>
         {children}
         {onClose ? (
             <button className={styles.closeButton} onClick={onClose}>
-                Close Modal
+                X
             </button>
         ) : null}
     </div>
