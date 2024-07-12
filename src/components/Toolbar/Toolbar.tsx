@@ -11,11 +11,15 @@ type ToolbarProps = {
 };
 
 const Toolbar = ({ hasControls }: ToolbarProps) => {
-    const { openModal } = useContext(ModalContext);
+    const { openModal, setModal } = useContext(ModalContext);
+    const handlePlayButtonClick = () => {
+        setModal(<p>Hejka</p>);
+        openModal();
+    };
     return (
         <div className={styles.wrapper}>
             {hasControls && <Button isDark>BPM</Button>}
-            <Button className={styles.playButton} onClick={openModal} circle>
+            <Button className={styles.playButton} onClick={handlePlayButtonClick} circle>
                 <img src={playIcon} alt="play" />
             </Button>
             <Button className={styles.secondOption} href="/login" transparent>
