@@ -8,10 +8,10 @@ import { useContext } from 'react';
 import { ModalContext } from 'components/Modal/ModalContext';
 
 const PlayView = () => {
-    const { isModalOpen, closeModal } = useContext(ModalContext);
+    const { isModalOpen, closeModal, modalContent } = useContext(ModalContext);
     return (
         <Section id={styles.playBackground}>
-            {isModalOpen && <Modal onClose={closeModal}>sdf</Modal>}
+            {isModalOpen && <Modal onClose={closeModal}>{modalContent}</Modal>}
             <Routes>
                 <Route path="dashboard" element={<DashboardView />}></Route>
                 <Route path="guitar" element={<GuitarView />}></Route>
