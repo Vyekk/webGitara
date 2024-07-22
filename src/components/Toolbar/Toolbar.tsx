@@ -13,6 +13,7 @@ type ToolbarProps = {
 
 const Toolbar = ({ hasControls }: ToolbarProps) => {
     const { openModal, setModal } = useContext(ModalContext);
+
     const songsListTest = [
         { songTitle: 'Hey Jude', author: 'The Beatles', rating: [1, 2, 3, 4, 5, 4, 5, 5], place: 4 },
         { songTitle: 'Stairway to Heaven', author: 'Led Zeppelin', rating: [1, 1, 2, 2, 2, 5], place: 6 },
@@ -28,18 +29,27 @@ const Toolbar = ({ hasControls }: ToolbarProps) => {
         { songTitle: 'Hotel California', author: 'Eagles', rating: [4, 4, 5, 5, 5], place: 9, liked: true },
     ];
     const handlePlayButtonClick = () => {
-        const content = (
-            <div>
-                <div className={styles.playTopWrapper}>
-                    <Button transparent>Moje utwory</Button>
-                    <Button transparent>Wszyskie utwory</Button>
+        const changeContent = (buttonType: string) => {
+            const modalContent = (
+                <div>
+                    <div className={styles.playTopWrapper}>
+                        <Button transparent onClick={() => changeContent('mySongs')}>
+                            Moje utwory
+                        </Button>
+                        <Button transparent onClick={() => changeContent('allSongs')}>
+                            Wszystkie utwory
+                        </Button>
+                    </div>
+                    <div className={styles.songsWrapper}>
+                        {buttonType === 'allSongs' ? <SongsList songs={songsListTest} /> : null}
+                    </div>
                 </div>
-                <div className={styles.songsWrapper}>
-                    <SongsList songs={songsListTest} />
-                </div>
-            </div>
-        );
-        setModal(content);
+            );
+
+            setModal(modalContent);
+        };
+
+        changeContent('allSongs');
         openModal();
     };
     const handleSettingsButtonClick = () => {
