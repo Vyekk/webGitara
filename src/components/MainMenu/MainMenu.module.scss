@@ -4,7 +4,7 @@
     justify-content:space-around;
     align-items: center;
     z-index: 1000000;
-    padding-bottom: 40px;
+    padding-bottom: 20px;
     .playButton {
         position: absolute;
         bottom: 0;
@@ -20,5 +20,5 @@
 }
 .songsWrapper {
     overflow-y: auto;
-    height: 400px;
+    height: 370px;
 }
