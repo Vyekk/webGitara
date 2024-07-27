@@ -2,6 +2,7 @@ import Button from 'components/Button/Button';
 import styles from './MainMenu.module.scss';
 import { SongsList } from 'components/SongsList/SongsList';
 import { useState } from 'react';
+import Input from 'components/Input/Input';
 
 export const MainMenu = () => {
     const [buttonType, setButtonType] = useState('allSongs');
@@ -26,6 +27,7 @@ export const MainMenu = () => {
                 <Button transparent onClick={() => setButtonType('mySongs')}>
                     Moje utwory
                 </Button>
+                {buttonType === 'allSongs' && <Input id="search">Wyszukaj utwór</Input>}
                 <Button transparent onClick={() => setButtonType('allSongs')}>
                     Wszystkie utwory
                 </Button>
