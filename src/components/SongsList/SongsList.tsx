@@ -5,12 +5,15 @@ import { Song } from 'types';
 type SongsListProps = {
     isVertical?: boolean;
     songs: Song[];
+    searchTerm?: string;
 };
 
-const SongsList = ({ isVertical, songs }: SongsListProps) => {
+const SongsList = ({ isVertical, songs, searchTerm }: SongsListProps) => {
+    const filteredSongs = songs.filter((song) => (searchTerm ? song.songTitle.includes(searchTerm) : true));
+
     return (
         <div className={isVertical ? styles.verticalList : styles.horizontalList}>
-            {songs.map((song, index) => (
+            {filteredSongs.map((song, index) => (
                 <SongTile
                     key={index}
                     songTitle={song.songTitle}
