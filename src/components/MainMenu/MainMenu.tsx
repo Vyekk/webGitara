@@ -23,7 +23,6 @@ export const MainMenu = () => {
     ];
     const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
         setSearchTerm(event.target.value);
-        console.log(searchTerm);
     };
 
     return (
