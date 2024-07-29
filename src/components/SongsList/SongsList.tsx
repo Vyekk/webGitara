@@ -23,6 +23,7 @@ const SongsList = ({ isVertical, songs, searchTerm }: SongsListProps) => {
                     rating={song.rating}
                     place={song.place}
                     liked={song.liked}
+                    comments={song.comments}
                 />
             ))}
         </div>

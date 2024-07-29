@@ -19,7 +19,17 @@ export const MainMenu = () => {
         { songTitle: 'Hotel California', author: 'Eagles', rating: [4, 4, 5, 5, 5], place: 9, liked: true },
         { songTitle: 'Hey Jude', author: 'The Beatles', rating: [1, 2, 3, 4, 5, 4, 5, 5], place: 4 },
         { songTitle: 'Stairway to Heaven', author: 'Led Zeppelin', rating: [1, 1, 2, 2, 2, 5], place: 6 },
-        { songTitle: 'Hotel California', author: 'Eagles', rating: [4, 4, 5, 5, 5], place: 9, liked: true },
+        {
+            songTitle: 'Hotel California',
+            author: 'Eagles',
+            rating: [4, 4, 5, 5, 5],
+            place: 9,
+            liked: true,
+            comments: [
+                ['Great song!', 'Johnny'],
+                ['I love it!', 'Maggie'],
+            ],
+        },
     ];
     const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
         setSearchTerm(event.target.value);

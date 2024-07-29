@@ -4,4 +4,5 @@ export type Song = {
     rating: number[];
     place: number;
     liked?: boolean;
+    comments?: string[][];
 };
