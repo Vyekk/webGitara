@@ -28,7 +28,11 @@ export const MainMenu = () => {
     return (
         <div>
             <div className={styles.playTopWrapper}>
-                <Button transparent onClick={() => setButtonType('mySongs')}>
+                <Button
+                    transparent
+                    isActive={buttonType === 'mySongs' ? true : false}
+                    onClick={() => setButtonType('mySongs')}
+                >
                     Moje utwory
                 </Button>
                 {buttonType === 'allSongs' && (
@@ -36,7 +40,11 @@ export const MainMenu = () => {
                         Wyszukaj utwór
                     </Input>
                 )}
-                <Button transparent onClick={() => setButtonType('allSongs')}>
+                <Button
+                    transparent
+                    isActive={buttonType === 'allSongs' ? true : false}
+                    onClick={() => setButtonType('allSongs')}
+                >
                     Wszystkie utwory
                 </Button>
             </div>

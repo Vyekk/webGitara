@@ -10,16 +10,18 @@ interface IButtonProps {
     isDark?: boolean;
     transparent?: boolean;
     className?: string;
+    isActive?: boolean;
     [key: string]: any;
 }
 
-const Button = ({ children, href, circle, isDark, transparent, className, ...props }: IButtonProps) => {
+const Button = ({ children, href, circle, isDark, transparent, className, isActive, ...props }: IButtonProps) => {
     const buttonClassName = classNames(
         styles.button,
         {
             [styles.buttonCircle]: circle,
             [styles.buttonTransparent]: transparent,
             [styles.buttonDark]: isDark,
+            [styles.buttonActive]: isActive,
         },
         className,
     );
