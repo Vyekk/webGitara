@@ -20,7 +20,7 @@ export const MainMenu = () => {
         { songTitle: 'Hey Jude', author: 'The Beatles', rating: [1, 2, 3, 4, 5, 4, 5, 5], place: 4 },
         { songTitle: 'Stairway to Heaven', author: 'Led Zeppelin', rating: [1, 1, 2, 2, 2, 5], place: 6 },
         {
-            songTitle: 'Hotel California',
+            songTitle: 'Hotel Californiaa',
             author: 'Eagles',
             rating: [4, 4, 5, 5, 5],
             place: 9,
