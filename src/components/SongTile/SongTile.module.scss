@@ -1,7 +1,7 @@
 @import "variables.scss";
 
 .songTile {
-    background-color: #D9D9D9;
+    background-color: $block-color;
     color: $black;
     width: 12.5rem;
     height: 7.5rem;
@@ -47,8 +47,8 @@
     height: 0;
     bottom: -4.5px;
     right: 10px;
-    border-top: 5px solid #D9D9D9;
-    border-right: 1px solid #D9D9D9;
+    border-top: 5px solid $block-color;
+    border-right: 1px solid $block-color;
     border-left: 5px solid transparent;
 }
 
