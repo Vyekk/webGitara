@@ -1,7 +1,9 @@
+import { CommentsSection } from 'components/CommentsSection/CommentsSection';
+import { ModalContext } from 'components/Modal/ModalContext';
 import { Rating } from 'components/Rating/Rating';
 import styles from 'components/SongTile/SongTile.module.scss';
 import Title from 'components/Title/Title';
-import { useRef, useState } from 'react';
+import { useContext, useRef, useState } from 'react';
 
 interface SongTileProps {
     songTitle: string;
@@ -15,6 +17,7 @@ interface SongTileProps {
 const SongTile = ({ songTitle, author, rating, place, liked, comments }: SongTileProps) => {
     const [songLiked, setSongLiked] = useState(liked);
     const [isHover, setIsHover] = useState(false);
+    const { openModal, setModal } = useContext(ModalContext);
     const likedRef = useRef<HTMLDivElement>(null);
     const commentsRef = useRef<HTMLDivElement>(null);
     const handleMouseOver = () => {
@@ -33,7 +36,8 @@ const SongTile = ({ songTitle, author, rating, place, liked, comments }: SongTil
         setSongLiked((prevState) => !prevState);
     };
     const handleCommentsClick = () => {
-        console.log('Comments:', comments);
+        setModal(<CommentsSection author={author} songTitle={songTitle} comments={comments} />);
+        openModal();
     };
 
     return (
