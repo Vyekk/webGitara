@@ -5,7 +5,7 @@ import styles from 'components/SongTile/SongTile.module.scss';
 import Title from 'components/Title/Title';
 import { useContext, useRef, useState } from 'react';
 
-interface SongTileProps {
+interface Song {
     songTitle: string;
     author: string;
     place?: number;
@@ -14,8 +14,12 @@ interface SongTileProps {
     comments?: string[][];
 }
 
-const SongTile = ({ songTitle, author, rating, place, liked, comments }: SongTileProps) => {
-    const [songLiked, setSongLiked] = useState(liked);
+interface SongTileProps {
+    song: Song;
+}
+
+const SongTile = ({ song }: SongTileProps) => {
+    const [songLiked, setSongLiked] = useState(song.liked);
     const [isHover, setIsHover] = useState(false);
     const { openModal, setModal } = useContext(ModalContext);
     const likedRef = useRef<HTMLDivElement>(null);
@@ -36,7 +40,7 @@ const SongTile = ({ songTitle, author, rating, place, liked, comments }: SongTil
         setSongLiked((prevState) => !prevState);
     };
     const handleCommentsClick = () => {
-        setModal(<CommentsSection author={author} songTitle={songTitle} comments={comments} />);
+        setModal(<CommentsSection author={song.author} songTitle={song.songTitle} comments={song.comments} />);
         openModal();
     };
 
@@ -44,16 +48,16 @@ const SongTile = ({ songTitle, author, rating, place, liked, comments }: SongTil
         <div className={styles.songTile} onMouseOver={handleMouseOver} onMouseOut={handleMouseOut}>
             <div className={songLiked ? styles.liked : styles.unliked} ref={likedRef} onClick={handleLikeClick}></div>
             <div
-                className={comments ? styles.comments : styles.noComments}
+                className={song.comments ? styles.comments : styles.noComments}
                 ref={commentsRef}
                 onClick={handleCommentsClick}
             ></div>
-            <Rating rating={rating} isHover={isHover} />
-            <Title tag="h3">{songTitle}</Title>
-            <div className={styles.songAuthor}>{author}</div>
-            {place === 1 && <div className={`${styles.songTop} ${styles.songTopGold}`}>{place}</div>}
-            {place === 2 && <div className={`${styles.songTop} ${styles.songTopSilver}`}>{place}</div>}
-            {place === 3 && <div className={`${styles.songTop} ${styles.songTopBronze}`}>{place}</div>}
+            <Rating rating={song.rating} isHover={isHover} />
+            <Title tag="h3">{song.songTitle}</Title>
+            <div className={styles.songAuthor}>{song.author}</div>
+            {song.place === 1 && <div className={`${styles.songTop} ${styles.songTopGold}`}>{song.place}</div>}
+            {song.place === 2 && <div className={`${styles.songTop} ${styles.songTopSilver}`}>{song.place}</div>}
+            {song.place === 3 && <div className={`${styles.songTop} ${styles.songTopBronze}`}>{song.place}</div>}
         </div>
     );
 };
