@@ -1,14 +1,13 @@
 import Button from 'components/Button/Button';
 import styles from 'components/CommentsSection/CommentsSection.module.scss';
 import Title from 'components/Title/Title';
+import { Song } from 'types';
 
 type CommentsSectionProps = {
-    songTitle: string;
-    author: string;
-    comments?: string[][];
+    song: Song;
 };
 
-const CommentsSection = (song: CommentsSectionProps) => {
+const CommentsSection = ({ song }: CommentsSectionProps) => {
     const addComment = () => {
         console.log('Dodaj komentarz');
     };

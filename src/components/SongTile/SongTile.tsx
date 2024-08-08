@@ -32,7 +32,7 @@ const SongTile = ({ song }: SongTileProps) => {
         setSongLiked((prevState) => !prevState);
     };
     const handleCommentsClick = () => {
-        setModal(<CommentsSection author={song.author} songTitle={song.songTitle} comments={song.comments} />);
+        setModal(<CommentsSection song={song} />);
         openModal();
     };
 
