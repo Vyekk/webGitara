@@ -4,19 +4,11 @@ import { Rating } from 'components/Rating/Rating';
 import styles from 'components/SongTile/SongTile.module.scss';
 import Title from 'components/Title/Title';
 import { useContext, useRef, useState } from 'react';
+import { Song } from 'types';
 
-interface Song {
-    songTitle: string;
-    author: string;
-    place?: number;
-    rating?: number[];
-    liked?: boolean;
-    comments?: string[][];
-}
-
-interface SongTileProps {
+type SongTileProps = {
     song: Song;
-}
+};
 
 const SongTile = ({ song }: SongTileProps) => {
     const [songLiked, setSongLiked] = useState(song.liked);
