@@ -19,6 +19,7 @@
     padding: 10px;
     margin: 10px 0;
     width: 95%;
+    position: relative;
 }
 
 .commentAuthor {
@@ -38,4 +39,23 @@
 
 .commentTextArea:focus {
     outline: none;
+}
+
+.deleteCommentButton {
+    background-color: #f00;
+    width: 20px;
+    height: 20px;
+    color: $white;
+    padding: 5px;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    cursor: pointer;
+    display: none;
+}
+
+.comment:hover .deleteCommentButton {
+    display: flex;
 }
