@@ -35,6 +35,13 @@ const CommentsSection = ({ song }: CommentsSectionProps) => {
         setIsCommenting(false);
     };
 
+    const handleDeleteComment = (index: number) => {
+        setCommentedSong((prev: Song) => ({
+            ...prev,
+            comments: prev.comments?.filter((_, i) => i !== index),
+        }));
+    };
+
     return (
         <div>
             <div className={styles.commentsTopSectionWraper}>
@@ -76,6 +83,9 @@ const CommentsSection = ({ song }: CommentsSectionProps) => {
                     <div key={index} className={styles.comment}>
                         <div className={styles.commentText}>{comment[0]}</div>
                         <div className={styles.commentAuthor}>{comment[1]}</div>
+                        <div className={styles.deleteCommentButton} onClick={() => handleDeleteComment(index)}>
+                            X
+                        </div>
                     </div>
                 ))}
             </div>
