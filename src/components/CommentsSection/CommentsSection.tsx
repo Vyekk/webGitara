@@ -66,6 +66,7 @@ const CommentsSection = ({ song }: CommentsSectionProps) => {
                                 name="commentContent"
                                 className={styles.commentTextArea}
                                 placeholder="Wpisz komentarz (max 100 znaków)"
+                                required
                             ></textarea>
                             <div className={styles.addCommentButtonsWrapper}>
                                 <Button type="submit">Wyślij</Button>
