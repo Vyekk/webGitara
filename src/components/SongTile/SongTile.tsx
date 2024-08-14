@@ -39,11 +39,7 @@ const SongTile = ({ song }: SongTileProps) => {
     return (
         <div className={styles.songTile} onMouseOver={handleMouseOver} onMouseOut={handleMouseOut}>
             <div className={songLiked ? styles.liked : styles.unliked} ref={likedRef} onClick={handleLikeClick}></div>
-            <div
-                className={song.comments ? styles.comments : styles.noComments}
-                ref={commentsRef}
-                onClick={handleCommentsClick}
-            ></div>
+            <div className={styles.comments} ref={commentsRef} onClick={handleCommentsClick}></div>
             <Rating rating={song.rating} isHover={isHover} />
             <Title tag="h3">{song.songTitle}</Title>
             <div className={styles.songAuthor}>{song.author}</div>
