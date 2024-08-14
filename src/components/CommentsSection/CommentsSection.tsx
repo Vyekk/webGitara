@@ -80,6 +80,7 @@ const CommentsSection = ({ song }: CommentsSectionProps) => {
                 <Title tag="h4" orange>
                     Komentarze
                 </Title>
+                {!commentedSong.comments && <div className={styles.noComments}>Brak komentarzy</div>}
                 {commentedSong.comments?.map((comment, index) => (
                     <div key={index} className={styles.comment}>
                         <div className={styles.commentText}>{comment[0]}</div>
