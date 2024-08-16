@@ -30,7 +30,7 @@ const DashboardView = () => {
                     </div>
                     <div className={styles.dashboardList}>
                         <Title tag="h2">Instrukcja</Title>
-                        <Modal>
+                        <Modal isMax>
                             <p>
                                 Witaj w aplikacji webGitara! Aby zacząć praktykę grania na gitarze zastosuj się do
                                 poniższych kroków:
