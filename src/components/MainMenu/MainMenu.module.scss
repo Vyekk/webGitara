@@ -1,3 +1,5 @@
+@import 'variables.scss';
+
 .playTopWrapper {
     display: flex;
     flex-wrap: wrap;
@@ -20,5 +22,20 @@
 }
 .songsWrapper {
     overflow-y: auto;
+    &::-webkit-scrollbar {
+        width: 20px;
+    }
+
+    &::-webkit-scrollbar-track {
+        background: #f1f1f1;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background:  #888;
+    }
+
+    &::-webkit-scrollbar-thumb:hover {
+        background: $primary-color;
+    }
     height: 370px;
 }
