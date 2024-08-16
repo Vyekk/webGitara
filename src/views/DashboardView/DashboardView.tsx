@@ -28,27 +28,29 @@ const DashboardView = () => {
                         <Title tag="h2">Ostatnio grane</Title>
                         <SongsList isVertical songs={songsListTest} />
                     </div>
-                    <Modal>
+                    <div className={styles.dashboardList}>
                         <Title tag="h2">Instrukcja</Title>
-                        <p>
-                            Witaj w aplikacji webGitara! Aby zacząć praktykę grania na gitarze zastosuj się do
-                            poniższych kroków:
-                        </p>
-                        <ol className={styles.manualList}>
-                            <li>
-                                Na ekranie głównym możesz wybrać najpopularniejsze lub ostatnio grane przez siebie
-                                utwory. W celu praktyki kliknij na utwór lub wybierz przycisk play na pasku zadań.
-                            </li>
-                            <li>
-                                Po wybraniu utworu zobaczysz swoją wirtualną gitarę oraz pasek zadań z dodatkowymi
-                                opcjami. Jeśli uruchomiłeś utwór przez menu główne, za pomocą paska sterowania utworem
-                                możesz zacząć praktykę. W przypadku kliknięcia przycisku start, należy wybrać utwór
-                                poprzez kliknięcie w przycisk biblioteki, następnie przejść do biblioteki wszystkich
-                                utworów i wybranie konkretnego poprzez kliknięcie.
-                            </li>
-                            <li>Praktykuj grę na gitarze</li>
-                        </ol>
-                    </Modal>
+                        <Modal>
+                            <p>
+                                Witaj w aplikacji webGitara! Aby zacząć praktykę grania na gitarze zastosuj się do
+                                poniższych kroków:
+                            </p>
+                            <ol className={styles.manualList}>
+                                <li>
+                                    Na ekranie głównym możesz wybrać najpopularniejsze lub ostatnio grane przez siebie
+                                    utwory. W celu praktyki kliknij na utwór lub wybierz przycisk play na pasku zadań.
+                                </li>
+                                <li>
+                                    Po wybraniu utworu zobaczysz swoją wirtualną gitarę oraz pasek zadań z dodatkowymi
+                                    opcjami. Jeśli uruchomiłeś utwór przez menu główne, za pomocą paska sterowania
+                                    utworem możesz zacząć praktykę. W przypadku kliknięcia przycisku start, należy
+                                    wybrać utwór poprzez kliknięcie w przycisk biblioteki, następnie przejść do
+                                    biblioteki wszystkich utworów i wybranie konkretnego poprzez kliknięcie.
+                                </li>
+                                <li>Praktykuj grę na gitarze</li>
+                            </ol>
+                        </Modal>
+                    </div>
                 </div>
             </div>
         </>
