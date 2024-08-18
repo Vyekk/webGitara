@@ -52,6 +52,12 @@ const DashboardView = () => {
                         </Modal>
                     </div>
                 </div>
+                <div className={styles.dashboardHintWrapper}>
+                    <p className={styles.dashboardHint}>
+                        Aby rozpocząć praktykę, wybierz utwór z listy najpopularniejszych lub ostatnio granych. Możesz
+                        również dodać własny utwór do biblioteki, klikając przycisk poniżej.
+                    </p>
+                </div>
             </div>
         </>
     );

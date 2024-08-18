@@ -1,3 +1,5 @@
+@import 'variables.scss';
+
 .wrapper {
     padding: 2em 3em;
 }
@@ -22,4 +24,11 @@
     li {
         margin-bottom: 10px;
     }
+}
+
+.dashboardHint {
+    color: $primary-color;
+    width: 100%;
+    text-align: center;
+    margin-top: 10rem;
 }
