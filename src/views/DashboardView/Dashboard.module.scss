@@ -26,9 +26,16 @@
     }
 }
 
+.dashboardHintWrapper {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
 .dashboardHint {
     color: $primary-color;
-    width: 100%;
+    position: absolute;
+    bottom: 9rem;
+    width: 50%;
     text-align: center;
-    margin-top: 10rem;
 }
