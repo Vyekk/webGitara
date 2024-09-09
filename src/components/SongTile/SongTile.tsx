@@ -8,9 +8,10 @@ import { Song } from 'types';
 
 type SongTileProps = {
     song: Song;
+    isLarge?: boolean;
 };
 
-const SongTile = ({ song }: SongTileProps) => {
+const SongTile = ({ song, isLarge }: SongTileProps) => {
     const [songLiked, setSongLiked] = useState(song.liked);
     const [isHover, setIsHover] = useState(false);
     const { openModal, setModal } = useContext(ModalContext);
@@ -37,7 +38,11 @@ const SongTile = ({ song }: SongTileProps) => {
     };
 
     return (
-        <div className={styles.songTile} onMouseOver={handleMouseOver} onMouseOut={handleMouseOut}>
+        <div
+            className={`${styles.songTile} ${isLarge ? styles.isLarge : ''}`}
+            onMouseOver={handleMouseOver}
+            onMouseOut={handleMouseOut}
+        >
             <div className={songLiked ? styles.liked : styles.unliked} ref={likedRef} onClick={handleLikeClick}></div>
             <div className={styles.comments} ref={commentsRef} onClick={handleCommentsClick}></div>
             <Rating rating={song.rating} isHover={isHover} />

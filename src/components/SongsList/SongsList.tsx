@@ -16,7 +16,7 @@ const SongsList = ({ isVertical, songs, searchTerm }: SongsListProps) => {
     return (
         <div className={isVertical ? styles.verticalList : styles.horizontalList}>
             {filteredSongs.map((song, index) => (
-                <SongTile key={index} song={song} />
+                <SongTile key={index} song={song} isLarge={isVertical ? true : false} />
             ))}
         </div>
     );
