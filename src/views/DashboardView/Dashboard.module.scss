@@ -7,6 +7,7 @@
 .dashboardContentWrapper {
     margin-top: 30px;
     display: flex;
+    flex-wrap: wrap;
     justify-content: space-between;
 }
 
@@ -34,8 +35,13 @@
 
 .dashboardHint {
     color: $primary-color;
-    position: absolute;
-    bottom: 9rem;
     width: 50%;
     text-align: center;
+    margin: 70px 0 120px;
+}
+
+@media (max-width: 1300px) { /* Możesz dostosować wartość max-width */
+    .dashboardList:last-child {
+        width: 100%;
+    }
 }
