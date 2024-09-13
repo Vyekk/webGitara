@@ -5,15 +5,15 @@ const Settings = () => {
     return (
         <div className={styles.settingsWrapper}>
             <div className={styles.settingsNav}>
-                <div>
-                    <Title>Moje konto</Title>
+                <div className={styles.settingsLink}>
+                    <Title tag="h4">Moje konto</Title>
                 </div>
-                <div>
-                    <Title>Ustawienia rozgrywki</Title>
+                <div className={styles.settingsLink}>
+                    <Title tag="h4">Ustawienia rozgrywki</Title>
                 </div>
             </div>
             <div className={styles.settingsOne}>
-                <Title>Moje konto</Title>
+                <Title tag="h3">Moje konto</Title>
             </div>
             <div className={styles.settingTwo}></div>
         </div>
