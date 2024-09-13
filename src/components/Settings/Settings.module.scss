@@ -1,9 +1,22 @@
 .settingsWrapper {
     display: flex;
-    height: 100vh;
     width: 100%;
+    height: 100%;
 }
 
+
 .settingsNav {
-    border-right: 1px solid #ccc;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0 40px 0 0;
+    border-right: 1px solid #1e2daf;
+}
+
+.settingsLink {
+    padding-bottom: 20px;
+}
+
+.settingsOne {
+    padding-left: 40px;
 }
