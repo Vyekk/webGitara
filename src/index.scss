@@ -7,13 +7,16 @@
   box-sizing: border-box;
 }
 
+html {
+  font-family: 'Montserrat', sans-serif;
+  font-size: $font-size-web;
+  color: $white;
+  font-weight: 200;
+}
+
 body {
     margin: 0;
     padding: 0;
-    font-family: 'Montserrat', sans-serif;
-    font-size: $font-size-web;
-    color: $white;
-    font-weight: 200;
 }
 p {
   margin: 0;
@@ -29,7 +32,7 @@ input[type=checkbox] {
 }
 
 @media screen and (max-width: $desktop) {
-  // body {
-  //   font-size: $mobile-font-size-web;
-  // }
+  html {
+    font-size: $mobile-font-size-web;
+  }
 }

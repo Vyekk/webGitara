@@ -7,6 +7,7 @@ $play-background: #1e1e1e;
 $block-color: #D9D9D9;
 
 $desktop: 1300px;
+$mobile: 768px;
 
 $font-size-web: 20px;
 $font-size-app: 16px;
@@ -14,7 +15,7 @@ $bigger-font-size: 32px;
 $bigger-font-size-form: 56px;
 $the-biggest-font-size: 96px;
 
-$mobile-font-size-web: $font-size-web * 0.8;
+$mobile-font-size-web: $font-size-app * 0.8;
 $mobile-bigger-font-size: $bigger-font-size * 0.8;
 $mobile-bigger-font-size-form: $bigger-font-size-form * 0.8;
 $mobile-the-biggest-font-size: $the-biggest-font-size * 0.8;
