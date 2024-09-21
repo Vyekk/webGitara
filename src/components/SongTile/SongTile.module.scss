@@ -75,6 +75,8 @@
 
 .songTop {
     position: absolute;
+    font-weight: bold;
+    color: $white;
     bottom: 0;
     right: 0;
     width: 50px;
@@ -87,15 +89,15 @@
 }
 
 .songTopGold {
-    background-color: #ffd700;
+    background-color: #a89216;
 }
 
 .songTopSilver {
-    background-color: #c0c0c0;
+    background-color: #757575;
 }
 
 .songTopBronze {
-    background-color: rgb(138, 107, 15);
+    background-color: #4f3d09;
 }
 
 .isLarge {
