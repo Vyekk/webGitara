@@ -3,7 +3,7 @@
 .songTile {
     background-color: $block-color;
     color: $black;
-    width: 12.5rem;
+    width: 10.5rem;
     height: 7.5rem;
     display: flex;
     justify-content: center;
@@ -101,6 +101,21 @@
 }
 
 .isLarge {
-    width: 18.5rem;
-    height: 9.5rem;
+    width: 17.5em;
+    height: 7em;
+}
+
+@media screen and (max-width: $desktop) {
+    .isLarge {
+        width: 20.5em;
+        height: 10em;
+    }
+}
+
+@media screen and (max-width: $mobile) {
+
+    .isLarge {
+        width: 17.5em;
+        height: 10em;
+    }
 }
