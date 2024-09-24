@@ -33,7 +33,7 @@ const Settings = () => {
                 </div>
             </div>
             <div className={styles.settingsOne}>
-                <Title tag="h3">Moje konto</Title>
+                <Title tag="h3">{(settingsScreen == 'myAccount' && 'Moje konto') || 'Ustawienia rozgrywki'}</Title>
             </div>
             <div className={styles.settingTwo}></div>
         </div>
