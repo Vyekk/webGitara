@@ -6,6 +6,10 @@ import { useState } from 'react';
 const Settings = () => {
     const [settingsScreen, setSettingsScreen] = useState('myAccount');
 
+    const myAccountContent = <Title tag="h3">Moje konto</Title>;
+
+    const mySettingsContent = <Title tag="h3">Ustawienia rozgrywki</Title>;
+
     return (
         <div className={styles.settingsWrapper}>
             <div className={styles.settingsNav}>
@@ -33,7 +37,7 @@ const Settings = () => {
                 </div>
             </div>
             <div className={styles.settingsOne}>
-                <Title tag="h3">{(settingsScreen == 'myAccount' && 'Moje konto') || 'Ustawienia rozgrywki'}</Title>
+                {settingsScreen === 'myAccount' ? myAccountContent : mySettingsContent}
             </div>
             <div className={styles.settingTwo}></div>
         </div>
