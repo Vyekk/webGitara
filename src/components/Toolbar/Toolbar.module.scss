@@ -24,4 +24,29 @@
     .secondOption {
         margin: 0 20px;
     }
+    @media (max-width: 768px) {
+        .playButton {
+            width: 3em;
+            height: 3em;
+            left: calc(50% - 1.5em);
+    
+            img {
+                width: 1.5em; 
+                height: 1.5em;
+            }
+        }
+    }
+    
+    @media (max-width: 480px) {
+        .playButton {
+            width: 2.5em;
+            height: 2.5em;
+            left: calc(50% - 1.25em);
+    
+            img {
+                width: 1.25em;
+                height: 1.25em;
+            }
+        }
+    }
 }
