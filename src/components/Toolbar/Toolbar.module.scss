@@ -17,8 +17,8 @@
         bottom: 0;
         left: 50%;
         transform: translateX(-50%);
-        width: 7vw; // Adjusted to be responsive
-        height: 7vw; // Adjusted to be responsive
+        width: 6vw; 
+        height: 6vw; 
         border-radius: 50%;
         overflow: hidden;
     
@@ -41,23 +41,23 @@
                 transform: translate(-50%, -50%);
                 width: 0;
                 height: 0;
-                border-top: 1.5vw solid transparent; // Adjusted to be responsive
-                border-bottom: 1.5vw solid transparent; // Adjusted to be responsive
-                border-left: 3vw solid $white; // Adjusted to be responsive
+                border-top: 1.2vw solid transparent;
+                border-bottom: 1.2vw solid transparent;
+                border-left: 2.5vw solid $white;
             }
         }
     }
     
     @media (max-width: 768px) {
         .playButton {
-            width: 15vw; // Adjusted to be responsive
-            height: 15vw; // Adjusted to be responsive
+            width: 15vw; 
+            height: 15vw; 
     
             .playIcon {
                 &::before {
-                    border-top: 3.75vw solid transparent; // Adjusted to be responsive
-                    border-bottom: 3.75vw solid transparent; // Adjusted to be responsive
-                    border-left: 7.5vw solid $white; // Adjusted to be responsive
+                    border-top: 3.75vw solid transparent;
+                    border-bottom: 3.75vw solid transparent;
+                    border-left: 7.5vw solid $white;
                 }
             }
     
@@ -70,14 +70,14 @@
     
     @media (max-width: 480px) {
         .playButton {
-            width: 20vw; // Adjusted to be responsive
-            height: 20vw; // Adjusted to be responsive
+            width: 20vw; 
+            height: 20vw; 
     
             .playIcon {
                 &::before {
-                    border-top: 5vw solid transparent; // Adjusted to be responsive
-                    border-bottom: 5vw solid transparent; // Adjusted to be responsive
-                    border-left: 10vw solid $white; // Adjusted to be responsive
+                    border-top: 5vw solid transparent;
+                    border-bottom: 5vw solid transparent;
+                    border-left: 10vw solid $white;
                 }
             }
     
