@@ -1,6 +1,5 @@
 import Button from 'components/Button/Button';
 import styles from 'components/Toolbar/Toolbar.module.scss';
-import playIcon from 'assets/play-icon.png';
 import settingsIcon from 'assets/settings-icon.png';
 import { ModalContext } from 'components/Modal/ModalContext';
 import { ReactNode, useContext } from 'react';
