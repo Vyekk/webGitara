@@ -28,7 +28,7 @@ const Toolbar = ({ hasControls }: ToolbarProps) => {
                 Nowy utwór
             </Button>
             <Button className={styles.playButton} onClick={() => handleOpenModal(<MainMenu />)} circle>
-                <img src={playIcon} alt="play" />
+                <div className={styles.playIcon}></div>
             </Button>
             <Button className={styles.secondOption} onClick={() => handleOpenModal(<Settings />)} transparent>
                 <img className={styles.settingsIcon} src={settingsIcon} alt="settings" />
