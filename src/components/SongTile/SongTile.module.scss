@@ -4,7 +4,7 @@
     background-color: $block-color;
     color: $black;
     width: 10.5rem;
-    height: 7.5rem;
+    height: 5.5rem;
     display: flex;
     justify-content: center;
     flex-direction: column;
@@ -102,7 +102,7 @@
 
 .isLarge {
     width: 17.5em;
-    height: 7em;
+    height: 8em;
 }
 
 @media screen and (max-width: $desktop) {
