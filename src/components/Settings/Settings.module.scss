@@ -32,9 +32,10 @@
     display: flex;
     width: 100%;
     padding: 0 40px;
-    input {
+    .accountSettingsInput {
         display: block;
         width: 100%;
+        padding: 0.5rem;
     }
     button {
         display: block;
@@ -69,3 +70,6 @@
     }
 }
 
+.gameInterfaceSettingsContent {
+    margin-top: 0.5rem;
+}

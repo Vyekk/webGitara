@@ -6,6 +6,11 @@ import { useState } from 'react';
 const Settings = () => {
     const [settingsScreen, setSettingsScreen] = useState('myAccount');
 
+    const handeChangeInterface = (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        console.log('zmieniono interfejs');
+    };
+
     const myAccountContent = (
         <>
             <div className={styles.settingsContentLeft}>
@@ -33,15 +38,15 @@ const Settings = () => {
                 <form>
                     <div className={styles.formGroup}>
                         <label htmlFor="oldPassword">Stare hasło</label>
-                        <input type="password" id="oldPassword" />
+                        <input className={styles.accountSettingsInput} type="password" id="oldPassword" />
                     </div>
                     <div className={styles.formGroup}>
                         <label htmlFor="newPassword">Nowe hasło</label>
-                        <input type="password" id="newPassword" />
+                        <input className={styles.accountSettingsInput} type="password" id="newPassword" />
                     </div>
                     <div className={styles.formGroup}>
                         <label htmlFor="repeatNewPassword">Powtórz nowe hasło</label>
-                        <input type="password" id="repeatNewPassword" />
+                        <input className={styles.accountSettingsInput} type="password" id="repeatNewPassword" />
                     </div>
                     <Button>Zmień hasło</Button>
                 </form>
@@ -51,8 +56,25 @@ const Settings = () => {
 
     const mySettingsContent = (
         <>
-            <Title tag="h3">Ustawienia rozgrywki</Title>
-            <div></div>
+            <div>
+                <Title tag="h4">Interfejs aplikacji</Title>
+                <div className={styles.gameInterfaceSettingsContent}>
+                    <form onSubmit={handeChangeInterface}>
+                        <div className={styles.formGroup}>
+                            <div className={styles.formGroup}>
+                                <input type="checkbox" id="reverseGuitar" />
+                                <label htmlFor="reverseGuitar">Odwróć gitarę</label>
+                            </div>
+                            <div className={styles.formGroup}>
+                                <input type="checkbox" id="reverseTab" />
+
+                                <label htmlFor="reverseTab">Odwróć tabulaturę</label>
+                            </div>
+                        </div>
+                        <Button>Zapisz zmiany</Button>
+                    </form>
+                </div>
+            </div>
         </>
     );
 
