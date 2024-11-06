@@ -82,12 +82,15 @@ const CommentsSection = ({ song }: CommentsSectionProps) => {
                 </Title>
                 {!commentedSong.comments && <div className={styles.noComments}>Brak komentarzy</div>}
                 {commentedSong.comments?.map((comment, index) => (
-                    <div key={index} className={styles.comment}>
-                        <div className={styles.commentText}>{comment[0]}</div>
-                        <div className={styles.commentAuthor}>{comment[1]}</div>
-                        <div className={styles.deleteCommentButton} onClick={() => handleDeleteComment(index)}>
-                            X
+                    <div className={styles.commentContainer} key={index}>
+                        <div className={styles.comment}>
+                            <div className={styles.commentText}>{comment[0]}</div>
+                            <div className={styles.commentAuthor}>{comment[1]}</div>
+                            <div className={styles.deleteCommentButton} onClick={() => handleDeleteComment(index)}>
+                                X
+                            </div>
                         </div>
+                        <div className={styles.commentAuthorAvatar}></div>
                     </div>
                 ))}
             </div>

@@ -13,12 +13,17 @@
     height: 370px;
 }
 
+.commentContainer {
+    display: flex;
+    margin: 10px 0;
+    gap: 2%;
+}
+
 .comment {
     background-color: $block-color;
     color: $black;
     padding: 10px;
-    margin: 10px 0;
-    width: 95%;
+    flex-basis: 90%;
     position: relative;
 }
 
@@ -62,4 +67,10 @@
 
 .comment:hover .deleteCommentButton {
     display: flex;
+}
+
+.commentAuthorAvatar {
+    max-width: 3rem;
+    flex-basis: 8%;
+    background-color: rgb(117, 117, 117);
 }
