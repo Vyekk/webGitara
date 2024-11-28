@@ -9,7 +9,11 @@ interface StarProps {
 
 const Star = ({ fill = 'none', rating, rateSong }: StarProps) => {
     const [songRating] = useState(rating);
-    return <div className={`${styles.star} ${styles[fill]}`} onClick={() => rateSong(songRating)} />;
+    const handleRateSong = (event: React.MouseEvent) => {
+        event.stopPropagation();
+        rateSong(songRating);
+    };
+    return <div className={`${styles.star} ${styles[fill]}`} onClick={handleRateSong} />;
 };
 
 export { Star };

@@ -29,12 +29,18 @@ const SongTile = ({ song, isLarge }: SongTileProps) => {
         setIsHover(false);
     };
 
-    const handleLikeClick = () => {
+    const handleLikeClick = (event: React.MouseEvent) => {
+        event.stopPropagation();
         setSongLiked((prevState) => !prevState);
     };
-    const handleCommentsClick = () => {
+    const handleCommentsClick = (event: React.MouseEvent) => {
+        event.stopPropagation();
         setModal(<CommentsSection song={song} />);
         openModal();
+    };
+
+    const handleSongTileClick = () => {
+        console.log('clicked');
     };
 
     return (
@@ -42,6 +48,7 @@ const SongTile = ({ song, isLarge }: SongTileProps) => {
             className={`${styles.songTile} ${isLarge ? styles.isLarge : ''}`}
             onMouseOver={handleMouseOver}
             onMouseOut={handleMouseOut}
+            onClick={handleSongTileClick}
         >
             <div className={songLiked ? styles.liked : styles.unliked} ref={likedRef} onClick={handleLikeClick}></div>
             <div className={styles.comments} ref={commentsRef} onClick={handleCommentsClick}></div>
