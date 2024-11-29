@@ -7,9 +7,9 @@ import styles from 'views/DashboardView/Dashboard.module.scss';
 
 const DashboardView = () => {
     const songsListTest = [
-        { songTitle: 'Hey Jude', author: 'The Beatles', rating: [1, 2, 3, 4, 5, 4, 5, 5], place: 1 },
-        { songTitle: 'Stairway to Heaven', author: 'Led Zeppelin', rating: [1, 1, 2, 2, 2, 5], place: 2 },
-        { songTitle: 'Hotel California', author: 'Eagles', rating: [4, 4, 5, 5, 5], place: 3, liked: true },
+        { id: 1, songTitle: 'Hey Jude', author: 'The Beatles', rating: [1, 2, 3, 4, 5, 4, 5, 5], place: 1 },
+        { id: 2, songTitle: 'Stairway to Heaven', author: 'Led Zeppelin', rating: [1, 1, 2, 2, 2, 5], place: 2 },
+        { id: 3, songTitle: 'Hotel California', author: 'Eagles', rating: [4, 4, 5, 5, 5], place: 3, liked: true },
     ];
     const showModal = () => {
         console.log('Show modal');
