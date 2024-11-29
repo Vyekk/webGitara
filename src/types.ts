@@ -1,4 +1,5 @@
 export type Song = {
+    id: number;
     songTitle: string;
     author: string;
     rating: number[];
