@@ -14,7 +14,7 @@ const PlayView = () => {
             {isModalOpen && <Modal onClose={closeModal}>{modalContent}</Modal>}
             <Routes>
                 <Route path="dashboard" element={<DashboardView />}></Route>
-                <Route path="guitar" element={<GuitarView />}></Route>
+                <Route path="guitar/:id" element={<GuitarView />}></Route>
             </Routes>
         </Section>
     );

@@ -42,7 +42,7 @@ const SongTile = ({ song, isLarge }: SongTileProps) => {
     };
 
     const handleSongTileClick = (songId: number) => {
-        navigate(`/play/${songId}`);
+        navigate(`/play/guitar/${songId}`);
     };
 
     return (
