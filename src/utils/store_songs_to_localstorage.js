@@ -4,7 +4,6 @@ const songs = [
         songTitle: 'Bohemian Rhapsody',
         author: 'Queen',
         rating: [5, 5, 4, 5, 5],
-        place: 2,
         comments: [
             ['Epic song!', 'James'],
             ['A classic!', 'Sophia'],
@@ -15,7 +14,6 @@ const songs = [
         songTitle: 'Imagine',
         author: 'John Lennon',
         rating: [4, 5, 5, 4, 4],
-        place: 1,
         comments: [
             ['Beautiful lyrics!', 'David'],
             ['Makes me think...', 'Laura'],
@@ -26,7 +24,6 @@ const songs = [
         songTitle: 'Like a Rolling Stone',
         author: 'Bob Dylan',
         rating: [3, 4, 5, 4, 5],
-        place: 5,
         liked: true,
         comments: [
             ['Timeless music!', 'Sam'],
@@ -38,7 +35,6 @@ const songs = [
         songTitle: 'Smells Like Teen Spirit',
         author: 'Nirvana',
         rating: [5, 4, 4, 4, 3],
-        place: 3,
         comments: [
             ['Revolutionary sound!', 'Lucas'],
             ['Still rocking today!', 'Ava'],
@@ -49,7 +45,6 @@ const songs = [
         songTitle: 'Sweet Child O’ Mine',
         author: 'Guns N’ Roses',
         rating: [5, 5, 4, 4, 5],
-        place: 7,
         comments: [
             ['Guitar solo is amazing!', 'Ben'],
             ['Such a catchy song!', 'Zoe'],
@@ -60,7 +55,6 @@ const songs = [
         songTitle: 'Thriller',
         author: 'Michael Jackson',
         rating: [5, 5, 5, 4, 5],
-        place: 8,
         liked: true,
         comments: [
             ['The music video is legendary!', 'Oliver'],
@@ -72,7 +66,6 @@ const songs = [
         songTitle: 'Rolling in the Deep',
         author: 'Adele',
         rating: [4, 4, 3, 4, 3],
-        place: 10,
         comments: [
             ['Such emotion in her voice!', 'Noah'],
             ['Very powerful song!', 'Isabella'],
@@ -83,7 +76,6 @@ const songs = [
         songTitle: 'Hallelujah',
         author: 'Leonard Cohen',
         rating: [5, 5, 5, 5, 5],
-        place: 4,
         comments: [
             ['So moving!', 'Ella'],
             ['One of the best songs ever!', 'Ethan'],
@@ -94,7 +86,6 @@ const songs = [
         songTitle: 'Let It Be',
         author: 'The Beatles',
         rating: [4, 4, 4, 5, 4],
-        place: 6,
         comments: [
             ['Such a peaceful song!', 'Mason'],
             ['Timeless and comforting', 'Amelia'],
@@ -105,7 +96,6 @@ const songs = [
         songTitle: 'Africa',
         author: 'Toto',
         rating: [3, 3, 4, 4, 4],
-        place: 12,
         liked: true,
         comments: [
             ['Great vibe!', 'Charlie'],
@@ -114,4 +104,26 @@ const songs = [
     },
 ];
 
-localStorage.setItem('songs', JSON.stringify(songs));
+(() => {
+    const songsPlaces = [];
+    songs.forEach((song) => {
+        const songRatingAvg = song.rating.reduce((acc, curr) => acc + curr, 0) / song.rating.length;
+        songsPlaces.push({ ...song, songRatingAvg, ratingCount: song.rating.length });
+    });
+
+    songsPlaces.sort((a, b) => {
+        if (b.ratingCount === a.ratingCount) {
+            if (b.songRatingAvg === a.songRatingAvg) {
+                return a.songTitle.localeCompare(b.songTitle);
+            }
+            return b.songRatingAvg - a.songRatingAvg;
+        }
+        return b.ratingCount - a.ratingCount;
+    });
+
+    songsPlaces.forEach((song, index) => {
+        song.place = index + 1;
+    });
+
+    localStorage.setItem('songs', JSON.stringify(songsPlaces));
+})();
