@@ -3,17 +3,26 @@ import Modal from 'components/Modal/Modal';
 import { SongsList } from 'components/SongsList/SongsList';
 import Title from 'components/Title/Title';
 import Toolbar from 'components/Toolbar/Toolbar';
+import { useEffect, useState } from 'react';
+import { Song } from 'types';
 import styles from 'views/DashboardView/Dashboard.module.scss';
 
 const DashboardView = () => {
-    const songsListTest = [
-        { id: 1, songTitle: 'Hey Jude', author: 'The Beatles', rating: [1, 2, 3, 4, 5, 4, 5, 5], place: 1 },
-        { id: 2, songTitle: 'Stairway to Heaven', author: 'Led Zeppelin', rating: [1, 1, 2, 2, 2, 5], place: 2 },
-        { id: 3, songTitle: 'Hotel California', author: 'Eagles', rating: [4, 4, 5, 5, 5], place: 3, liked: true },
-    ];
+    const [bestSongsList, setBestSongsList] = useState<Song[]>([]);
     const showModal = () => {
         console.log('Show modal');
     };
+
+    const fetchSongsUserStorge = async () => {
+        const songsData = localStorage.getItem('songs');
+        const songs = songsData ? JSON.parse(songsData) : [];
+        setBestSongsList([songs[0], songs[1], songs[2]]);
+    };
+
+    useEffect(() => {
+        fetchSongsUserStorge();
+    });
+
     return (
         <>
             <Toolbar handleShowModal={showModal} />
@@ -22,11 +31,11 @@ const DashboardView = () => {
                 <div className={styles.dashboardContentWrapper}>
                     <div className={styles.dashboardList}>
                         <Title tag="h2">Najpopularniejsze</Title>
-                        <SongsList isVertical songs={songsListTest} />
+                        <SongsList isVertical songs={bestSongsList} />
                     </div>
                     <div className={styles.dashboardList}>
                         <Title tag="h2">Ostatnio grane</Title>
-                        <SongsList isVertical songs={songsListTest} />
+                        <SongsList isVertical songs={bestSongsList} />
                     </div>
                     <div className={styles.dashboardList}>
                         <Title tag="h2">Instrukcja</Title>
