@@ -1,13 +1,36 @@
+import Title from 'components/Title/Title';
 import Toolbar from 'components/Toolbar/Toolbar';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import { Song } from 'types';
 import styles from 'views/GuitarView/GuitarView.module.scss';
+import { useLocation } from 'react-router-dom';
 
 const GuitarView = () => {
+    const [song, setSong] = useState<Song | null>(null);
     const fretboardRef = useRef<HTMLDivElement | null>(null);
+    const [currentUrl, setCurrentUrl] = useState(window.location.href);
+    const location = useLocation();
 
     useEffect(() => {
+        setupSong();
+    }, [currentUrl]);
+
+    useEffect(() => {
+        setCurrentUrl(location.pathname);
+    }, [location]);
+
+    const setupSong = () => {
+        // Pobierz utwór z localStorage async
+        const fetchSong = async () => {
+            const songsData = localStorage.getItem('songs');
+            const songs = songsData ? await JSON.parse(songsData) : [];
+            const songId = currentUrl.split('/').pop();
+            const song = songs.find((song: Song) => song.id === Number(songId));
+            setSong(song);
+        };
+        fetchSong();
         setupFretboard();
-    }, []);
+    };
 
     const setupFretboard = () => {
         const fretboard = fretboardRef.current;
@@ -34,6 +57,7 @@ const GuitarView = () => {
 
     return (
         <div>
+            <Title>{`${song?.songTitle} - ${song?.author}`}</Title>
             <Toolbar />
             <div className={styles.fretboard} ref={fretboardRef}></div>
         </div>
