@@ -23,7 +23,7 @@ const GuitarView = () => {
         // Pobierz utwór z localStorage async
         const fetchSong = async () => {
             const songsData = localStorage.getItem('songs');
-            const songs = songsData ? await JSON.parse(songsData) : [];
+            const songs = songsData ? JSON.parse(songsData) : [];
             const songId = currentUrl.split('/').pop();
             const song = songs.find((song: Song) => song.id === Number(songId));
             setSong(song);
@@ -57,7 +57,9 @@ const GuitarView = () => {
 
     return (
         <div>
-            <Title>{`${song?.songTitle} - ${song?.author}`}</Title>
+            <div className={styles.wrapper}>
+                <Title>{`${song?.songTitle} - ${song?.author}`}</Title>
+            </div>
             <Toolbar />
             <div className={styles.fretboard} ref={fretboardRef}></div>
         </div>
