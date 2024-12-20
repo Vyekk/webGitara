@@ -62,6 +62,12 @@ const GuitarView = () => {
             </div>
             <Toolbar />
             <div className={styles.fretboard} ref={fretboardRef}></div>
+            <div className={styles.songControl}>
+                <button className={styles.goBackButton} title="Cofnij"></button>
+                <button className={styles.playButton} title="Start"></button>
+                <button className={styles.stopButton} title="Stop"></button>
+                <button className={styles.forwardButton} title="Naprzód"></button>
+            </div>
         </div>
     );
 };
