@@ -1,6 +1,6 @@
 import Section from 'components/Section/Section';
 import styles from 'views/PlayView/PlayView.module.scss';
-import { Route, Routes } from 'react-router-dom';
+import { Route, Routes, Navigate } from 'react-router-dom';
 import DashboardView from 'views/DashboardView/DashboardView';
 import { GuitarView } from 'views/GuitarView/GuitarView';
 import Modal from 'components/Modal/Modal';
@@ -14,6 +14,7 @@ const PlayView = () => {
             {isModalOpen && <Modal onClose={closeModal}>{modalContent}</Modal>}
             <Routes>
                 <Route path="dashboard" element={<DashboardView />}></Route>
+                <Route path="guitar" element={<Navigate to="1" replace />} />
                 <Route path="guitar/:id" element={<GuitarView />}></Route>
             </Routes>
         </Section>
