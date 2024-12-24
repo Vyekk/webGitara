@@ -4,7 +4,7 @@ import styles from 'components/Button/Button.module.scss';
 import classNames from 'classnames';
 
 interface IButtonProps {
-    children: ReactNode;
+    children?: ReactNode;
     href?: string;
     circle?: boolean;
     isDark?: boolean;
