@@ -1,3 +1,5 @@
+@import 'variables.scss';
+
 .fretboard {
     display: flex;
     flex-direction: column;
@@ -5,8 +7,6 @@
     width: 100%;
     min-width: 1500px;
     height: calc(var(--fretboard-height) * 1px);
-    position: absolute;
-    top: 20%;
 }
 .string {
     width: 100%;
@@ -48,7 +48,7 @@
     height: 33px;
     border-radius: 50%;
     line-height: 33px;
-    text-align:  center;
+    text-align: center;
     background: teal;
     z-index: 2;
     color: #eee;
@@ -56,5 +56,132 @@
 }
 
 .wrapper {
-    padding: 2em 3em;
+    padding: 0 3em;
+}
+
+.linkWrapper {
+    padding: 2em 3em 0;
+    a {
+        color:  $white;
+    }
+}
+
+.songControl {
+    display: flex;
+    justify-content: center;
+    margin-top: 3em;
+    gap: 5em;
+    align-items: center;
+    margin-bottom: 1em;
+}
+
+.playButton {
+    border-top: 15px solid transparent;
+    border-bottom: 15px solid transparent;
+    border-left: 25px solid white;
+    background: transparent;
+    cursor: pointer;
+    transition: border-left-color 0.3s;
+
+    &:hover {
+        border-left-color: $primary-color;
+    }
+}
+
+.goBackButton {
+    position: relative;
+    width: 30px;
+    height: 30px;
+    background: transparent;
+    cursor: pointer;
+
+    &:before,
+    &:after {
+        content: '';
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        border-top: 10px solid transparent;
+        border-bottom: 10px solid transparent;
+    }
+
+    &:before {
+        left: 0;
+        border-right: 15px solid white;
+    }
+
+    &:after {
+        left: 10px;
+        border-right: 15px solid white;
+    }
+
+    &:hover:before,
+    &:hover:after {
+        border-right-color: $primary-color;
+    }
+}
+
+.forwardButton {
+    position: relative;
+    width: 30px;
+    height: 30px;
+    background: transparent;
+    cursor: pointer;
+
+    &:before,
+    &:after {
+        content: '';
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        border-top: 10px solid transparent;
+        border-bottom: 10px solid transparent;
+    }
+
+    &:before {
+        left: 0;
+        border-left: 15px solid white;
+    }
+
+    &:after {
+        left: 10px;
+        border-left: 15px solid white;
+    }
+
+    &:hover:before,
+    &:hover:after {
+        border-left-color: $primary-color;
+    }
+}
+
+.stopButton {
+    position: relative;
+    width: 30px;
+    height: 30px;
+    background: transparent;
+    cursor: pointer;
+
+    &:before,
+    &:after {
+        content: '';
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 6px;
+        height: 25px;
+        background: white;
+    }
+
+    &:before {
+        left: 6px;
+    }
+
+    &:after {
+        right: 6px;
+    }
+
+    &:hover:before,
+    &:hover:after {
+        background: $primary-color;
+    }
 }
