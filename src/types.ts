@@ -6,4 +6,5 @@ export type Song = {
     place: number;
     liked?: boolean;
     comments?: string[][];
+    tabulature: number[][];
 };

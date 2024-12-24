@@ -8,6 +8,7 @@ const songs = [
             ['Epic song!', 'James'],
             ['A classic!', 'Sophia'],
         ],
+        tabulature: [],
     },
     {
         id: 2,
@@ -18,6 +19,7 @@ const songs = [
             ['Beautiful lyrics!', 'David'],
             ['Makes me think...', 'Laura'],
         ],
+        tabulature: [],
     },
     {
         id: 3,
@@ -29,6 +31,7 @@ const songs = [
             ['Timeless music!', 'Sam'],
             ['Great storytelling!', 'Ella'],
         ],
+        tabulature: [],
     },
     {
         id: 4,
@@ -39,6 +42,7 @@ const songs = [
             ['Revolutionary sound!', 'Lucas'],
             ['Still rocking today!', 'Ava'],
         ],
+        tabulature: [],
     },
     {
         id: 5,
@@ -49,6 +53,7 @@ const songs = [
             ['Guitar solo is amazing!', 'Ben'],
             ['Such a catchy song!', 'Zoe'],
         ],
+        tabulature: [],
     },
     {
         id: 6,
@@ -60,6 +65,7 @@ const songs = [
             ['The music video is legendary!', 'Oliver'],
             ['A masterpiece!', 'Mia'],
         ],
+        tabulature: [],
     },
     {
         id: 7,
@@ -70,6 +76,7 @@ const songs = [
             ['Such emotion in her voice!', 'Noah'],
             ['Very powerful song!', 'Isabella'],
         ],
+        tabulature: [],
     },
     {
         id: 8,
@@ -80,6 +87,7 @@ const songs = [
             ['So moving!', 'Ella'],
             ['One of the best songs ever!', 'Ethan'],
         ],
+        tabulature: [],
     },
     {
         id: 9,
@@ -90,6 +98,7 @@ const songs = [
             ['Such a peaceful song!', 'Mason'],
             ['Timeless and comforting', 'Amelia'],
         ],
+        tabulature: [],
     },
     {
         id: 10,
@@ -100,6 +109,45 @@ const songs = [
         comments: [
             ['Great vibe!', 'Charlie'],
             ['Perfect for road trips!', 'Lily'],
+        ],
+        tabulature: [],
+    },
+    {
+        id: 11,
+        songTitle: 'Happy Birthday',
+        author: 'unknown',
+        rating: [3, 3, 4, 4, 5, 5],
+        liked: true,
+        comments: [
+            ['Great vibe!', 'Charlie'],
+            ['Perfect for road trips!', 'Lily'],
+        ],
+        tabulature: [
+            [1, 0],
+            [1, 0],
+            [1, 2],
+            [0, 0],
+            [1, 4],
+            [1, 0],
+            [1, 0],
+            [1, 2],
+            [1, 0],
+            [0, 2],
+            [0, 0],
+            [1, 0],
+            [1, 0],
+            [0, 7],
+            [0, 4],
+            [0, 0],
+            [0, 0],
+            [1, 4],
+            [1, 2],
+            [0, 5],
+            [0, 5],
+            [0, 4],
+            [1, 5],
+            [0, 2],
+            [0, 0],
         ],
     },
 ];
