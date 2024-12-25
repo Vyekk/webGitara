@@ -14,8 +14,10 @@ const Slider = ({ max }: ISliderProps) => {
 
     return (
         <div className={styles.slider}>
-            <p>Krok: {value}</p>
-            <input type="range" min="1" max={max + 1} value={value} onChange={handleChange} />
+            <label>
+                Krok: {value}
+                <input type="range" min="1" max={max + 1} value={value} onChange={handleChange} />
+            </label>
         </div>
     );
 };
