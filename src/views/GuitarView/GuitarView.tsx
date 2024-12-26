@@ -14,6 +14,7 @@ const GuitarView = () => {
     const [song, setSong] = useState<Song>(songs[0]);
     const fretboardRef = useRef<HTMLDivElement | null>(null);
     const [currentUrl, setCurrentUrl] = useState(window.location.href);
+    const [currentStep, setCurrentStep] = useState(0);
     const location = useLocation();
     const navigate = useNavigate();
 
@@ -62,6 +63,36 @@ const GuitarView = () => {
         }
     };
 
+    const playSong = (currentStep: number) => {
+        const tabulature = song?.tabulature;
+        if (!tabulature) {
+            return;
+        }
+        const currentTabulature = tabulature[currentStep];
+        if (!currentTabulature) {
+            return;
+        }
+        const [string, fret] = currentTabulature;
+        console.log(`Play string ${string} on fret ${fret}`);
+        playSong(currentStep + 1);
+    };
+
+    const handleClickPlay = () => {
+        playSong(currentStep);
+    };
+
+    const handleClickStop = () => {
+        console.log('Stop button clicked');
+    };
+
+    const handlePreviousStep = () => {
+        setCurrentStep(currentStep - 1);
+    };
+
+    const handleNextStep = () => {
+        setCurrentStep(currentStep + 1);
+    };
+
     return (
         <div>
             <div className={styles.linkWrapper}>
@@ -74,10 +105,15 @@ const GuitarView = () => {
             <div className={styles.fretboard} ref={fretboardRef}></div>
             <Slider max={song.tabulature.length} />
             <div className={styles.songControl}>
-                <Button className={styles.goBackButton} transparent title="Cofnij"></Button>
-                <Button className={styles.playButton} transparent title="Odtwórz"></Button>
-                <Button className={styles.stopButton} transparent title="Stop"></Button>
-                <Button className={styles.forwardButton} transparent title="Naprzód"></Button>
+                <Button
+                    className={styles.goBackButton}
+                    onClick={handlePreviousStep}
+                    transparent
+                    title="Cofnij"
+                ></Button>
+                <Button className={styles.playButton} onClick={handleClickPlay} transparent title="Odtwórz"></Button>
+                <Button className={styles.stopButton} onClick={handleClickStop} transparent title="Stop"></Button>
+                <Button className={styles.forwardButton} onClick={handleNextStep} transparent title="Naprzód"></Button>
             </div>
         </div>
     );
