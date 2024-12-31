@@ -64,6 +64,7 @@ const GuitarView = () => {
     };
 
     const playSong = (currentStep: number) => {
+        let info = ``;
         const tabulature = song?.tabulature;
         if (!tabulature) {
             return;
@@ -72,12 +73,21 @@ const GuitarView = () => {
         if (!currentTabulature) {
             return;
         }
-        const [string, fret] = currentTabulature;
-        console.log(`Play string ${string} on fret ${fret}`);
+        if (currentTabulature.length === 1) {
+            const [[string, fret]] = currentTabulature;
+            info = `Play string ${string} on fret ${fret}\n`;
+        } else {
+            currentTabulature.forEach(([string, fret]) => {
+                info += `Play string ${string} on fret ${fret}\n`;
+            });
+            info += `in the same time\n`;
+        }
+        console.log(info);
         playSong(currentStep + 1);
     };
 
     const handleClickPlay = () => {
+        console.log(currentStep);
         playSong(currentStep);
     };
 
