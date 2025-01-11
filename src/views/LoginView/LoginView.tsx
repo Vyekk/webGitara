@@ -14,6 +14,13 @@ const LoginView = () => {
         e.preventDefault();
         navigate('/play/dashboard');
     };
+
+    const users = [
+        { username: 'user1', password: 'password123' },
+        { username: 'user2', password: 'mysecurepassword' },
+        { username: 'admin', password: 'admin123' },
+    ];
+
     return (
         <Section url={loginPageImage}>
             <div className={styles.wrapper}>
