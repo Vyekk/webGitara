@@ -1,5 +1,5 @@
 import React from 'react';
-import styles from 'components/Form/FormRadio.module.scss';
+import styles from 'components/FormRadio/FormRadio.module.scss';
 
 interface IRadioProps {
     name: string;
