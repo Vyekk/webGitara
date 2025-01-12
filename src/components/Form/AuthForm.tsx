@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import Title from 'components/Title/Title';
-import styles from 'components/Form/Form.module.scss';
+import styles from 'components/Form/AuthForm.module.scss';
 import Input from 'components/Input/Input';
 import Button from 'components/Button/Button';
-import Radio from 'components/Form/FormRadio';
+import Radio from 'components/FormRadio/FormRadio';
 
 const types = {
     login: 'logowanie',
