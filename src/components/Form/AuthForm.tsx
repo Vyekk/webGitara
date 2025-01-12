@@ -10,7 +10,7 @@ const types = {
     register: 'rejestracja',
 };
 
-const Form = ({ submitFn }: any) => {
+const AuthForm = ({ submitFn }: any) => {
     const [activeOption, setActiveOption] = useState(types.login);
     const [isRegistered, setIsRegistered] = useState(false);
 
@@ -92,4 +92,4 @@ const Form = ({ submitFn }: any) => {
     );
 };
 
-export default Form;
+export default AuthForm;
