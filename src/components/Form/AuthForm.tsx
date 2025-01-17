@@ -26,7 +26,14 @@ const AuthForm = ({ submitFn }: any) => {
                     <p className={styles.info}>
                         Konto założone <br /> pomyślnie
                     </p>
-                    <Button onClick={() => setIsRegistered(false)}>Wróć do logowania</Button>
+                    <Button
+                        onClick={() => {
+                            setIsRegistered(false);
+                            setActiveOption(types.login);
+                        }}
+                    >
+                        Wróć do logowania
+                    </Button>
                 </>
             ) : (
                 <>
@@ -82,9 +89,7 @@ const AuthForm = ({ submitFn }: any) => {
                                 </div>
                             ) : null}
                         </div>
-                        <Button type="submit" onSubmit={handleRegister}>
-                            {activeOption === types.login ? 'Zaloguj' : 'Zarejestruj'}
-                        </Button>
+                        <Button type="submit">{activeOption === types.login ? 'Zaloguj' : 'Zarejestruj'}</Button>
                     </form>
                 </>
             )}
