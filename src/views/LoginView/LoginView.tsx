@@ -7,6 +7,7 @@ import loginPageImage from 'assets/login-page-background.png';
 import styles from 'views/LoginView/LoginView.module.scss';
 import Modal from 'components/Modal/Modal';
 import AuthForm from 'components/Form/AuthForm';
+import Button from 'components/Button/Button';
 
 interface User {
     username: string;
@@ -14,12 +15,23 @@ interface User {
 }
 
 const LoginView = () => {
+    const [incorrectData, setIncorrectData] = React.useState(false);
     const navigate = useNavigate();
     const users: User[] = [
         { username: 'user1', password: 'password123' },
         { username: 'user2', password: 'mysecurepassword' },
         { username: 'admin', password: 'admin123' },
     ];
+
+    const authError = (
+        <div className={styles.authError}>
+            <p>Nieprawidłowe dane logowania</p>
+            <p>Aby spróbować jeszcze raz, kliknij przycisk poniżej</p>
+            <Button isDark onClick={() => setIncorrectData(false)}>
+                OK
+            </Button>
+        </div>
+    );
 
     const handleLogin = (e: React.MouseEvent<HTMLButtonElement>, user: User) => {
         // Symulacja logowania
@@ -29,7 +41,7 @@ const LoginView = () => {
             localStorage.setItem('user', JSON.stringify({ username: user.username }));
             navigate('/play/dashboard');
         } else {
-            alert('Nieprawidłowe dane logowania');
+            setIncorrectData(true);
         }
     };
 
@@ -38,9 +50,7 @@ const LoginView = () => {
             <div className={styles.wrapper}>
                 <Logo />
                 <Link to="/">&lt; Wróć do strony głównej</Link>
-                <Modal>
-                    <AuthForm submitFn={handleLogin} />
-                </Modal>
+                <Modal>{!incorrectData ? <AuthForm submitFn={handleLogin} /> : authError}</Modal>
             </div>
         </Section>
     );
