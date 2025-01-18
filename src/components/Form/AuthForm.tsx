@@ -13,10 +13,18 @@ const types = {
 const AuthForm = ({ submitFn }: any) => {
     const [activeOption, setActiveOption] = useState(types.login);
     const [isRegistered, setIsRegistered] = useState(false);
+    const [username, setUsername] = useState('');
+    const [password, setPassword] = useState('');
 
     const handleRegister = () => {
         // Tutaj powinna być logika rejestracji
         setIsRegistered(true);
+    };
+
+    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        const user = { username, password };
+        submitFn(e, user);
     };
 
     return (
@@ -39,7 +47,10 @@ const AuthForm = ({ submitFn }: any) => {
                 <>
                     {activeOption === types.login ? <Title>Zaloguj się</Title> : <Title>Zarejestruj się</Title>}
                     {activeOption === types.login ? <p>i kontynuuj praktykę</p> : <p>i wkrocz do świata muzyki</p>}
-                    <form className={styles.form} onSubmit={activeOption == types.login ? submitFn : handleRegister}>
+                    <form
+                        className={styles.form}
+                        onSubmit={activeOption == types.login ? handleSubmit : handleRegister}
+                    >
                         <div className={styles.radioWrapper}>
                             <Radio
                                 name="formType"
@@ -56,8 +67,10 @@ const AuthForm = ({ submitFn }: any) => {
                         </div>
                         <div className={styles.inputWrapper}>
                             <div className={styles.loginPasswordWrapper}>
-                                <Input id="login">Login</Input>
-                                <Input id="password" type="password">
+                                <Input id="login" onChange={(e) => setUsername(e.target.value)}>
+                                    Login
+                                </Input>
+                                <Input id="password" type="password" onChange={(e) => setPassword(e.target.value)}>
                                     Hasło
                                 </Input>
                                 {activeOption !== types.login ? (
