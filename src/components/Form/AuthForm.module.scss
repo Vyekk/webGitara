@@ -6,12 +6,29 @@
 .agreement:last-child {
     margin-top: 10px;
 }
+.agreement {
+    display: flex;
+    align-items: start;
+    gap: 8px;
+}
+
+.agreement input[type="checkbox"] {
+    margin: 4px 0 0;
+}
+
+.agreement label {
+    display: inline;
+}
+
 .inputWrapper {
     display: flex;
     flex-wrap: wrap;
+    flex-direction: column;
     justify-content: space-between;
 }
-
+.loginPasswordWrapper input{
+    width: 100%;
+}
 .loginPasswordWrapper {
     display: flex;
     flex-basis: 30%;
@@ -19,9 +36,9 @@
     margin: 10px 0 0;
 }
 .approvalWrapper {
-    font-size: 0.8em;
-    flex-basis: 60%;
-    margin-bottom: 1em;
+    font-size: 0.7em;
+    width: 100%;
+    margin: 20px 0;
 }
 .labelRadio {
     font-size: 0.7em;
@@ -32,4 +49,8 @@
 
 .info {
     margin-bottom: 10px;
+}
+
+.wrapper {
+    max-width: 300px; // Constrain the modal width
 }
