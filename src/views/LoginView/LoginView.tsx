@@ -28,7 +28,7 @@ const LoginView = () => {
             <p>Nieprawidłowe dane logowania</p>
             <p>Aby spróbować jeszcze raz, kliknij przycisk poniżej</p>
             <Button isDark onClick={() => setIncorrectData(false)}>
-                Powrót do logowania
+                &lt; Powrót do logowania
             </Button>
         </div>
     );
@@ -49,7 +49,7 @@ const LoginView = () => {
         <Section url={loginPageImage}>
             <div className={styles.wrapper}>
                 <Logo />
-                <Link to="/">&lt; Wróć do strony głównej</Link>
+                <Link to="/"> &lt; wróć do strony głównej</Link>
                 <Modal>{!incorrectData ? <AuthForm submitFn={handleLogin} /> : authError}</Modal>
             </div>
         </Section>
