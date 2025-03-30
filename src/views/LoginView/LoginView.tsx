@@ -28,7 +28,7 @@ const LoginView = () => {
             <p>Nieprawidłowe dane logowania</p>
             <p>Aby spróbować jeszcze raz, kliknij przycisk poniżej</p>
             <Button isDark onClick={() => setIncorrectData(false)}>
-                OK
+                Powrót do logowania
             </Button>
         </div>
     );
