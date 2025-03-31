@@ -1,4 +1,4 @@
-import { ReactNode } from 'react';
+import { ReactNode, forwardRef } from 'react';
 import styles from 'components/Modal/Modal.module.scss';
 
 interface IModalProps {
@@ -7,15 +7,17 @@ interface IModalProps {
     onClose?: () => void;
 }
 
-const Modal = ({ children, isMax, onClose }: IModalProps) => (
-    <div className={`${styles.wrapper} ${onClose ? styles.closeableWrapper : ''} ${isMax ? styles.max : ''}`}>
+const Modal = forwardRef<HTMLDivElement, IModalProps>(({ children, isMax, onClose }, ref) => (
+    <div ref={ref} className={`${styles.wrapper} ${onClose ? styles.closeableWrapper : ''} ${isMax ? styles.max : ''}`}>
         {children}
-        {onClose ? (
+        {onClose && (
             <button className={styles.closeButton} onClick={onClose}>
                 X
             </button>
-        ) : null}
+        )}
     </div>
-);
+));
+
+Modal.displayName = 'Modal';
 
 export default Modal;
