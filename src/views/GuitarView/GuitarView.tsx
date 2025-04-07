@@ -63,16 +63,17 @@ const GuitarView = () => {
         }
     };
 
-    const playSong = (currentStep: number) => {
-        let info = ``;
+    const getCurrentStepInfo = (currentStep: number) => {
         const tabulature = song?.tabulature;
         if (!tabulature) {
-            return;
+            throw new Error('No tabulature available for the song.');
         }
         const currentTabulature = tabulature[currentStep];
         if (!currentTabulature) {
-            return;
+            throw new Error(`No tabulature found for step ${currentStep}.`);
         }
+
+        let info = '';
         if (currentTabulature.length === 1) {
             const [[string, fret]] = currentTabulature;
             info = `Play string ${string} on fret ${fret}\n`;
@@ -82,8 +83,17 @@ const GuitarView = () => {
             });
             info += `in the same time\n`;
         }
-        console.log(info);
-        playSong(currentStep + 1);
+        return info;
+    };
+
+    const playSong = (currentStep: number) => {
+        try {
+            const info = getCurrentStepInfo(currentStep);
+            console.log(info);
+            playSong(currentStep + 1);
+        } catch (error) {
+            return;
+        }
     };
 
     const handleClickPlay = () => {
@@ -103,6 +113,10 @@ const GuitarView = () => {
         setCurrentStep(currentStep + 1);
     };
 
+    const handleSliderChange = (value: number) => {
+        setCurrentStep(value);
+    };
+
     return (
         <div>
             <div className={styles.linkWrapper}>
@@ -113,7 +127,7 @@ const GuitarView = () => {
             </div>
             <Toolbar />
             <div className={styles.fretboard} ref={fretboardRef}></div>
-            <Slider max={song.tabulature.length} />
+            <Slider max={song.tabulature.length} onChange={handleSliderChange} />
             <div className={styles.songControl}>
                 <Button
                     className={styles.goBackButton}
