@@ -97,7 +97,6 @@ const GuitarView = () => {
     };
 
     const handleClickPlay = () => {
-        console.log(currentStep);
         playSong(currentStep);
     };
 
@@ -115,6 +114,7 @@ const GuitarView = () => {
 
     const handleSliderChange = (value: number) => {
         setCurrentStep(value);
+        console.log(getCurrentStepInfo(value));
     };
 
     return (
