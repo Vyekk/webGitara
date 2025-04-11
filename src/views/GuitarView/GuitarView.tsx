@@ -26,6 +26,10 @@ const GuitarView = () => {
         setCurrentUrl(location.pathname);
     }, [location]);
 
+    useEffect(() => {
+        console.log(getCurrentStepInfo(currentStep));
+    }, [currentStep]);
+
     const setupSong = () => {
         const fetchSong = async () => {
             const songId = currentUrl.split('/').pop();
@@ -105,16 +109,15 @@ const GuitarView = () => {
     };
 
     const handlePreviousStep = () => {
-        setCurrentStep(currentStep - 1);
+        setCurrentStep((prevStep) => Math.max(prevStep - 1, 0));
     };
 
     const handleNextStep = () => {
-        setCurrentStep(currentStep + 1);
+        setCurrentStep((prevStep) => Math.min(prevStep + 1, song.tabulature.length - 1));
     };
 
     const handleSliderChange = (value: number) => {
         setCurrentStep(value);
-        console.log(getCurrentStepInfo(value));
     };
 
     return (
@@ -127,7 +130,7 @@ const GuitarView = () => {
             </div>
             <Toolbar />
             <div className={styles.fretboard} ref={fretboardRef}></div>
-            <Slider max={song.tabulature.length} onChange={handleSliderChange} />
+            <Slider max={song.tabulature.length} value={currentStep} onChange={handleSliderChange} />
             <div className={styles.songControl}>
                 <Button
                     className={styles.goBackButton}

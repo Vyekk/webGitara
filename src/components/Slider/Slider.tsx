@@ -1,18 +1,22 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styles from 'components/Slider/Slider.module.scss';
 
 interface ISliderProps {
     max: number;
+    value: number;
     onChange: (value: number) => void;
 }
 
-const Slider = ({ max, onChange }: ISliderProps) => {
-    const [value, setValue] = useState(1); // Początkowa wartość slidera
+const Slider = ({ max, value: externalValue, onChange }: ISliderProps) => {
+    const [value, setValue] = useState(externalValue + 1);
+
+    useEffect(() => {
+        setValue(externalValue + 1);
+    }, [externalValue]);
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const newValue = Number(event.target.value);
         setValue(newValue);
-        console.log('wartość value:', newValue - 1);
         onChange(newValue - 1);
     };
 
