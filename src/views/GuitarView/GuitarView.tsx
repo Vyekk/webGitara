@@ -26,6 +26,7 @@ const GuitarView = () => {
 
     useEffect(() => {
         setCurrentUrl(location.pathname);
+        setCurrentStep(0);
     }, [location]);
 
     useEffect(() => {
