@@ -15,8 +15,10 @@ const GuitarView = () => {
     const fretboardRef = useRef<HTMLDivElement | null>(null);
     const [currentUrl, setCurrentUrl] = useState(window.location.href);
     const [currentStep, setCurrentStep] = useState(0);
+    const [isInitialized, setIsInitialized] = useState(false);
     const location = useLocation();
     const navigate = useNavigate();
+    const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
     useEffect(() => {
         setupSong();
@@ -27,6 +29,10 @@ const GuitarView = () => {
     }, [location]);
 
     useEffect(() => {
+        if (!isInitialized) {
+            setIsInitialized(true);
+            return;
+        }
         console.log(getCurrentStepInfo(currentStep));
     }, [currentStep]);
 
@@ -90,22 +96,31 @@ const GuitarView = () => {
         return info;
     };
 
-    const playSong = (currentStep: number) => {
-        try {
-            const info = getCurrentStepInfo(currentStep);
-            console.log(info);
-            playSong(currentStep + 1);
-        } catch (error) {
-            return;
+    const playSong = () => {
+        if (intervalRef.current) {
+            clearInterval(intervalRef.current);
         }
+
+        intervalRef.current = setInterval(() => {
+            setCurrentStep((prevStep) => {
+                if (prevStep + 1 >= song.tabulature.length) {
+                    clearInterval(intervalRef.current!);
+                    return prevStep;
+                }
+                return prevStep + 1;
+            });
+        }, 1000);
     };
 
     const handleClickPlay = () => {
-        playSong(currentStep);
+        playSong();
     };
 
     const handleClickStop = () => {
-        console.log('Stop button clicked');
+        if (intervalRef.current) {
+            clearInterval(intervalRef.current);
+            intervalRef.current = null;
+        }
     };
 
     const handlePreviousStep = () => {
