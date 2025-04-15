@@ -11,29 +11,38 @@ import { Link } from 'react-router-dom';
 const GuitarView = () => {
     const songsData = localStorage.getItem('songs');
     const songs = songsData ? JSON.parse(songsData) : [];
-    const [song, setSong] = useState<Song>(songs[0]);
     const fretboardRef = useRef<HTMLDivElement | null>(null);
     const [currentUrl, setCurrentUrl] = useState(window.location.href);
     const [currentStep, setCurrentStep] = useState(0);
-    const [isInitialized, setIsInitialized] = useState(false);
     const location = useLocation();
     const navigate = useNavigate();
     const intervalRef = useRef<NodeJS.Timeout | null>(null);
+    const [song, setSong] = useState<Song>(() => {
+        const songId = currentUrl.split('/').pop();
+        return songs.find((song: Song) => song.id === Number(songId)) || null;
+    });
+    const [initialized, setInitialized] = useState(false);
 
     useEffect(() => {
         setupSong();
     }, [currentUrl]);
+
+    // Inicjalizacja fretboardu po załadowaniu komponentu
+    useEffect(() => {
+        if (!initialized) {
+            setInitialized(true);
+            return;
+        }
+        console.log(getCurrentStepInfo(0));
+    }, [song]);
 
     useEffect(() => {
         setCurrentUrl(location.pathname);
         setCurrentStep(0);
     }, [location]);
 
+    // Ustawienie fretboardu po zmianie kroku
     useEffect(() => {
-        if (!isInitialized) {
-            setIsInitialized(true);
-            return;
-        }
         console.log(getCurrentStepInfo(currentStep));
     }, [currentStep]);
 
@@ -46,9 +55,9 @@ const GuitarView = () => {
                 return;
             }
             setSong(song);
+            setupFretboard();
         };
         fetchSong();
-        setupFretboard();
     };
 
     const setupFretboard = () => {
