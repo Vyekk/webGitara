@@ -85,12 +85,12 @@ const GuitarView = () => {
 
     const getCurrentStepInfo = (currentStep: number) => {
         const tabulature = song?.tabulature;
-        if (!tabulature) {
-            throw new Error('No tabulature available for the song.');
+        if (!tabulature || tabulature.length === 0) {
+            return null;
         }
         const currentTabulature = tabulature[currentStep];
         if (!currentTabulature) {
-            throw new Error(`No tabulature found for step ${currentStep}.`);
+            return null;
         }
 
         let info = '';
@@ -107,6 +107,11 @@ const GuitarView = () => {
     };
 
     const playSong = () => {
+        if (!song?.tabulature || song.tabulature.length === 0) {
+            console.warn('Play is not possible: No tabulature available for the song.');
+            return;
+        }
+
         if (intervalRef.current) {
             clearInterval(intervalRef.current);
         }
