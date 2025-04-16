@@ -4,9 +4,9 @@ import { useEffect, useRef, useState } from 'react';
 import { Song } from 'types';
 import styles from 'views/GuitarView/GuitarView.module.scss';
 import { useLocation, useNavigate } from 'react-router-dom';
-import Button from 'components/Button/Button';
 import Slider from 'components/Slider/Slider';
 import { Link } from 'react-router-dom';
+import SongControl from 'components/SongControl/SongControl';
 
 const GuitarView = () => {
     const songsData = localStorage.getItem('songs');
@@ -176,17 +176,12 @@ const GuitarView = () => {
             <Toolbar />
             <div className={styles.fretboard} ref={fretboardRef}></div>
             <Slider max={song.tabulature.length} value={currentStep} onChange={handleSliderChange} />
-            <div className={styles.songControl}>
-                <Button
-                    className={styles.goBackButton}
-                    onClick={handlePreviousStep}
-                    transparent
-                    title="Cofnij"
-                ></Button>
-                <Button className={styles.playButton} onClick={handleClickPlay} transparent title="Odtwórz"></Button>
-                <Button className={styles.stopButton} onClick={handleClickStop} transparent title="Stop"></Button>
-                <Button className={styles.forwardButton} onClick={handleNextStep} transparent title="Naprzód"></Button>
-            </div>
+            <SongControl
+                onGoBack={handlePreviousStep}
+                onPlay={handleClickPlay}
+                onStop={handleClickStop}
+                onForward={handleNextStep}
+            />
         </div>
     );
 };
