@@ -185,3 +185,12 @@
         background: $primary-color;
     }
 }
+
+.playButton.activeControl {
+    border-left-color: $primary-color;
+}
+
+.activeControl:before,
+.activeControl:after {
+    background: $primary-color !important;
+}
