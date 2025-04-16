@@ -21,7 +21,8 @@ const GuitarView = () => {
         const songId = currentUrl.split('/').pop();
         return songs.find((song: Song) => song.id === Number(songId)) || null;
     });
-    const [initialized, setInitialized] = useState(false);
+    const [isFretboardInitialized, setIsFretboardInitialized] = useState(false);
+    const [isPlaybackInitialized, setIsPlaybackInitialized] = useState(false);
 
     useEffect(() => {
         setupSong();
@@ -29,8 +30,8 @@ const GuitarView = () => {
 
     // Inicjalizacja fretboardu po załadowaniu komponentu
     useEffect(() => {
-        if (!initialized) {
-            setInitialized(true);
+        if (!isFretboardInitialized) {
+            setIsFretboardInitialized(true);
             return;
         }
         console.log(getCurrentStepInfo(0));
@@ -43,7 +44,9 @@ const GuitarView = () => {
 
     // Ustawienie fretboardu po zmianie kroku
     useEffect(() => {
-        console.log(getCurrentStepInfo(currentStep));
+        if (isPlaybackInitialized) {
+            console.log(getCurrentStepInfo(currentStep));
+        }
     }, [currentStep]);
 
     const setupSong = () => {
@@ -112,6 +115,11 @@ const GuitarView = () => {
             return;
         }
 
+        if (currentStep === 0) {
+            // Wyświetlenie pierwszego kroku w sekwencji
+            console.log(getCurrentStepInfo(currentStep));
+        }
+
         if (intervalRef.current) {
             clearInterval(intervalRef.current);
         }
@@ -128,6 +136,7 @@ const GuitarView = () => {
     };
 
     const handleClickPlay = () => {
+        setIsPlaybackInitialized(true);
         playSong();
     };
 
