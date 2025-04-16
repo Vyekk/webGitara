@@ -156,6 +156,12 @@ const GuitarView = () => {
     };
 
     const handleSliderChange = (value: number) => {
+        setIsPlaybackInitialized((prev) => {
+            if (!prev) {
+                return true;
+            }
+            return prev;
+        });
         setCurrentStep(value);
     };
 
