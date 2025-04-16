@@ -10,21 +10,16 @@ interface SongControlProps {
 }
 
 const SongControl = ({ onGoBack, onPlay, onStop, onForward }: SongControlProps) => {
-    const [activeButton, setActiveButton] = useState<string | null>(null);
+    const [activeButton, setActiveButton] = useState<'play' | 'stop' | null>(null);
 
-    const handleButtonClick = (buttonName: string, action: () => void) => {
+    const handleButtonClick = (buttonName: 'play' | 'stop', action: () => void) => {
         setActiveButton(buttonName);
         action();
     };
 
     return (
         <div className={styles.songControl}>
-            <Button
-                className={`${styles.goBackButton} ${activeButton === 'goBack' ? styles.activeControl : ''}`}
-                onClick={() => handleButtonClick('goBack', onGoBack)}
-                transparent
-                title="Cofnij"
-            ></Button>
+            <Button className={styles.goBackButton} onClick={onGoBack} transparent title="Cofnij"></Button>
             <Button
                 className={`${styles.playButton} ${activeButton === 'play' ? styles.activeControl : ''}`}
                 onClick={() => handleButtonClick('play', onPlay)}
@@ -37,12 +32,7 @@ const SongControl = ({ onGoBack, onPlay, onStop, onForward }: SongControlProps) 
                 transparent
                 title="Stop"
             ></Button>
-            <Button
-                className={`${styles.forwardButton} ${activeButton === 'forward' ? styles.activeControl : ''}`}
-                onClick={() => handleButtonClick('forward', onForward)}
-                transparent
-                title="Naprzód"
-            ></Button>
+            <Button className={styles.forwardButton} onClick={onForward} transparent title="Naprzód"></Button>
         </div>
     );
 };
