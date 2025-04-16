@@ -13,8 +13,8 @@ const SongControl = ({ onGoBack, onPlay, onStop, onForward }: SongControlProps) 
     const [activeButton, setActiveButton] = useState<string | null>(null);
 
     const handleButtonClick = (buttonName: string, action: () => void) => {
-        setActiveButton(buttonName); // Set the clicked button as active
-        action(); // Execute the corresponding action
+        setActiveButton(buttonName);
+        action();
     };
 
     return (
