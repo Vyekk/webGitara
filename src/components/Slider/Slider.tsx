@@ -23,7 +23,7 @@ const Slider = ({ max, value: externalValue, onChange }: ISliderProps) => {
     return (
         <div className={styles.slider}>
             <label>
-                Krok: {value}
+                Krok: {value !== 0 ? value : value + 1}
                 <input type="range" min="1" max={max} value={value} onChange={handleChange} />
             </label>
         </div>
