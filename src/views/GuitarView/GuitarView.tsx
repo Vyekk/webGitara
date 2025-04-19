@@ -127,7 +127,9 @@ const GuitarView = () => {
         intervalRef.current = setInterval(() => {
             setCurrentStep((prevStep) => {
                 if (prevStep + 1 >= song.tabulature.length) {
-                    clearInterval(intervalRef.current!);
+                    if (intervalRef.current) {
+                        clearInterval(intervalRef.current);
+                    }
                     return prevStep;
                 }
                 return prevStep + 1;
