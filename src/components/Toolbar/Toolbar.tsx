@@ -1,6 +1,7 @@
 import Button from 'components/Button/Button';
 import styles from 'components/Toolbar/Toolbar.module.scss';
-import settingsIcon from 'assets/settings-icon.png';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faBook, faGear } from '@fortawesome/free-solid-svg-icons';
 import { ModalContext } from 'components/Modal/ModalContext';
 import { ReactNode, useContext } from 'react';
 import { MainMenu } from 'components/MainMenu/MainMenu';
@@ -26,11 +27,13 @@ const Toolbar = ({ hasControls }: ToolbarProps) => {
             <Button className={styles.secondOption} href="../new" transparent>
                 Nowy utwór
             </Button>
-            <Button className={styles.playButton} onClick={() => handleOpenModal(<MainMenu />)} circle>
-                <div className={styles.playIcon}></div>
+            <Button className={styles.libraryButton} onClick={() => handleOpenModal(<MainMenu />)} circle>
+                <div className={styles.libraryIcon}>
+                    <FontAwesomeIcon icon={faBook} />
+                </div>
             </Button>
             <Button className={styles.secondOption} onClick={() => handleOpenModal(<Settings />)} transparent>
-                <img className={styles.settingsIcon} src={settingsIcon} alt="settings" />
+                <FontAwesomeIcon icon={faGear} className={styles.settingsIcon} />
             </Button>
             <Button className={styles.secondOption} href="/login" transparent>
                 Wyloguj się
