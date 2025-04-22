@@ -2,16 +2,12 @@ import Logo from 'components/Logo/Logo';
 import Modal from 'components/Modal/Modal';
 import { SongsList } from 'components/SongsList/SongsList';
 import Title from 'components/Title/Title';
-import Toolbar from 'components/Toolbar/Toolbar';
 import { useEffect, useState } from 'react';
 import { Song } from 'types';
 import styles from 'views/DashboardView/Dashboard.module.scss';
 
 const DashboardView = () => {
     const [bestSongsList, setBestSongsList] = useState<Song[]>([]);
-    const showModal = () => {
-        console.log('Show modal');
-    };
 
     const fetchSongsUserStorge = async () => {
         const songsData = localStorage.getItem('songs');
@@ -25,7 +21,6 @@ const DashboardView = () => {
 
     return (
         <>
-            <Toolbar handleShowModal={showModal} />
             <div className={styles.wrapper}>
                 <Logo />
                 <div className={styles.dashboardContentWrapper}>

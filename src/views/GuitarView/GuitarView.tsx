@@ -1,5 +1,4 @@
 import Title from 'components/Title/Title';
-import Toolbar from 'components/Toolbar/Toolbar';
 import { useEffect, useRef, useState } from 'react';
 import { Song } from 'types';
 import styles from 'views/GuitarView/GuitarView.module.scss';
@@ -175,7 +174,6 @@ const GuitarView = () => {
             <div className={styles.wrapper}>
                 <Title>{`${song?.songTitle} - ${song?.author}`}</Title>
             </div>
-            <Toolbar />
             <div className={styles.fretboard} ref={fretboardRef}></div>
             <Slider max={song.tabulature.length} value={currentStep} onChange={handleSliderChange} />
             <SongControl

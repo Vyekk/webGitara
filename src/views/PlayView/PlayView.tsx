@@ -6,6 +6,7 @@ import DashboardView from 'views/DashboardView/DashboardView';
 import { GuitarView } from 'views/GuitarView/GuitarView';
 import Modal from 'components/Modal/Modal';
 import { ModalContext } from 'components/Modal/ModalContext';
+import Toolbar from 'components/Toolbar/Toolbar';
 
 const PlayView: React.FC = () => {
     const { isModalOpen, closeModal, modalContent } = useContext(ModalContext);
@@ -38,6 +39,7 @@ const PlayView: React.FC = () => {
                 <Route path="guitar" element={<Navigate to="1" replace />} />
                 <Route path="guitar/:id" element={<GuitarView />} />
             </Routes>
+            <Toolbar />
         </Section>
     );
 };
