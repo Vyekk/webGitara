@@ -3,56 +3,68 @@
 .fretboard {
     display: flex;
     flex-direction: column;
-    background: #be975b url(/assets/wood-pattern.png);
+    background: #c79d5e;
     width: 100%;
     min-width: 1500px;
-    height: calc(var(--fretboard-height) * 1px);
+    height: #{$fretboard-height}px;
 }
+
 .string {
     width: 100%;
     height: 100%;
     display: flex;
     position: relative;
+
+    @for $i from 1 through length($string-colors) {
+        &:nth-child(#{$i}) {
+            .noteFret::before {
+                background: nth($string-colors, $i);
+            }
+        }
+    }
+
+    &::before {
+        content: '';
+        width: 100%;
+        height: #{$string-height}px;
+        background: linear-gradient(#eee, #999);
+        box-shadow: 76px 3px 10px #806233;
+        z-index: 1;
+        position: absolute;
+        top: #{$string-top-position}px;
+    }
 }
-.string:before {
-    content: '';
-    width: 100%;
-    height: calc(var(--string-height) * 1px);
-    background: linear-gradient(#eee, #999);
-    box-shadow: 76px 3px 10px #806233;
-    z-index: 1;
-    position: absolute;
-    top: 22px;
-    top: calc(var(--string-top-position) * 1px);
-}
+
 .noteFret {
     display: flex;
     flex: 1;
-    border-right: 10px solid;
-    border-image: linear-gradient(to left, #777, #bbb, #777) 1 100%;
     justify-content: center;
     align-items: center;
     position: relative;
-}
-.noteFret:first-child {
-    background: #161717;
-    min-width: 76px;
-    border-right: 12px solid;
-    flex-grow: 0;
-    flex-shrink: 0;
-    border-image: linear-gradient(to left, #bbb, #fff, #bbb) 1 100%;
-}
-.noteFret:before {
-    content: attr(data-note);
-    width: 33px;
-    height: 33px;
-    border-radius: 50%;
-    line-height: 33px;
-    text-align: center;
-    background: teal;
-    z-index: 2;
-    color: #eee;
-    opacity: var(--noteDotOpacity);
+    border-right: 10px solid;
+    border-image: linear-gradient(to left, #777, #bbb, #777) 1 100%;
+
+    &:first-child {
+        background: #161717;
+        min-width: 76px;
+        flex-grow: 0;
+        flex-shrink: 0;
+        border-right: 12px solid;
+        border-image: linear-gradient(to left, #bbb, #fff, #bbb) 1 100%;
+    }
+
+    &::before {
+        content: attr(data-note);
+        width: 33px;
+        height: 33px;
+        border-radius: 50%;
+        line-height: 33px;
+        text-align: center;
+        background: teal;
+        z-index: 2;
+        color: #eee;
+        opacity: $note-dot-opacity;
+    }
 }
 
 .wrapper {
@@ -61,18 +73,18 @@
 
 .linkWrapper {
     padding: 2em 3em 0;
+
     a {
-        color:  $white;
+        color: $white;
     }
 }
 
 .songControl {
     display: flex;
     justify-content: center;
-    margin-top: 3em;
-    gap: 5em;
     align-items: center;
-    margin-bottom: 1em;
+    margin: 3em 0 1em;
+    gap: 5em;
 }
 
 .playButton {
@@ -86,9 +98,15 @@
     &:hover {
         border-left-color: $primary-color;
     }
+
+    &.activeControl {
+        border-left-color: $primary-color;
+    }
 }
 
-.goBackButton {
+.goBackButton,
+.forwardButton,
+.stopButton {
     position: relative;
     width: 30px;
     height: 30px;
@@ -101,6 +119,12 @@
         position: absolute;
         top: 50%;
         transform: translateY(-50%);
+    }
+}
+
+.goBackButton {
+    &:before,
+    &:after {
         border-top: 10px solid transparent;
         border-bottom: 10px solid transparent;
     }
@@ -122,18 +146,8 @@
 }
 
 .forwardButton {
-    position: relative;
-    width: 30px;
-    height: 30px;
-    background: transparent;
-    cursor: pointer;
-
     &:before,
     &:after {
-        content: '';
-        position: absolute;
-        top: 50%;
-        transform: translateY(-50%);
         border-top: 10px solid transparent;
         border-bottom: 10px solid transparent;
     }
@@ -155,18 +169,8 @@
 }
 
 .stopButton {
-    position: relative;
-    width: 30px;
-    height: 30px;
-    background: transparent;
-    cursor: pointer;
-
     &:before,
     &:after {
-        content: '';
-        position: absolute;
-        top: 50%;
-        transform: translateY(-50%);
         width: 6px;
         height: 25px;
         background: white;
@@ -186,11 +190,9 @@
     }
 }
 
-.playButton.activeControl {
-    border-left-color: $primary-color;
-}
-
-.activeControl:before,
-.activeControl:after {
-    background: $primary-color !important;
+.activeControl {
+    &:before,
+    &:after {
+        background: $primary-color !important;
+    }
 }
