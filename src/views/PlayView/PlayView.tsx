@@ -10,13 +10,19 @@ import Toolbar from 'components/Toolbar/Toolbar';
 
 const PlayView: React.FC = () => {
     const { isModalOpen, closeModal, modalContent } = useContext(ModalContext);
+    const toolbarRef = useRef<HTMLDivElement | null>(null);
     const modalRef = useRef<HTMLDivElement | null>(null);
 
     useEffect(() => {
         if (!isModalOpen || !closeModal) return;
 
         const handleClickOutside = (event: MouseEvent) => {
-            if (modalRef.current && !modalRef.current.contains(event.target as Node)) {
+            if (
+                modalRef.current &&
+                !modalRef.current.contains(event.target as Node) &&
+                toolbarRef.current &&
+                !toolbarRef.current.contains(event.target as Node)
+            ) {
                 closeModal();
             }
         };
@@ -39,7 +45,7 @@ const PlayView: React.FC = () => {
                 <Route path="guitar" element={<Navigate to="1" replace />} />
                 <Route path="guitar/:id" element={<GuitarView />} />
             </Routes>
-            <Toolbar />
+            <Toolbar ref={toolbarRef} />
         </Section>
     );
 };
