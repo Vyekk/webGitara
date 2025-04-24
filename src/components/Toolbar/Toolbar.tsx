@@ -3,26 +3,28 @@ import styles from 'components/Toolbar/Toolbar.module.scss';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBook, faGear } from '@fortawesome/free-solid-svg-icons';
 import { ModalContext } from 'components/Modal/ModalContext';
-import { ReactNode, useContext } from 'react';
+import { ReactNode, useContext, forwardRef } from 'react';
 import { MainMenu } from 'components/MainMenu/MainMenu';
 import { Settings } from 'components/Settings/Settings';
 
-type ToolbarProps = {
+interface ToolbarProps {
     hasControls?: boolean;
     handleShowModal?: () => void;
-};
+}
 
-const Toolbar = ({ hasControls }: ToolbarProps) => {
+const Toolbar = forwardRef<HTMLDivElement, ToolbarProps>(({ hasControls }, ref) => {
     const { openModal, setModal } = useContext(ModalContext);
+    const isModalOpen = useContext(ModalContext).isModalOpen;
 
     const handleOpenModal = (content: ReactNode) => {
+        if (isModalOpen) return;
         const modalContent = content;
         setModal(modalContent);
         openModal();
     };
 
     return (
-        <div className={styles.wrapper}>
+        <div ref={ref} className={styles.wrapper}>
             {hasControls && <Button isDark>BPM</Button>}
             <Button className={styles.secondOption} href="../new" transparent>
                 Nowy utwór
@@ -40,6 +42,8 @@ const Toolbar = ({ hasControls }: ToolbarProps) => {
             </Button>
         </div>
     );
-};
+});
+
+Toolbar.displayName = 'Toolbar';
 
 export default Toolbar;
