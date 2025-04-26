@@ -12,8 +12,5 @@
     font-size: 2em;
 }
 .activeControl {
-    &:before,
-    &:after {
-        background: $primary-color;
-    }
+    color: $primary-color;
 }
