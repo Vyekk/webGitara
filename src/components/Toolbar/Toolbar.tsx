@@ -14,10 +14,8 @@ interface ToolbarProps {
 
 const Toolbar = forwardRef<HTMLDivElement, ToolbarProps>(({ hasControls }, ref) => {
     const { openModal, setModal } = useContext(ModalContext);
-    const isModalOpen = useContext(ModalContext).isModalOpen;
 
     const handleOpenModal = (content: ReactNode) => {
-        if (isModalOpen) return;
         const modalContent = content;
         setModal(modalContent);
         openModal();
