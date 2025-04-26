@@ -22,6 +22,8 @@ const GuitarView = () => {
     });
     const [isFretboardInitialized, setIsFretboardInitialized] = useState(false);
     const [isPlaybackInitialized, setIsPlaybackInitialized] = useState(false);
+    const singleFretMarkPositions = [3, 5, 7, 9, 15, 17, 19, 21];
+    const doubleFretMarkPositions = [12, 24];
 
     useEffect(() => {
         setupSong();
@@ -64,25 +66,42 @@ const GuitarView = () => {
 
     const setupFretboard = () => {
         const fretboard = fretboardRef.current;
-        if (!fretboard) {
-            return; // Wyjdź jeśli fretboard nie jest dostępny
-        }
+        if (!fretboard) return;
+
         fretboard.innerHTML = '';
+
         const numberOfStrings = 6;
         const numberOfFrets = 12;
-        // Dodaj struny do fretboard
+
+        const fragment = document.createDocumentFragment();
+
         for (let i = 0; i < numberOfStrings; i++) {
             const string = document.createElement('div');
             string.classList.add(styles.string);
-            fretboard.appendChild(string);
 
-            // Stwórz progi
-            for (let fret = 0; fret <= numberOfFrets; fret++) {
+            for (let fretNumber = 0; fretNumber <= numberOfFrets; fretNumber++) {
                 const noteFret = document.createElement('div');
                 noteFret.classList.add(styles.noteFret);
+
+                if (i === 0) {
+                    if (singleFretMarkPositions.includes(fretNumber)) {
+                        noteFret.classList.add(styles.singleFretmark);
+                    }
+
+                    if (doubleFretMarkPositions.includes(fretNumber)) {
+                        const doubleFretMark = document.createElement('div');
+                        doubleFretMark.classList.add(styles.doubleFretmark);
+                        noteFret.appendChild(doubleFretMark);
+                    }
+                }
+
                 string.appendChild(noteFret);
             }
+
+            fragment.appendChild(string);
         }
+
+        fretboard.appendChild(fragment);
     };
 
     const getCurrentStepInfo = (currentStep: number) => {
