@@ -75,7 +75,7 @@ const GuitarView = () => {
 
         const fragment = document.createDocumentFragment();
 
-        for (let i = 0; i < numberOfStrings; i++) {
+        for (let stringNumber = 1; stringNumber <= numberOfStrings; stringNumber++) {
             const string = document.createElement('div');
             string.classList.add(styles.string);
 
@@ -83,7 +83,10 @@ const GuitarView = () => {
                 const noteFret = document.createElement('div');
                 noteFret.classList.add(styles.noteFret);
 
-                if (i === 0) {
+                noteFret.dataset.string = String(stringNumber);
+                noteFret.dataset.fret = String(fretNumber);
+
+                if (stringNumber === 1) {
                     if (singleFretMarkPositions.includes(fretNumber)) {
                         noteFret.classList.add(styles.singleFretmark);
                     }
