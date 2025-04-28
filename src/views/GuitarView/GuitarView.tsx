@@ -6,11 +6,11 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import Slider from 'components/Slider/Slider';
 import { Link } from 'react-router-dom';
 import SongControl from 'components/SongControl/SongControl';
+import Fretboard from 'components/Fretboard/Fretboard';
 
 const GuitarView = () => {
     const songsData = localStorage.getItem('songs');
     const songs = songsData ? JSON.parse(songsData) : [];
-    const fretboardRef = useRef<HTMLDivElement | null>(null);
     const [currentUrl, setCurrentUrl] = useState(window.location.href);
     const [currentStep, setCurrentStep] = useState(0);
     const location = useLocation();
@@ -20,33 +20,32 @@ const GuitarView = () => {
         const songId = currentUrl.split('/').pop();
         return songs.find((song: Song) => song.id === Number(songId)) || null;
     });
-    const [isFretboardInitialized, setIsFretboardInitialized] = useState(false);
+    const [isFretboardInitialized, setIsFretboardInitialized] = useState(false); // Przywrócenie stanu
     const [isPlaybackInitialized, setIsPlaybackInitialized] = useState(false);
-    const singleFretMarkPositions = [3, 5, 7, 9, 15, 17, 19, 21];
-    const doubleFretMarkPositions = [12, 24];
+    const [infoToShow, setInfoToShow] = useState<string | null>(null);
 
     useEffect(() => {
         setupSong();
     }, [currentUrl]);
-
-    // Inicjalizacja fretboardu po załadowaniu komponentu
-    useEffect(() => {
-        if (!isFretboardInitialized) {
-            setIsFretboardInitialized(true);
-            return;
-        }
-        console.log(getCurrentStepInfo(0));
-    }, [song]);
 
     useEffect(() => {
         setCurrentUrl(location.pathname);
         setCurrentStep(0);
     }, [location]);
 
-    // Ustawienie fretboardu po zmianie kroku
+    useEffect(() => {
+        if (!isFretboardInitialized) {
+            setIsFretboardInitialized(true);
+            return;
+        }
+        const currentInfo = getCurrentStepInfo(0);
+        setInfoToShow(currentInfo);
+    }, [song]);
+
     useEffect(() => {
         if (isPlaybackInitialized) {
-            console.log(getCurrentStepInfo(currentStep));
+            const currentInfo = getCurrentStepInfo(currentStep);
+            setInfoToShow(currentInfo);
         }
     }, [currentStep]);
 
@@ -59,52 +58,8 @@ const GuitarView = () => {
                 return;
             }
             setSong(song);
-            setupFretboard();
         };
         fetchSong();
-    };
-
-    const setupFretboard = () => {
-        const fretboard = fretboardRef.current;
-        if (!fretboard) return;
-
-        fretboard.innerHTML = '';
-
-        const numberOfStrings = 6;
-        const numberOfFrets = 12;
-
-        const fragment = document.createDocumentFragment();
-
-        for (let stringNumber = 1; stringNumber <= numberOfStrings; stringNumber++) {
-            const string = document.createElement('div');
-            string.classList.add(styles.string);
-
-            for (let fretNumber = 0; fretNumber <= numberOfFrets; fretNumber++) {
-                const noteFret = document.createElement('div');
-                noteFret.classList.add(styles.noteFret);
-
-                noteFret.dataset.string = String(stringNumber);
-                noteFret.dataset.fret = String(fretNumber);
-
-                if (stringNumber === 1) {
-                    if (singleFretMarkPositions.includes(fretNumber)) {
-                        noteFret.classList.add(styles.singleFretmark);
-                    }
-
-                    if (doubleFretMarkPositions.includes(fretNumber)) {
-                        const doubleFretMark = document.createElement('div');
-                        doubleFretMark.classList.add(styles.doubleFretmark);
-                        noteFret.appendChild(doubleFretMark);
-                    }
-                }
-
-                string.appendChild(noteFret);
-            }
-
-            fragment.appendChild(string);
-        }
-
-        fretboard.appendChild(fragment);
     };
 
     const getCurrentStepInfo = (currentStep: number) => {
@@ -137,8 +92,8 @@ const GuitarView = () => {
         }
 
         if (currentStep === 0) {
-            // Wyświetlenie pierwszego kroku w sekwencji
-            console.log(getCurrentStepInfo(currentStep));
+            const currentInfo = getCurrentStepInfo(currentStep);
+            setInfoToShow(currentInfo);
         }
 
         if (intervalRef.current) {
@@ -196,7 +151,7 @@ const GuitarView = () => {
             <div className={styles.wrapper}>
                 <Title>{`${song?.songTitle} - ${song?.author}`}</Title>
             </div>
-            <div className={styles.fretboard} ref={fretboardRef}></div>
+            <Fretboard numberOfStrings={6} numberOfFrets={24} notesToShow={infoToShow} />
             <Slider max={song.tabulature.length} value={currentStep} onChange={handleSliderChange} />
             <SongControl
                 onGoBack={handlePreviousStep}
@@ -207,4 +162,5 @@ const GuitarView = () => {
         </div>
     );
 };
+
 export { GuitarView };
