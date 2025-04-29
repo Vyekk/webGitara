@@ -38,7 +38,7 @@
 
     @media screen and (max-width: $desktop) {
         flex-direction: column-reverse;
-
+        gap: 0;
 
         .demoTextWrapper {
             flex-basis: 100%;
@@ -46,6 +46,7 @@
 
         iframe {
             flex-basis: 100%;
+            width: 100%;
             margin-top: 40px;
         }
     }
