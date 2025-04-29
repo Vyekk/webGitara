@@ -15,10 +15,10 @@ $bigger-font-size: 32px;
 $bigger-font-size-form: 56px;
 $the-biggest-font-size: 96px;
 
-$mobile-font-size-web: $font-size-app * 0.8;
+$mobile-font-size-web: $font-size-app;
 $mobile-bigger-font-size: $bigger-font-size * 0.8;
 $mobile-bigger-font-size-form: $bigger-font-size-form * 0.8;
-$mobile-the-biggest-font-size: $the-biggest-font-size * 0.8;
+$mobile-the-biggest-font-size: $the-biggest-font-size * 0.5;
 
 $section-height: 434px;
 
@@ -31,6 +31,6 @@ $half-string-height: $string-height / 2;
 $string-top-position: ($fretboard-height / $number-of-strings / 2) - $half-string-height;
 $double-fretmark-position-1: $fretboard-height * 0.25;
 $double-fretmark-position-2: $fretboard-height * 0.75;
-$note-dot-opacity: 1;
+$note-dot-opacity: 0;
 
 $string-colors: red, yellow, blue, orange, green, purple;
