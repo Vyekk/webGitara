@@ -20,6 +20,7 @@
     @media screen and (max-width: $desktop) {
         @at-root h1#{&} {
             font-size: $mobile-the-biggest-font-size;
+            line-height: 1.2;
         }
         @at-root h2#{&} {
             font-size: $mobile-bigger-font-size;
