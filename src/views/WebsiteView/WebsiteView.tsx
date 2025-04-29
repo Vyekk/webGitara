@@ -46,7 +46,7 @@ const WebsiteView = () => {
             </Section>
             <Section id="about" dark>
                 <Title tag="h2" center>
-                    O projekcie
+                    Co zyskasz dzięki webGitarze?
                 </Title>
                 <p className={styles.aboutParagraph}>
                     WebGitara to innowacyjna aplikacja internetowa, która daje użytkownikom możliwość tworzenia i
@@ -81,8 +81,6 @@ const WebsiteView = () => {
             <Section id="demo">
                 <div className={styles.demo}>
                     <iframe
-                        width="1252"
-                        height="704"
                         src="https://www.youtube.com/embed/Xdc7u4MUYYo"
                         title="John5 Solo"
                         frameBorder="0"
@@ -93,7 +91,7 @@ const WebsiteView = () => {
 
                     <div className={styles.demoTextWrapper}>
                         <Title tag="h2" black center={false}>
-                            Demo
+                            Zobacz, jak działa webGitara w praktyce!
                         </Title>
                         <p className={styles.demoParagraph}>
                             Z przyjemnością prezentuję krótki film wideo, w którym pokazuję działanie naszej platformy
