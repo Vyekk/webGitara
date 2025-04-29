@@ -2,7 +2,7 @@
 .wrapper {
     background-color: $white;
     min-height: $section-height;
-    padding: 20px 5% 50px;
+    padding: 50px 5% 50px;
     &Dark {
         @extend .wrapper;
         background: $secondary-color;
