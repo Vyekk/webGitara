@@ -7,7 +7,6 @@ import Footer from 'components/Footer/Footer';
 import Header from 'components/Header/Header';
 import Button from 'components/Button/Button';
 import styles from 'views/WebsiteView/WebisteView.module.scss';
-import demo from 'assets/demo.png';
 import Card from 'components/Card/Card';
 
 const profits = ['Rozszerzaj swoje horyzony', 'Rozwijaj słuch muzyczny', 'Naucz się pozycji dźwięków'];
@@ -20,7 +19,6 @@ const WebsiteView = () => {
         if (activeProfit > profits.length - 1) {
             activeProfit = 0;
         }
-        console.log(activeProfit);
         return activeProfit;
     };
 
@@ -29,7 +27,6 @@ const WebsiteView = () => {
         if (activeProfit <= -1) {
             activeProfit = profits.length - 1;
         }
-        console.log(activeProfit);
         return activeProfit;
     };
 
@@ -82,20 +79,33 @@ const WebsiteView = () => {
                 </div>
             </Section>
             <Section id="demo">
-                <Title tag="h2" black>
-                    Demo
-                </Title>
                 <div className={styles.demo}>
-                    <p className={styles.demoParagraph}>
-                        Z przyjemnością prezentuję krótki film wideo, w którym pokazuję działanie naszej platformy
-                        webGitara oraz jak się nią posługiwać. Film ten będzie doskonałym przewodnikiem dla osób, które
-                        chcą poznać możliwości tej platformy i dowiedzieć się jak korzystać z jej różnych funkcji. Mamy
-                        nadzieję, że film ten pomoże Państwu w pełni wykorzystać potencjał webGitary i cieszyć się jej
-                        użytkowaniem.
-                    </p>
-                    <img src={demo} alt="Demo działania aplikacji" />
+                    <iframe
+                        width="1252"
+                        height="704"
+                        src="https://www.youtube.com/embed/Xdc7u4MUYYo"
+                        title="John5 Solo"
+                        frameBorder="0"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                        referrerPolicy="strict-origin-when-cross-origin"
+                        allowFullScreen
+                    ></iframe>
+
+                    <div className={styles.demoTextWrapper}>
+                        <Title tag="h2" black center={false}>
+                            Demo
+                        </Title>
+                        <p className={styles.demoParagraph}>
+                            Z przyjemnością prezentuję krótki film wideo, w którym pokazuję działanie naszej platformy
+                            webGitara oraz jak się nią posługiwać. Film ten będzie doskonałym przewodnikiem dla osób,
+                            które chcą poznać możliwości tej platformy i dowiedzieć się jak korzystać z jej różnych
+                            funkcji. Mamy nadzieję, że film ten pomoże Państwu w pełni wykorzystać potencjał webGitary i
+                            cieszyć się jej użytkowaniem.
+                        </p>
+                    </div>
                 </div>
             </Section>
+
             <Section id="profits" url={profitsImage}>
                 <div className={styles.profits}>
                     <Button onClick={() => setProfitNumber(prevProfit(profitNumber))}>&lt;</Button>
