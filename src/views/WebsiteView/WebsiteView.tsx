@@ -117,31 +117,36 @@ const WebsiteView = () => {
                         <Title tag="h2">Kontakt</Title>
                         <ul>
                             <li>
-                                <a href="">+48 000 000 000</a>
+                                <a href="tel:+48000000000">📞 +48 000 000 000</a>
                             </li>
                             <li>
-                                <a href="">kontakt@mail.com</a>
+                                <a href="mailto:kontakt@mail.com">✉ kontakt@mail.com</a>
                             </li>
                             <li>
-                                <a href="">webGitara</a>
+                                <a href="#">🌐 webGitara</a>
                             </li>
                         </ul>
                     </div>
                     <div>
-                        <Title tag="h2">Pozostałe informacje</Title>
+                        <Title tag="h2">Inne projekty</Title>
                         <ul>
                             <li>
-                                <a href="">www.przykładowa-strona.pl</a>
+                                <a href="https://www.przykladowa-strona.pl" target="_blank" rel="noopener noreferrer">
+                                    🔗 www.przykladowa-strona.pl
+                                </a>
                             </li>
                             <li>
-                                <a href="">www.przykładowa-strona.pl</a>
+                                <a href="https://www.przykladowa-strona.pl" target="_blank" rel="noopener noreferrer">
+                                    🔗 www.przykladowa-strona.pl
+                                </a>
                             </li>
                             <li>
-                                <a href="">www.przykładowa-strona.pl</a>
+                                <a href="https://www.przykladowa-strona.pl" target="_blank" rel="noopener noreferrer">
+                                    🔗 www.przykladowa-strona.pl
+                                </a>
                             </li>
                         </ul>
                     </div>
-                    <div style={{ width: '40%', backgroundColor: '#fff', minHeight: '300px' }}></div>
                 </div>
             </Section>
             <Footer />
