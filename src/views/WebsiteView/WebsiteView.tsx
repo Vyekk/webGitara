@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Section from 'components/Section/Section';
 import Title from 'components/Title/Title';
 import headerImage from 'assets/header_image.png';
@@ -13,6 +13,13 @@ const profits = ['Rozszerzaj swoje horyzony', 'Rozwijaj słuch muzyczny', 'Naucz
 
 const WebsiteView = () => {
     const [profitNumber, setProfitNumber] = useState(0);
+
+    useEffect(() => {
+        const interval = setInterval(() => {
+            setProfitNumber((prev) => nextProfit(prev));
+        }, 3000);
+        return () => clearInterval(interval);
+    }, []);
 
     const nextProfit = (currentProfitNumber: number) => {
         let activeProfit = currentProfitNumber + 1;
