@@ -31,7 +31,7 @@ $half-string-height: $string-height / 2;
 $string-top-position: ($fretboard-height / $number-of-strings / 2) - $half-string-height;
 $double-fretmark-position-1: $fretboard-height * 0.25;
 $double-fretmark-position-2: $fretboard-height * 0.75;
-$note-dot-opacity: 1;
+$note-dot-opacity: 0;
 
 $e-top-string-color: red;
 $e-bottom-string-color: purple;
