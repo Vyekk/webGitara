@@ -67,6 +67,10 @@
         text-shadow: 1px 1px 2px black;
         opacity: $note-dot-opacity;
     }
+
+    &.active::before {
+        opacity: 1;
+    }
 }
 .singleFretmark {
     &::after {
