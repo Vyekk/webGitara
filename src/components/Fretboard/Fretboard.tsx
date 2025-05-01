@@ -4,7 +4,7 @@ import styles from 'components/Fretboard/Fretboard.module.scss';
 interface FretboardProps {
     numberOfStrings: number;
     numberOfFrets: number;
-    notesToShow?: string | null;
+    notesToShow: (number[] | number[][])[] | null;
 }
 
 const Fretboard: React.FC<FretboardProps> = ({ numberOfStrings, numberOfFrets, notesToShow }) => {
@@ -14,11 +14,23 @@ const Fretboard: React.FC<FretboardProps> = ({ numberOfStrings, numberOfFrets, n
     const notesSharp = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
 
     useEffect(() => {
-        showNotes(notesToShow || '');
+        showNotes(notesToShow);
     }, [notesToShow]);
 
-    const showNotes = (info: string) => {
-        console.log(info);
+    const showNotes = (info: (number[] | number[][])[] | null) => {
+        if (info) {
+            info.forEach((noteInfo) => {
+                const stringIndex = noteInfo[0];
+                const fretIndex = noteInfo[1];
+                const noteElement = document.querySelector(
+                    `[data-string="${stringIndex}"][data-fret="${fretIndex}"]`,
+                ) as HTMLElement;
+                console.log(noteElement);
+                if (noteElement) {
+                    noteElement.classList.add(styles.active);
+                }
+            });
+        }
     };
 
     const generateNoteNames = (noteIndex: number) => {

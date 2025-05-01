@@ -22,7 +22,7 @@ const GuitarView = () => {
     });
     const [isFretboardInitialized, setIsFretboardInitialized] = useState(false); // Przywrócenie stanu
     const [isPlaybackInitialized, setIsPlaybackInitialized] = useState(false);
-    const [infoToShow, setInfoToShow] = useState<string | null>(null);
+    const [infoToShow, setInfoToShow] = useState<(number[] | number[][])[] | null>();
 
     useEffect(() => {
         setupSong();
@@ -72,16 +72,7 @@ const GuitarView = () => {
             return null;
         }
 
-        let info = '';
-        if (currentTabulature.length === 1) {
-            const [[string, fret]] = currentTabulature;
-            info = `Play string ${string} on fret ${fret}\n`;
-        } else {
-            currentTabulature.forEach(([string, fret]) => {
-                info += `Play string ${string} on fret ${fret}\n`;
-            });
-            info += `in the same time\n`;
-        }
+        const info = currentTabulature;
         return info;
     };
 
@@ -151,7 +142,7 @@ const GuitarView = () => {
             <div className={styles.wrapper}>
                 <Title>{`${song?.songTitle} - ${song?.author}`}</Title>
             </div>
-            <Fretboard numberOfStrings={6} numberOfFrets={24} notesToShow={infoToShow} />
+            <Fretboard numberOfStrings={6} numberOfFrets={24} notesToShow={infoToShow || null} />
             <Slider max={song.tabulature.length} value={currentStep} onChange={handleSliderChange} />
             <SongControl
                 onGoBack={handlePreviousStep}
