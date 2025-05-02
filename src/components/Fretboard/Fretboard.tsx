@@ -4,7 +4,10 @@ import styles from 'components/Fretboard/Fretboard.module.scss';
 interface FretboardProps {
     numberOfStrings: number;
     numberOfFrets: number;
-    notesToShow: (number[] | number[][])[] | null;
+    notesToShow: {
+        prevStep: (number[] | number[][])[] | null;
+        step: (number[] | number[][])[] | null;
+    };
 }
 
 const Fretboard: React.FC<FretboardProps> = ({ numberOfStrings, numberOfFrets, notesToShow }) => {
@@ -17,9 +20,12 @@ const Fretboard: React.FC<FretboardProps> = ({ numberOfStrings, numberOfFrets, n
         showNotes(notesToShow);
     }, [notesToShow]);
 
-    const showNotes = (info: (number[] | number[][])[] | null) => {
-        if (info) {
-            info.forEach((noteInfo) => {
+    const showNotes = (info: {
+        prevStep: (number[] | number[][])[] | null;
+        step: (number[] | number[][])[] | null;
+    }) => {
+        if (info && info.step) {
+            info.step.forEach((noteInfo) => {
                 const stringIndex = noteInfo[0];
                 const fretIndex = noteInfo[1];
                 const noteElement = document.querySelector(

@@ -22,7 +22,10 @@ const GuitarView = () => {
     });
     const [isFretboardInitialized, setIsFretboardInitialized] = useState(false); // Przywrócenie stanu
     const [isPlaybackInitialized, setIsPlaybackInitialized] = useState(false);
-    const [infoToShow, setInfoToShow] = useState<(number[] | number[][])[] | null>();
+    const [infoToShow, setInfoToShow] = useState<{
+        prevStep: (number[] | number[][])[] | null;
+        step: (number[] | number[][])[] | null;
+    }>();
 
     useEffect(() => {
         setupSong();
@@ -39,13 +42,19 @@ const GuitarView = () => {
             return;
         }
         const currentInfo = getCurrentStepInfo(0);
-        setInfoToShow(currentInfo);
+        setInfoToShow((prev) => ({
+            prevStep: prev?.step || null,
+            step: currentInfo || null,
+        }));
     }, [song]);
 
     useEffect(() => {
         if (isPlaybackInitialized) {
             const currentInfo = getCurrentStepInfo(currentStep);
-            setInfoToShow(currentInfo);
+            setInfoToShow((prev) => ({
+                prevStep: prev?.step || null,
+                step: currentInfo || null,
+            }));
         }
     }, [currentStep]);
 
@@ -84,7 +93,10 @@ const GuitarView = () => {
 
         if (currentStep === 0) {
             const currentInfo = getCurrentStepInfo(currentStep);
-            setInfoToShow(currentInfo);
+            setInfoToShow((prev) => ({
+                prevStep: prev?.step || null,
+                step: currentInfo || null,
+            }));
         }
 
         if (intervalRef.current) {
@@ -142,7 +154,11 @@ const GuitarView = () => {
             <div className={styles.wrapper}>
                 <Title>{`${song?.songTitle} - ${song?.author}`}</Title>
             </div>
-            <Fretboard numberOfStrings={6} numberOfFrets={24} notesToShow={infoToShow || null} />
+            <Fretboard
+                numberOfStrings={6}
+                numberOfFrets={24}
+                notesToShow={infoToShow || { prevStep: null, step: null }}
+            />
             <Slider max={song.tabulature.length} value={currentStep} onChange={handleSliderChange} />
             <SongControl
                 onGoBack={handlePreviousStep}
