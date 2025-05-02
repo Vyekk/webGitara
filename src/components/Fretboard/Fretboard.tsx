@@ -17,24 +17,18 @@ const Fretboard: React.FC<FretboardProps> = ({ numberOfStrings, numberOfFrets, n
     const notesSharp = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
 
     useEffect(() => {
-        showNotes(notesToShow);
+        const timeout = setTimeout(() => showNotes(notesToShow), 0);
+        return () => clearTimeout(timeout);
     }, [notesToShow]);
 
     const showNotes = (info: {
         prevStep: (number[] | number[][])[] | null;
         step: (number[] | number[][])[] | null;
     }) => {
-        if (info && info.prevStep) {
-            info.prevStep.forEach((noteInfo) => {
-                const [stringIndex, fretIndex] = noteInfo as number[];
-                const noteElement = document.querySelector(
-                    `[data-string="${stringIndex}"][data-fret="${fretIndex}"]`,
-                ) as HTMLElement;
-                if (noteElement) {
-                    noteElement.classList.remove(styles.active);
-                }
-            });
-        }
+        document.querySelectorAll(`.${styles.active}`).forEach((el) => {
+            el.classList.remove(styles.active);
+        });
+
         if (info && info.step) {
             info.step.forEach((noteInfo) => {
                 const [stringIndex, fretIndex] = noteInfo as number[];
@@ -43,6 +37,8 @@ const Fretboard: React.FC<FretboardProps> = ({ numberOfStrings, numberOfFrets, n
                 ) as HTMLElement;
                 console.log(noteElement);
                 if (noteElement) {
+                    noteElement.classList.remove(styles.active);
+                    void noteElement.offsetWidth;
                     noteElement.classList.add(styles.active);
                 }
             });
