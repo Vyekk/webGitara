@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import styles from './SongControl.module.scss';
 import Button from 'components/Button/Button';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -9,10 +9,17 @@ interface SongControlProps {
     onPlay: () => void;
     onStop: () => void;
     onForward: () => void;
+    isStop?: boolean;
 }
 
-const SongControl = ({ onGoBack, onPlay, onStop, onForward }: SongControlProps) => {
+const SongControl = ({ onGoBack, onPlay, onStop, onForward, isStop }: SongControlProps) => {
     const [activeButton, setActiveButton] = useState<'play' | 'stop' | null>(null);
+
+    useEffect(() => {
+        if (isStop) {
+            setActiveButton('stop');
+        }
+    }, [isStop]);
 
     const handleButtonClick = (buttonName: 'play' | 'stop', action: () => void) => {
         setActiveButton(buttonName);

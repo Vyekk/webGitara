@@ -20,7 +20,7 @@ const GuitarView = () => {
         const songId = currentUrl.split('/').pop();
         return songs.find((song: Song) => song.id === Number(songId)) || null;
     });
-    const [isFretboardInitialized, setIsFretboardInitialized] = useState(false); // Przywrócenie stanu
+    const [isFretboardInitialized, setIsFretboardInitialized] = useState(false);
     const [isPlaybackInitialized, setIsPlaybackInitialized] = useState(false);
     const [infoToShow, setInfoToShow] = useState<{
         prevStep: (number[] | number[][])[] | null;
@@ -165,6 +165,7 @@ const GuitarView = () => {
                 onPlay={handleClickPlay}
                 onStop={handleClickStop}
                 onForward={handleNextStep}
+                isStop={currentStep === song.tabulature.length - 1 ? true : false}
             />
         </div>
     );
