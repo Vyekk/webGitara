@@ -24,10 +24,20 @@ const Fretboard: React.FC<FretboardProps> = ({ numberOfStrings, numberOfFrets, n
         prevStep: (number[] | number[][])[] | null;
         step: (number[] | number[][])[] | null;
     }) => {
+        if (info && info.prevStep) {
+            info.prevStep.forEach((noteInfo) => {
+                const [stringIndex, fretIndex] = noteInfo as number[];
+                const noteElement = document.querySelector(
+                    `[data-string="${stringIndex}"][data-fret="${fretIndex}"]`,
+                ) as HTMLElement;
+                if (noteElement) {
+                    noteElement.classList.remove(styles.active);
+                }
+            });
+        }
         if (info && info.step) {
             info.step.forEach((noteInfo) => {
-                const stringIndex = noteInfo[0];
-                const fretIndex = noteInfo[1];
+                const [stringIndex, fretIndex] = noteInfo as number[];
                 const noteElement = document.querySelector(
                     `[data-string="${stringIndex}"][data-fret="${fretIndex}"]`,
                 ) as HTMLElement;
