@@ -1,6 +1,6 @@
 import Title from 'components/Title/Title';
 import { useEffect, useRef, useState } from 'react';
-import { Song } from 'types';
+import { Song, TabNote } from 'types';
 import styles from 'views/GuitarView/GuitarView.module.scss';
 import { useLocation, useNavigate } from 'react-router-dom';
 import Slider from 'components/Slider/Slider';
@@ -23,9 +23,9 @@ const GuitarView = () => {
     const [isFretboardInitialized, setIsFretboardInitialized] = useState(false);
     const [isPlaybackInitialized, setIsPlaybackInitialized] = useState(false);
     const [infoToShow, setInfoToShow] = useState<{
-        prevStep: (number[] | number[][])[] | null;
-        step: (number[] | number[][])[] | null;
-        nextStep?: (number[] | number[][])[] | null;
+        prevStep: TabNote[] | null;
+        step: TabNote[] | null;
+        nextStep: TabNote[] | null;
     }>();
 
     useEffect(() => {
@@ -43,19 +43,35 @@ const GuitarView = () => {
             return;
         }
         const currentInfo = getCurrentStepInfo(0);
+        let nextStepInfo: TabNote[] | null = null;
+        if (currentInfo && currentStep + 1 < song.tabulature.length) {
+            nextStepInfo = getCurrentStepInfo(currentStep + 1);
+        }
         setInfoToShow((prev) => ({
             prevStep: prev?.step || null,
             step: currentInfo || null,
+            nextStep: nextStepInfo,
         }));
     }, [song]);
 
     useEffect(() => {
         if (isPlaybackInitialized) {
             const currentInfo = getCurrentStepInfo(currentStep);
+            let nextStepInfo: TabNote[] | null = null;
+            if (currentInfo && currentStep + 1 < song.tabulature.length) {
+                nextStepInfo = getCurrentStepInfo(currentStep + 1);
+            }
             setInfoToShow((prev) => ({
                 prevStep: prev?.step || null,
                 step: currentInfo || null,
+                nextStep: nextStepInfo,
             }));
+        }
+    }, [currentStep]);
+
+    useEffect(() => {
+        if (currentStep === 0) {
+            handleClickStop();
         }
     }, [currentStep]);
 
@@ -72,18 +88,12 @@ const GuitarView = () => {
         fetchSong();
     };
 
-    const getCurrentStepInfo = (currentStep: number) => {
+    const getCurrentStepInfo = (currentStep: number): TabNote[] | null => {
         const tabulature = song?.tabulature;
         if (!tabulature || tabulature.length === 0) {
             return null;
         }
-        const currentTabulature = tabulature[currentStep];
-        if (!currentTabulature) {
-            return null;
-        }
-
-        const info = currentTabulature;
-        return info;
+        return tabulature[currentStep] || null;
     };
 
     const playSong = () => {
@@ -94,9 +104,14 @@ const GuitarView = () => {
 
         if (currentStep === 0) {
             const currentInfo = getCurrentStepInfo(currentStep);
+            let nextStepInfo: TabNote[] | null = null;
+            if (currentInfo && currentStep + 1 < song.tabulature.length) {
+                nextStepInfo = getCurrentStepInfo(currentStep + 1);
+            }
             setInfoToShow((prev) => ({
                 prevStep: prev?.step || null,
                 step: currentInfo || null,
+                nextStep: nextStepInfo,
             }));
         }
 
@@ -158,7 +173,7 @@ const GuitarView = () => {
             <Fretboard
                 numberOfStrings={6}
                 numberOfFrets={24}
-                notesToShow={infoToShow || { prevStep: null, step: null }}
+                notesToShow={infoToShow || { prevStep: null, step: null, nextStep: null }}
             />
             <Slider max={song.tabulature.length} value={currentStep} onChange={handleSliderChange} />
             <SongControl
@@ -166,7 +181,7 @@ const GuitarView = () => {
                 onPlay={handleClickPlay}
                 onStop={handleClickStop}
                 onForward={handleNextStep}
-                isStop={currentStep === song.tabulature.length - 1 ? true : false}
+                isStop={currentStep === song.tabulature.length - 1 || currentStep === 0 ? true : false}
             />
         </div>
     );
