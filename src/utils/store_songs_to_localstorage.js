@@ -88,33 +88,33 @@ const songs = [
             ['One of the best songs ever!', 'Ethan'],
         ],
         tabulature: [
-            [[2, 2]],
-            [[5, 4]],
-            [[5, 2]],
-            [[4, 2]],
-            [[4, 1]],
-            [[2, 2]],
-            [[2, 2]],
-            [[1, 4]],
-            [[3, 2]],
+            [{ guitarString: 2, guitarFret: 2, duration: '8n' }],
+            [{ guitarString: 5, guitarFret: 4, duration: '8n' }],
+            [{ guitarString: 5, guitarFret: 2, duration: '8n' }],
+            [{ guitarString: 4, guitarFret: 2, duration: '8n' }],
+            [{ guitarString: 4, guitarFret: 1, duration: '8n' }],
+            [{ guitarString: 2, guitarFret: 2, duration: '8n' }],
+            [{ guitarString: 2, guitarFret: 2, duration: '8n' }],
+            [{ guitarString: 1, guitarFret: 4, duration: '8n' }],
+            [{ guitarString: 3, guitarFret: 2, duration: '8n' }],
             [
-                [1, 2],
-                [3, 2],
-                [4, 4],
-                [5, 2],
+                { guitarString: 1, guitarFret: 2, duration: '8n' },
+                { guitarString: 3, guitarFret: 2, duration: '8n' },
+                { guitarString: 4, guitarFret: 4, duration: '8n' },
+                { guitarString: 5, guitarFret: 2, duration: '8n' },
             ],
-            [[4, 4]],
-            [[4, 2]],
-            [[5, 2]],
-            [[5, 2]],
-            [[3, 4]],
-            [[3, 1]],
-            [[4, 2]],
-            [[4, 1]],
-            [[6, 4]],
-            [[3, 2]],
-            [[3, 2]],
-            [[6, 1]],
+            [{ guitarString: 4, guitarFret: 4, duration: '8n' }],
+            [{ guitarString: 4, guitarFret: 2, duration: '8n' }],
+            [{ guitarString: 5, guitarFret: 2, duration: '8n' }],
+            [{ guitarString: 5, guitarFret: 2, duration: '8n' }],
+            [{ guitarString: 3, guitarFret: 4, duration: '8n' }],
+            [{ guitarString: 3, guitarFret: 1, duration: '8n' }],
+            [{ guitarString: 4, guitarFret: 2, duration: '8n' }],
+            [{ guitarString: 4, guitarFret: 1, duration: '8n' }],
+            [{ guitarString: 6, guitarFret: 4, duration: '8n' }],
+            [{ guitarString: 3, guitarFret: 2, duration: '8n' }],
+            [{ guitarString: 3, guitarFret: 2, duration: '8n' }],
+            [{ guitarString: 6, guitarFret: 1, duration: '8n' }],
         ],
     },
     {
@@ -151,34 +151,34 @@ const songs = [
             ['Perfect for road trips!', 'Lily'],
         ],
         tabulature: [
-            [[2, 1]], // C
-            [[2, 1]], // C
-            [[2, 3]], // D
-            [[2, 1]], // C
-            [[2, 6]], // F
-            [[2, 5]], // E
+            [{ guitarString: 2, guitarFret: 1, duration: '8n' }], // C
+            [{ guitarString: 2, guitarFret: 1, duration: '8n' }], // C
+            [{ guitarString: 2, guitarFret: 3, duration: '8n' }], // D
+            [{ guitarString: 2, guitarFret: 1, duration: '8n' }], // C
+            [{ guitarString: 2, guitarFret: 6, duration: '8n' }], // F
+            [{ guitarString: 2, guitarFret: 5, duration: '4n' }], // E (ćwierćnuta)
 
-            [[2, 1]], // C
-            [[2, 1]], // C
-            [[2, 3]], // D
-            [[2, 1]], // C
-            [[2, 8]], // G
-            [[2, 6]], // F
+            [{ guitarString: 2, guitarFret: 1, duration: '8n' }],
+            [{ guitarString: 2, guitarFret: 1, duration: '8n' }],
+            [{ guitarString: 2, guitarFret: 3, duration: '8n' }],
+            [{ guitarString: 2, guitarFret: 1, duration: '8n' }],
+            [{ guitarString: 2, guitarFret: 8, duration: '8n' }],
+            [{ guitarString: 2, guitarFret: 6, duration: '4n' }],
 
-            [[2, 1]], // C
-            [[2, 1]], // C
-            [[2, 1]], // C
-            [[2, 10]], // A
-            [[2, 6]], // F
-            [[2, 5]], // E
-            [[2, 3]], // D
+            [{ guitarString: 2, guitarFret: 1, duration: '8n' }],
+            [{ guitarString: 2, guitarFret: 1, duration: '8n' }],
+            [{ guitarString: 2, guitarFret: 1, duration: '8n' }],
+            [{ guitarString: 2, guitarFret: 10, duration: '8n' }], // A
+            [{ guitarString: 2, guitarFret: 6, duration: '8n' }],
+            [{ guitarString: 2, guitarFret: 5, duration: '8n' }],
+            [{ guitarString: 2, guitarFret: 3, duration: '4n' }],
 
-            [[2, 11]], // A#
-            [[2, 11]], // A#
-            [[2, 11]], // A#
-            [[2, 8]], // G
-            [[2, 6]], // F
-            [[2, 8]], // G
+            [{ guitarString: 2, guitarFret: 11, duration: '8n' }],
+            [{ guitarString: 2, guitarFret: 11, duration: '8n' }],
+            [{ guitarString: 2, guitarFret: 11, duration: '8n' }],
+            [{ guitarString: 2, guitarFret: 8, duration: '8n' }],
+            [{ guitarString: 2, guitarFret: 6, duration: '8n' }],
+            [{ guitarString: 2, guitarFret: 8, duration: '4n' }],
         ],
     },
 ];
