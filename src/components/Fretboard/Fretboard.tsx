@@ -7,6 +7,7 @@ interface FretboardProps {
     notesToShow: {
         prevStep: (number[] | number[][])[] | null;
         step: (number[] | number[][])[] | null;
+        nextStep?: (number[] | number[][])[] | null;
     };
 }
 
@@ -24,9 +25,14 @@ const Fretboard: React.FC<FretboardProps> = ({ numberOfStrings, numberOfFrets, n
     const showNotes = (info: {
         prevStep: (number[] | number[][])[] | null;
         step: (number[] | number[][])[] | null;
+        nextStep?: (number[] | number[][])[] | null;
     }) => {
         document.querySelectorAll(`.${styles.active}`).forEach((el) => {
             el.classList.remove(styles.active);
+        });
+
+        document.querySelectorAll(`.${styles.nextActive}`).forEach((el) => {
+            el.classList.remove(styles.nextActive);
         });
 
         if (info && info.step) {
@@ -35,11 +41,22 @@ const Fretboard: React.FC<FretboardProps> = ({ numberOfStrings, numberOfFrets, n
                 const noteElement = document.querySelector(
                     `[data-string="${stringIndex}"][data-fret="${fretIndex}"]`,
                 ) as HTMLElement;
-                console.log(noteElement);
                 if (noteElement) {
                     noteElement.classList.remove(styles.active);
                     void noteElement.offsetWidth;
                     noteElement.classList.add(styles.active);
+                }
+            });
+        }
+
+        if (info && info.nextStep) {
+            info.nextStep.forEach((noteInfo) => {
+                const [stringIndex, fretIndex] = noteInfo as number[];
+                const noteElement = document.querySelector(
+                    `[data-string="${stringIndex}"][data-fret="${fretIndex}"]`,
+                ) as HTMLElement;
+                if (noteElement) {
+                    noteElement.classList.add(styles.nextActive);
                 }
             });
         }
