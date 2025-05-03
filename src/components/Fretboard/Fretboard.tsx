@@ -1,13 +1,14 @@
 import React, { useEffect } from 'react';
+import { TabNote } from 'types';
 import styles from 'components/Fretboard/Fretboard.module.scss';
 
 interface FretboardProps {
     numberOfStrings: number;
     numberOfFrets: number;
     notesToShow: {
-        prevStep: (number[] | number[][])[] | null;
-        step: (number[] | number[][])[] | null;
-        nextStep?: (number[] | number[][])[] | null;
+        prevStep: TabNote[] | null;
+        step: TabNote[] | null;
+        nextStep: TabNote[] | null;
     };
 }
 
@@ -22,11 +23,7 @@ const Fretboard: React.FC<FretboardProps> = ({ numberOfStrings, numberOfFrets, n
         return () => clearTimeout(timeout);
     }, [notesToShow]);
 
-    const showNotes = (info: {
-        prevStep: (number[] | number[][])[] | null;
-        step: (number[] | number[][])[] | null;
-        nextStep?: (number[] | number[][])[] | null;
-    }) => {
+    const showNotes = (info: { prevStep: TabNote[] | null; step: TabNote[] | null; nextStep: TabNote[] | null }) => {
         document.querySelectorAll(`.${styles.active}`).forEach((el) => {
             el.classList.remove(styles.active);
         });
@@ -35,28 +32,28 @@ const Fretboard: React.FC<FretboardProps> = ({ numberOfStrings, numberOfFrets, n
             el.classList.remove(styles.nextActive);
         });
 
+        if (info && info.nextStep) {
+            info.nextStep.forEach((noteInfo) => {
+                const { guitarString, guitarFret } = noteInfo as TabNote;
+                const noteElement = document.querySelector(
+                    `[data-string="${guitarString}"][data-fret="${guitarFret}"]`,
+                ) as HTMLElement;
+                if (noteElement) {
+                    noteElement.classList.add(styles.nextActive);
+                }
+            });
+        }
+
         if (info && info.step) {
             info.step.forEach((noteInfo) => {
-                const [stringIndex, fretIndex] = noteInfo as number[];
+                const { guitarString, guitarFret } = noteInfo as TabNote;
                 const noteElement = document.querySelector(
-                    `[data-string="${stringIndex}"][data-fret="${fretIndex}"]`,
+                    `[data-string="${guitarString}"][data-fret="${guitarFret}"]`,
                 ) as HTMLElement;
                 if (noteElement) {
                     noteElement.classList.remove(styles.active);
                     void noteElement.offsetWidth;
                     noteElement.classList.add(styles.active);
-                }
-            });
-        }
-
-        if (info && info.nextStep) {
-            info.nextStep.forEach((noteInfo) => {
-                const [stringIndex, fretIndex] = noteInfo as number[];
-                const noteElement = document.querySelector(
-                    `[data-string="${stringIndex}"][data-fret="${fretIndex}"]`,
-                ) as HTMLElement;
-                if (noteElement) {
-                    noteElement.classList.add(styles.nextActive);
                 }
             });
         }
