@@ -25,6 +25,7 @@ const GuitarView = () => {
     const [infoToShow, setInfoToShow] = useState<{
         prevStep: (number[] | number[][])[] | null;
         step: (number[] | number[][])[] | null;
+        nextStep?: (number[] | number[][])[] | null;
     }>();
 
     useEffect(() => {
