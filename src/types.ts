@@ -2,6 +2,7 @@ export type TabNote = {
     guitarString: number;
     guitarFret: number;
     duration: string;
+    rest?: boolean;
 };
 
 export type Step = TabNote[];
