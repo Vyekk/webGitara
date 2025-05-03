@@ -20,6 +20,7 @@ const GuitarView = () => {
         const songId = currentUrl.split('/').pop();
         return songs.find((song: Song) => song.id === Number(songId)) || null;
     });
+    const [sliderChanged, setSliderChanged] = useState(false);
     const [isFretboardInitialized, setIsFretboardInitialized] = useState(false);
     const [isPlaybackInitialized, setIsPlaybackInitialized] = useState(false);
     const [infoToShow, setInfoToShow] = useState<{
@@ -134,6 +135,9 @@ const GuitarView = () => {
 
     const handleClickPlay = () => {
         setIsPlaybackInitialized(true);
+        if (sliderChanged) {
+            setSliderChanged(false);
+        }
         playSong();
     };
 
@@ -153,12 +157,8 @@ const GuitarView = () => {
     };
 
     const handleSliderChange = (value: number) => {
-        setIsPlaybackInitialized((prev) => {
-            if (!prev) {
-                return true;
-            }
-            return prev;
-        });
+        handleClickStop();
+        setSliderChanged(true);
         setCurrentStep(value);
     };
 
@@ -181,7 +181,7 @@ const GuitarView = () => {
                 onPlay={handleClickPlay}
                 onStop={handleClickStop}
                 onForward={handleNextStep}
-                isStop={currentStep === song.tabulature.length - 1 || currentStep === 0 ? true : false}
+                isStop={currentStep === song.tabulature.length - 1 || currentStep === 0 || sliderChanged ? true : false}
             />
         </div>
     );
