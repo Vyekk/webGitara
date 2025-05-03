@@ -32,6 +32,9 @@
             .noteFret::before {
                 background: nth($string-colors, $i);
             }
+            .noteFret::after {
+                background: nth($string-colors, $i);
+            }
         }
     }
 
@@ -72,7 +75,6 @@
         border-radius: 50%;
         line-height: 33px;
         text-align: center;
-        background: teal;
         z-index: 2;
         color: #ffffff;
         font-weight: 700;
@@ -80,6 +82,28 @@
         opacity: $note-dot-opacity;
         transform: scale(1);
         transition: transform 0.2s ease;
+    }
+
+    &::after {
+        content: '';
+        width: 33px;
+        height: 33px;
+        border-radius: 50%;
+        line-height: 33px;
+        text-align: center;
+        z-index: 1;
+        color: #ffffff;
+        font-weight: 700;
+        text-shadow: 1px 1px 2px black;
+        opacity: $note-dot-opacity;
+        transform: scale(1);
+        transition: transform 0.2s ease;
+        position: absolute;
+    }
+
+    &.nextActive::after {
+        opacity: 0.5;
+        transform: scale(1.5);
     }
 
     &.active::before {
