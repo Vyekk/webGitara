@@ -22,7 +22,6 @@ const GuitarView = () => {
     });
     const [sliderChanged, setSliderChanged] = useState(false);
     const [isFretboardInitialized, setIsFretboardInitialized] = useState(false);
-    const [isPlaybackInitialized, setIsPlaybackInitialized] = useState(false);
     const [infoToShow, setInfoToShow] = useState<{
         prevStep: TabNote[] | null;
         step: TabNote[] | null;
@@ -56,18 +55,16 @@ const GuitarView = () => {
     }, [song]);
 
     useEffect(() => {
-        if (isPlaybackInitialized) {
-            const currentInfo = getCurrentStepInfo(currentStep);
-            let nextStepInfo: TabNote[] | null = null;
-            if (currentInfo && currentStep + 1 < song.tabulature.length) {
-                nextStepInfo = getCurrentStepInfo(currentStep + 1);
-            }
-            setInfoToShow((prev) => ({
-                prevStep: prev?.step || null,
-                step: currentInfo || null,
-                nextStep: nextStepInfo,
-            }));
+        const currentInfo = getCurrentStepInfo(currentStep);
+        let nextStepInfo: TabNote[] | null = null;
+        if (currentInfo && currentStep + 1 < song.tabulature.length) {
+            nextStepInfo = getCurrentStepInfo(currentStep + 1);
         }
+        setInfoToShow((prev) => ({
+            prevStep: prev?.step || null,
+            step: currentInfo || null,
+            nextStep: nextStepInfo,
+        }));
     }, [currentStep]);
 
     useEffect(() => {
@@ -134,7 +131,6 @@ const GuitarView = () => {
     };
 
     const handleClickPlay = () => {
-        setIsPlaybackInitialized(true);
         if (sliderChanged) {
             setSliderChanged(false);
         }
