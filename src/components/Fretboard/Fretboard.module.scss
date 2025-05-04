@@ -82,6 +82,7 @@
 
     &:first-child {
         background: #161717;
+        z-index: 2;
         min-width: 76px;
         flex-grow: 0;
         flex-shrink: 0;
