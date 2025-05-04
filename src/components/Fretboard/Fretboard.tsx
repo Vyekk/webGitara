@@ -1,4 +1,4 @@
-import React, { useLayoutEffect } from 'react';
+import React, { useEffect, useLayoutEffect } from 'react';
 import { TabNote } from 'types';
 import styles from 'components/Fretboard/Fretboard.module.scss';
 
@@ -17,10 +17,24 @@ const Fretboard: React.FC<FretboardProps> = ({ numberOfStrings, numberOfFrets, n
     const doubleFretMarkPositions = [12, 24];
     const instrumentTuning = [4, 11, 7, 2, 9, 4];
     const notesSharp = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
+    const stringNames = ['E', 'A', 'D', 'G', 'B', 'E'];
+
+    useEffect(() => {
+        showStringsNames();
+    }, []);
 
     useLayoutEffect(() => {
         showNotes(notesToShow);
     }, [notesToShow]);
+
+    const showStringsNames = () => {
+        const stringElements = document.querySelectorAll(`.${styles.string}`);
+        stringElements.forEach((_, index) => {
+            const noteName = stringNames[index];
+            const noteElement = document.querySelector(`[data-string="${index + 1}"][data-fret="0"]`) as HTMLElement;
+            noteElement.innerText = noteName;
+        });
+    };
 
     const showNotes = (info: { prevStep: TabNote[] | null; step: TabNote[] | null; nextStep: TabNote[] | null }) => {
         document.querySelectorAll(`.${styles.active}`).forEach((el) => {
