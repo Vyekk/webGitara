@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useLayoutEffect } from 'react';
 import { TabNote } from 'types';
 import styles from 'components/Fretboard/Fretboard.module.scss';
 
@@ -18,9 +18,8 @@ const Fretboard: React.FC<FretboardProps> = ({ numberOfStrings, numberOfFrets, n
     const instrumentTuning = [4, 11, 7, 2, 9, 4];
     const notesSharp = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
 
-    useEffect(() => {
-        const timeout = setTimeout(() => showNotes(notesToShow), 0);
-        return () => clearTimeout(timeout);
+    useLayoutEffect(() => {
+        showNotes(notesToShow);
     }, [notesToShow]);
 
     const showNotes = (info: { prevStep: TabNote[] | null; step: TabNote[] | null; nextStep: TabNote[] | null }) => {
@@ -31,15 +30,29 @@ const Fretboard: React.FC<FretboardProps> = ({ numberOfStrings, numberOfFrets, n
         document.querySelectorAll(`.${styles.nextActive}`).forEach((el) => {
             el.classList.remove(styles.nextActive);
         });
+        document.querySelectorAll(`.${styles.activeEmptyString}`).forEach((el) => {
+            el.classList.remove(styles.activeEmptyString);
+        });
+
+        document.querySelectorAll(styles.nextActiveEmptyString).forEach((el) => {
+            el.classList.remove(styles.nextActiveEmptyString);
+        });
 
         if (info && info.nextStep) {
             info.nextStep.forEach((noteInfo) => {
                 const { guitarString, guitarFret } = noteInfo as TabNote;
-                const noteElement = document.querySelector(
-                    `[data-string="${guitarString}"][data-fret="${guitarFret}"]`,
-                ) as HTMLElement;
-                if (noteElement) {
-                    noteElement.classList.add(styles.nextActive);
+                if (guitarFret === 0) {
+                    const noteElement = document.querySelector(`[data-string="${guitarString}"]`) as HTMLElement;
+                    if (noteElement) {
+                        noteElement.classList.add(styles.nextActiveEmptyString);
+                    }
+                } else {
+                    const noteElement = document.querySelector(
+                        `[data-string="${guitarString}"][data-fret="${guitarFret}"]`,
+                    ) as HTMLElement;
+                    if (noteElement) {
+                        noteElement.classList.add(styles.nextActive);
+                    }
                 }
             });
         }
@@ -47,13 +60,22 @@ const Fretboard: React.FC<FretboardProps> = ({ numberOfStrings, numberOfFrets, n
         if (info && info.step) {
             info.step.forEach((noteInfo) => {
                 const { guitarString, guitarFret } = noteInfo as TabNote;
-                const noteElement = document.querySelector(
-                    `[data-string="${guitarString}"][data-fret="${guitarFret}"]`,
-                ) as HTMLElement;
-                if (noteElement) {
-                    noteElement.classList.remove(styles.active);
-                    void noteElement.offsetWidth;
-                    noteElement.classList.add(styles.active);
+                if (guitarFret === 0) {
+                    const noteElement = document.querySelector(`[data-string="${guitarString}"]`) as HTMLElement;
+                    if (noteElement) {
+                        noteElement.classList.remove(styles.activeEmptyString);
+                        void noteElement.offsetWidth;
+                        noteElement.classList.add(styles.activeEmptyString);
+                    }
+                } else {
+                    const noteElement = document.querySelector(
+                        `[data-string="${guitarString}"][data-fret="${guitarFret}"]`,
+                    ) as HTMLElement;
+                    if (noteElement) {
+                        noteElement.classList.remove(styles.active);
+                        void noteElement.offsetWidth;
+                        noteElement.classList.add(styles.active);
+                    }
                 }
             });
         }
@@ -68,7 +90,7 @@ const Fretboard: React.FC<FretboardProps> = ({ numberOfStrings, numberOfFrets, n
     return (
         <div className={styles.fretboard}>
             {Array.from({ length: numberOfStrings }, (_, stringIndex) => (
-                <div key={stringIndex} className={styles.string}>
+                <div key={stringIndex} className={styles.string} data-string={stringIndex + 1}>
                     {Array.from({ length: numberOfFrets + 1 }, (_, fretIndex) => (
                         <div
                             key={fretIndex}
