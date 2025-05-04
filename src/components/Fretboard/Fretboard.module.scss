@@ -19,6 +19,8 @@
     width: 100%;
     min-width: 1500px;
     height: #{$fretboard-height}px;
+    overflow-x: hidden;
+
 }
 
 .string {
@@ -35,6 +37,25 @@
             .noteFret::after {
                 background: nth($string-colors, $i);
             }
+            &::after {
+                background: nth($string-colors, $i);
+            }
+        }
+    }
+    &::after {
+        content: '';
+            width: 100%;
+            height: #{$string-height}px;
+            z-index: 1;
+            position: absolute;
+            top: #{$string-top-position}px;
+            opacity: $note-dot-opacity;
+    }
+    &.activeEmptyString {
+        &::after {
+            opacity: 1;
+            animation: pulse 0.3s ease;
+            transform-origin: center;
         }
     }
 
