@@ -33,12 +33,12 @@ $double-fretmark-position-1: $fretboard-height * 0.25;
 $double-fretmark-position-2: $fretboard-height * 0.75;
 $note-dot-opacity: 0;
 
-$e-top-string-color: red;
-$e-bottom-string-color: purple;
-$a-string-color: #e6e600;
-$d-string-color: blue;
-$g-string-color: orange;
-$b-string-color: green;
+$e-top-string-color: rgb(255, 0, 0);
+$e-bottom-string-color: rgb(128, 0, 128);
+$a-string-color: rgb(230, 230, 0);
+$d-string-color: rgb(0, 0, 255);
+$g-string-color: rgb(255, 165, 0);
+$b-string-color: rgb(0, 128, 0);
 
 
 $string-colors: $e-top-string-color, $a-string-color, $d-string-color, $g-string-color, $b-string-color, $e-bottom-string-color;
