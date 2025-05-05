@@ -48,8 +48,8 @@ const Fretboard: React.FC<FretboardProps> = ({ numberOfStrings, numberOfFrets, n
             el.classList.remove(styles.activeEmptyString);
         });
 
-        document.querySelectorAll(styles.nextActiveEmptyString).forEach((el) => {
-            el.classList.remove(styles.nextActiveEmptyString);
+        document.querySelectorAll(`.${styles.nextActiveEmpty}`).forEach((el) => {
+            el.classList.remove(styles.nextActiveEmpty);
         });
 
         if (info && info.nextStep) {
@@ -58,7 +58,7 @@ const Fretboard: React.FC<FretboardProps> = ({ numberOfStrings, numberOfFrets, n
                 if (guitarFret === 0) {
                     const noteElement = document.querySelector(`[data-string="${guitarString}"]`) as HTMLElement;
                     if (noteElement) {
-                        noteElement.classList.add(styles.nextActiveEmptyString);
+                        noteElement.classList.add(styles.nextActiveEmpty);
                     }
                 } else {
                     const noteElement = document.querySelector(
