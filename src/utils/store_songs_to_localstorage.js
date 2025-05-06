@@ -1,6 +1,6 @@
 const songs = [
     {
-        id: 8,
+        id: 1,
         songTitle: 'Hallelujah',
         author: 'Leonard Cohen',
         rating: [5, 5, 5, 5, 5],
