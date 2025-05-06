@@ -2,7 +2,15 @@ import { useContext, useEffect, useState } from 'react';
 import styles from './SongControl.module.scss';
 import Button from 'components/Button/Button';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faBackwardStep, faForwardStep, faPause, faPlay, faRotateLeft } from '@fortawesome/free-solid-svg-icons';
+import {
+    faBackwardStep,
+    faForwardStep,
+    faPause,
+    faPlay,
+    faRotateLeft,
+    faMinus,
+    faPlus,
+} from '@fortawesome/free-solid-svg-icons';
 import { Context } from 'views/PlayView/PlayView';
 
 interface SongControlProps {
@@ -30,10 +38,19 @@ const SongControl = ({ onGoBack, onPlay, onStop, onForward, onRepeat, defaultBpm
         action();
     };
 
-    const handleBpmChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const bpmValue = parseInt(event.target.value, 10);
-        if (!isNaN(bpmValue) && bpmValue >= 30 && bpmValue <= 300) {
-            setSongBpm(bpmValue);
+    const handleAddBpm = () => {
+        const newBpm = songBpm + 1;
+        if (newBpm <= 300) {
+            setSongBpm(newBpm);
+            onStop();
+            setActiveButton('stop');
+        }
+    };
+
+    const handleSubstractBpm = () => {
+        const newBpm = songBpm - 1;
+        if (newBpm >= 30) {
+            setSongBpm(newBpm);
             onStop();
             setActiveButton('stop');
         }
@@ -74,7 +91,13 @@ const SongControl = ({ onGoBack, onPlay, onStop, onForward, onRepeat, defaultBpm
             </Button>
             <div className={styles.songBpm}>
                 <label htmlFor="songBpm">Bpm utworu:</label>
-                <input id="songBpm" value={songBpm} type="number" onChange={handleBpmChange} />
+                <Button transparent onClick={handleSubstractBpm} className={styles.bpmControlButton}>
+                    <FontAwesomeIcon icon={faMinus} />
+                </Button>
+                <div>{songBpm}</div>
+                <Button transparent onClick={handleAddBpm} className={styles.bpmControlButton}>
+                    <FontAwesomeIcon icon={faPlus} />
+                </Button>
                 <Button onClick={handleSetDefaultBpm}>Domyślne</Button>
             </div>
         </div>

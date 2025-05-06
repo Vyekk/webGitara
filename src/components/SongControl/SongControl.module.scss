@@ -20,7 +20,11 @@
     gap: 1em;
 }
 
-.songBpm input {
-    width: 3.3rem;
-    padding: 10px;
+.bpmControlButton {
+    font-size: 1.5em;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+    &:hover {
+        transform: scale(1.2);
+    }
 }
