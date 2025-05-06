@@ -16,7 +16,7 @@ interface FretboardProps {
 const Fretboard: React.FC<FretboardProps> = ({ numberOfStrings, numberOfFrets, notesToShow, isReversed }) => {
     const singleFretMarkPositions = [3, 5, 7, 9, 15, 17, 19, 21];
     const doubleFretMarkPositions = [12, 24];
-    const instrumentTuning = [4, 11, 7, 2, 9, 4];
+    const instrumentTuning = [4, 9, 2, 7, 11, 4];
     const notesSharp = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
     const stringNames = ['E', 'A', 'D', 'G', 'B', 'E'];
 
