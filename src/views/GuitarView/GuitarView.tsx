@@ -15,6 +15,7 @@ const GuitarView = () => {
     const [currentUrl, setCurrentUrl] = useState(window.location.href);
     const timeoutRef = useRef<NodeJS.Timeout | null>(null);
     const { songBpm, setSongBpm } = useContext(Context);
+    const [songDefaultBpm, setSongDefaultBpm] = useState(120);
     const [currentStep, setCurrentStep] = useState(0);
     const location = useLocation();
     const navigate = useNavigate();
@@ -104,6 +105,7 @@ const GuitarView = () => {
             }
             setSong(song);
             setSongBpm(song.bpm);
+            setSongDefaultBpm(song.bpm);
         };
         fetchSong();
     };
@@ -192,6 +194,11 @@ const GuitarView = () => {
         setCurrentStep(value);
     };
 
+    const handleRepeat = () => {
+        handleClickStop();
+        setCurrentStep(0);
+    };
+
     return (
         <div>
             <div className={styles.linkWrapper}>
@@ -214,6 +221,8 @@ const GuitarView = () => {
                 onPlay={handleClickPlay}
                 onStop={handleClickStop}
                 onForward={handleNextStep}
+                onRepeat={handleRepeat}
+                defaultBpm={songDefaultBpm}
                 isStop={
                     song && (currentStep === song.tabulature.length - 1 || currentStep === 0 || sliderChanged)
                         ? true

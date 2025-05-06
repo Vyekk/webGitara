@@ -2,7 +2,7 @@ import { useContext, useEffect, useState } from 'react';
 import styles from './SongControl.module.scss';
 import Button from 'components/Button/Button';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faBackwardStep, faForwardStep, faPause, faPlay } from '@fortawesome/free-solid-svg-icons';
+import { faBackwardStep, faForwardStep, faPause, faPlay, faRotateLeft } from '@fortawesome/free-solid-svg-icons';
 import { Context } from 'views/PlayView/PlayView';
 
 interface SongControlProps {
@@ -10,10 +10,12 @@ interface SongControlProps {
     onPlay: () => void;
     onStop: () => void;
     onForward: () => void;
+    onRepeat: () => void;
+    defaultBpm: number;
     isStop?: boolean;
 }
 
-const SongControl = ({ onGoBack, onPlay, onStop, onForward, isStop }: SongControlProps) => {
+const SongControl = ({ onGoBack, onPlay, onStop, onForward, onRepeat, defaultBpm, isStop }: SongControlProps) => {
     const [activeButton, setActiveButton] = useState<'play' | 'stop' | null>(null);
     const { songBpm, setSongBpm } = useContext(Context);
 
@@ -35,6 +37,12 @@ const SongControl = ({ onGoBack, onPlay, onStop, onForward, isStop }: SongContro
             onStop();
             setActiveButton('stop');
         }
+    };
+
+    const handleSetDefaultBpm = () => {
+        setSongBpm(defaultBpm);
+        onStop();
+        setActiveButton('stop');
     };
 
     return (
@@ -61,10 +69,13 @@ const SongControl = ({ onGoBack, onPlay, onStop, onForward, isStop }: SongContro
             <Button className={styles.forwardButton} onClick={onForward} transparent title="Naprzód">
                 <FontAwesomeIcon icon={faForwardStep} />
             </Button>
+            <Button className={styles.repeatButton} onClick={onRepeat} transparent title="Resetuj">
+                <FontAwesomeIcon icon={faRotateLeft} />
+            </Button>
             <div className={styles.songBpm}>
                 <label htmlFor="songBpm">Bpm utworu:</label>
                 <input id="songBpm" value={songBpm} type="number" onChange={handleBpmChange} />
-                <Button>Default</Button>
+                <Button onClick={handleSetDefaultBpm}>Domyślne</Button>
             </div>
         </div>
     );

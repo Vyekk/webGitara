@@ -8,7 +8,7 @@
     align-items: center;
     margin-bottom: 1em;
 }
-.playButton, .forwardButton, .stopButton, .backwardButton {
+.playButton, .forwardButton, .stopButton, .backwardButton, .repeatButton {
     font-size: 2em;
 }
 .activeControl {
@@ -21,6 +21,6 @@
 }
 
 .songBpm input {
-    width: 3rem;
+    width: 3.3rem;
     padding: 10px;
 }
