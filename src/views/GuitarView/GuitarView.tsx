@@ -1,5 +1,5 @@
 import Title from 'components/Title/Title';
-import { useEffect, useRef, useState } from 'react';
+import { useContext, useEffect, useRef, useState } from 'react';
 import { Song, TabNote } from 'types';
 import styles from 'views/GuitarView/GuitarView.module.scss';
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -7,6 +7,7 @@ import Slider from 'components/Slider/Slider';
 import { Link } from 'react-router-dom';
 import SongControl from 'components/SongControl/SongControl';
 import Fretboard from 'components/Fretboard/Fretboard';
+import { Context } from 'views/PlayView/PlayView';
 
 const GuitarView = () => {
     const songsData = localStorage.getItem('songs');
@@ -27,6 +28,7 @@ const GuitarView = () => {
         step: TabNote[] | null;
         nextStep: TabNote[] | null;
     }>();
+    const { isFretboardReversed } = useContext(Context);
 
     useEffect(() => {
         setupSong();
@@ -170,6 +172,7 @@ const GuitarView = () => {
                 numberOfStrings={6}
                 numberOfFrets={24}
                 notesToShow={infoToShow || { prevStep: null, step: null, nextStep: null }}
+                isReversed={isFretboardReversed}
             />
             <Slider max={song.tabulature.length} value={currentStep} onChange={handleSliderChange} />
             <SongControl
