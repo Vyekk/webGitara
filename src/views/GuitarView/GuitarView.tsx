@@ -17,7 +17,7 @@ const GuitarView = () => {
     const location = useLocation();
     const navigate = useNavigate();
     const intervalRef = useRef<NodeJS.Timeout | null>(null);
-    const [song, setSong] = useState<Song>(() => {
+    const [song, setSong] = useState<Song | null>(() => {
         const songId = currentUrl.split('/').pop();
         return songs.find((song: Song) => song.id === Number(songId)) || null;
     });
@@ -46,7 +46,7 @@ const GuitarView = () => {
         }
         const currentInfo = getCurrentStepInfo(0);
         let nextStepInfo: TabNote[] | null = null;
-        if (currentInfo && currentStep + 1 < song.tabulature.length) {
+        if (currentInfo && song && currentStep + 1 < song.tabulature.length) {
             nextStepInfo = getCurrentStepInfo(currentStep + 1);
         }
         setInfoToShow((prev) => ({
@@ -59,7 +59,7 @@ const GuitarView = () => {
     useEffect(() => {
         const currentInfo = getCurrentStepInfo(currentStep);
         let nextStepInfo: TabNote[] | null = null;
-        if (currentInfo && currentStep + 1 < song.tabulature.length) {
+        if (song && currentInfo && currentStep + 1 < song.tabulature.length) {
             nextStepInfo = getCurrentStepInfo(currentStep + 1);
         }
         setInfoToShow((prev) => ({
@@ -151,7 +151,7 @@ const GuitarView = () => {
     };
 
     const handleNextStep = () => {
-        setCurrentStep((prevStep) => Math.min(prevStep + 1, song.tabulature.length - 1));
+        setCurrentStep((prevStep) => Math.min(prevStep + 1, (song?.tabulature?.length ?? 0) - 1 || prevStep));
     };
 
     const handleSliderChange = (value: number) => {
@@ -166,7 +166,9 @@ const GuitarView = () => {
                 <Link to="/play/dashboard"> &lt; powrót do dashboard</Link>
             </div>
             <div className={styles.wrapper}>
-                <Title>{`${song?.songTitle} - ${song?.author}`}</Title>
+                <Title>{`${song?.songTitle ? song?.songTitle + ' - ' : 'Brak danego utworu'} ${
+                    song?.author || ''
+                }`}</Title>
             </div>
             <Fretboard
                 numberOfStrings={6}
@@ -174,13 +176,17 @@ const GuitarView = () => {
                 notesToShow={infoToShow || { prevStep: null, step: null, nextStep: null }}
                 isReversed={isFretboardReversed}
             />
-            <Slider max={song.tabulature.length} value={currentStep} onChange={handleSliderChange} />
+            {song && <Slider max={song.tabulature.length} value={currentStep} onChange={handleSliderChange} />}
             <SongControl
                 onGoBack={handlePreviousStep}
                 onPlay={handleClickPlay}
                 onStop={handleClickStop}
                 onForward={handleNextStep}
-                isStop={currentStep === song.tabulature.length - 1 || currentStep === 0 || sliderChanged ? true : false}
+                isStop={
+                    song && (currentStep === song.tabulature.length - 1 || currentStep === 0 || sliderChanged)
+                        ? true
+                        : false
+                }
             />
         </div>
     );
