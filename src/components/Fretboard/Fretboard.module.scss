@@ -29,7 +29,7 @@
     position: relative;
 
     @for $i from 1 through length($string-colors) {
-        &:nth-child(#{$i}) {
+        &[data-string="#{$i}"] {
             .noteFret::before {
                 background: nth($string-colors, $i);
             }
