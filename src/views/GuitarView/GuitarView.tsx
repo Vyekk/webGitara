@@ -13,10 +13,11 @@ const GuitarView = () => {
     const songsData = localStorage.getItem('songs');
     const songs = songsData ? JSON.parse(songsData) : [];
     const [currentUrl, setCurrentUrl] = useState(window.location.href);
+    const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+    const [songBpm, setSongBpm] = useState(60);
     const [currentStep, setCurrentStep] = useState(0);
     const location = useLocation();
     const navigate = useNavigate();
-    const intervalRef = useRef<NodeJS.Timeout | null>(null);
     const [song, setSong] = useState<Song | null>(() => {
         const songId = currentUrl.split('/').pop();
         return songs.find((song: Song) => song.id === Number(songId)) || null;
@@ -75,6 +76,24 @@ const GuitarView = () => {
         }
     }, [currentStep]);
 
+    const getDurationInMs = (duration: string): number => {
+        const beatDuration = 60000 / songBpm;
+        switch (duration) {
+            case '1n':
+                return beatDuration * 4;
+            case '2n':
+                return beatDuration * 2;
+            case '4n':
+                return beatDuration;
+            case '8n':
+                return beatDuration / 2;
+            case '16n':
+                return beatDuration / 4;
+            default:
+                return beatDuration;
+        }
+    };
+
     const setupSong = () => {
         const fetchSong = async () => {
             const songId = currentUrl.split('/').pop();
@@ -84,6 +103,7 @@ const GuitarView = () => {
                 return;
             }
             setSong(song);
+            setSongBpm(song.bpm);
         };
         fetchSong();
     };
@@ -102,6 +122,8 @@ const GuitarView = () => {
             return;
         }
 
+        handleClickStop();
+
         if (currentStep === 0) {
             const currentInfo = getCurrentStepInfo(currentStep);
             let nextStepInfo: TabNote[] | null = null;
@@ -115,21 +137,31 @@ const GuitarView = () => {
             }));
         }
 
-        if (intervalRef.current) {
-            clearInterval(intervalRef.current);
-        }
+        const playNext = (stepIndex: number) => {
+            if (!song || stepIndex >= song.tabulature.length) {
+                return;
+            }
 
-        intervalRef.current = setInterval(() => {
-            setCurrentStep((prevStep) => {
-                if (prevStep + 1 >= song.tabulature.length) {
-                    if (intervalRef.current) {
-                        clearInterval(intervalRef.current);
-                    }
-                    return prevStep;
+            setCurrentStep(stepIndex);
+
+            const stepNotes = song.tabulature[stepIndex];
+            const durationStr =
+                Array.isArray(stepNotes) && stepNotes.length > 0 && 'duration' in stepNotes[0]
+                    ? (stepNotes[0] as any).duration || '4n'
+                    : '4n';
+
+            const delay = getDurationInMs(durationStr);
+
+            timeoutRef.current = setTimeout(() => {
+                if (stepIndex + 1 < song.tabulature.length) {
+                    playNext(stepIndex + 1);
+                } else {
+                    handleClickStop();
                 }
-                return prevStep + 1;
-            });
-        }, 1000);
+            }, delay);
+        };
+
+        playNext(currentStep);
     };
 
     const handleClickPlay = () => {
@@ -140,9 +172,9 @@ const GuitarView = () => {
     };
 
     const handleClickStop = () => {
-        if (intervalRef.current) {
-            clearInterval(intervalRef.current);
-            intervalRef.current = null;
+        if (timeoutRef.current) {
+            clearTimeout(timeoutRef.current);
+            timeoutRef.current = null;
         }
     };
 
