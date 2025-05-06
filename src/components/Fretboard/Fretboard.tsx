@@ -117,11 +117,11 @@ const Fretboard: React.FC<FretboardProps> = ({ numberOfStrings, numberOfFrets, n
                                 data-note={generateNoteNames(fretIndex + instrumentTuning[stringIndex])}
                             >
                                 {singleFretMarkPositions.includes(fretIndex) &&
-                                    stringIndex === (isReversed ? 5 : 0) && (
+                                    stringIndex === (isReversed ? 0 : 5) && (
                                         <div className={styles.singleFretmark}></div>
                                     )}
                                 {doubleFretMarkPositions.includes(fretIndex) &&
-                                    stringIndex === (isReversed ? 5 : 0) && (
+                                    stringIndex === (isReversed ? 0 : 5) && (
                                         <div className={styles.doubleFretmark}></div>
                                     )}
                             </div>
