@@ -17,4 +17,5 @@ export type Song = {
     liked?: boolean;
     comments?: [string, string][];
     tabulature: Tabulature;
+    bpm: number;
 };
