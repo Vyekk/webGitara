@@ -40,7 +40,7 @@ const songs = [
         ],
     },
     {
-        id: 12,
+        id: 2,
         songTitle: 'Smoke on the Water',
         author: 'Deep Purple',
         rating: [5, 5, 4, 5, 4],
@@ -67,7 +67,7 @@ const songs = [
         ],
     },
     {
-        id: 13,
+        id: 3,
         songTitle: 'Seven Nation Army',
         author: 'The White Stripes',
         rating: [5, 4, 4, 5, 4],
@@ -87,7 +87,7 @@ const songs = [
         ],
     },
     {
-        id: 14,
+        id: 4,
         songTitle: 'Iron Man',
         author: 'Black Sabbath',
         rating: [4, 4, 4, 4, 5],
@@ -95,7 +95,7 @@ const songs = [
             ['Ciężki riff, klasyka!', 'Mike'],
             ['Uwielbiam to intro', 'Sophie'],
         ],
-        bpm: 80,
+        bpm: 96,
         tabulature: [
             [{ guitarString: 6, guitarFret: 0, duration: '4n' }],
             [{ guitarString: 6, guitarFret: 3, duration: '4n' }],
@@ -103,11 +103,15 @@ const songs = [
             [{ rest: true, duration: '8n' }],
             [{ guitarString: 4, guitarFret: 5, duration: '8n' }],
             [{ guitarString: 5, guitarFret: 5, duration: '8n' }],
-            [{ guitarString: 4, guitarFret: 5, duration: '4n' }],
+            [{ guitarString: 4, guitarFret: 5, duration: '8n' }],
+            [{ guitarString: 5, guitarFret: 5, duration: '8n' }],
+            [{ guitarString: 4, guitarFret: 5, duration: '8n' }],
+            [{ rest: true, duration: '8n' }],
+            [{ guitarString: 6, guitarFret: 0, duration: '4n' }],
         ],
     },
     {
-        id: 15,
+        id: 5,
         songTitle: 'Satisfaction',
         author: 'The Rolling Stones',
         rating: [4, 5, 4, 5, 4],
@@ -129,7 +133,7 @@ const songs = [
         ],
     },
     {
-        id: 11,
+        id: 6,
         songTitle: 'Happy Birthday',
         author: 'unknown',
         rating: [3, 3, 4, 4, 5, 5],
@@ -171,7 +175,7 @@ const songs = [
         ],
     },
     {
-        id: 12,
+        id: 7,
         songTitle: 'Twinkle Twinkle Little Star',
         author: 'Traditional',
         rating: [4, 4, 4, 5, 5],
@@ -199,7 +203,7 @@ const songs = [
         ],
     },
     {
-        id: 13,
+        id: 8,
         songTitle: 'Ode to Joy',
         author: 'Ludwig van Beethoven',
         rating: [5, 5, 5, 4, 4],
@@ -216,7 +220,7 @@ const songs = [
             [{ guitarString: 2, guitarFret: 2, duration: '8n' }],
             [{ guitarString: 2, guitarFret: 1, duration: '8n' }],
             [{ guitarString: 2, guitarFret: 0, duration: '8n' }],
-            [{ guitarString: 2, guitarFret: -1, duration: '8n' }], // Pauza – opcjonalna nuta pustej struny
+            [{ guitarString: 2, guitarFret: 0, duration: '8n' }], // Pauza – opcjonalna nuta pustej struny
             [{ guitarString: 2, guitarFret: 0, duration: '8n' }],
             [{ guitarString: 2, guitarFret: 0, duration: '8n' }],
             [{ guitarString: 2, guitarFret: 1, duration: '8n' }],
@@ -229,7 +233,7 @@ const songs = [
         ],
     },
     {
-        id: 14,
+        id: 9,
         songTitle: 'Mary Had a Little Lamb',
         author: 'Traditional',
         rating: [4, 5, 4, 5, 4],
