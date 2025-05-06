@@ -10,9 +10,10 @@ interface FretboardProps {
         step: TabNote[] | null;
         nextStep: TabNote[] | null;
     };
+    isReversed: boolean;
 }
 
-const Fretboard: React.FC<FretboardProps> = ({ numberOfStrings, numberOfFrets, notesToShow }) => {
+const Fretboard: React.FC<FretboardProps> = ({ numberOfStrings, numberOfFrets, notesToShow, isReversed }) => {
     const singleFretMarkPositions = [3, 5, 7, 9, 15, 17, 19, 21];
     const doubleFretMarkPositions = [12, 24];
     const instrumentTuning = [4, 11, 7, 2, 9, 4];
@@ -103,26 +104,30 @@ const Fretboard: React.FC<FretboardProps> = ({ numberOfStrings, numberOfFrets, n
 
     return (
         <div className={styles.fretboard}>
-            {Array.from({ length: numberOfStrings }, (_, stringIndex) => (
-                <div key={stringIndex} className={styles.string} data-string={stringIndex + 1}>
-                    {Array.from({ length: numberOfFrets + 1 }, (_, fretIndex) => (
-                        <div
-                            key={fretIndex}
-                            className={styles.noteFret}
-                            data-string={stringIndex + 1}
-                            data-fret={fretIndex}
-                            data-note={generateNoteNames(fretIndex + instrumentTuning[stringIndex])}
-                        >
-                            {singleFretMarkPositions.includes(fretIndex) && stringIndex === 0 && (
-                                <div className={styles.singleFretmark}></div>
-                            )}
-                            {doubleFretMarkPositions.includes(fretIndex) && stringIndex === 0 && (
-                                <div className={styles.doubleFretmark}></div>
-                            )}
-                        </div>
-                    ))}
-                </div>
-            ))}
+            {Array.from({ length: numberOfStrings }, (_, stringIndex) => stringIndex)
+                .map((i) => (isReversed ? numberOfStrings - 1 - i : i))
+                .map((stringIndex) => (
+                    <div key={stringIndex} className={styles.string} data-string={stringIndex + 1}>
+                        {Array.from({ length: numberOfFrets + 1 }, (_, fretIndex) => (
+                            <div
+                                key={fretIndex}
+                                className={styles.noteFret}
+                                data-string={stringIndex + 1}
+                                data-fret={fretIndex}
+                                data-note={generateNoteNames(fretIndex + instrumentTuning[stringIndex])}
+                            >
+                                {singleFretMarkPositions.includes(fretIndex) &&
+                                    stringIndex === (isReversed ? 5 : 0) && (
+                                        <div className={styles.singleFretmark}></div>
+                                    )}
+                                {doubleFretMarkPositions.includes(fretIndex) &&
+                                    stringIndex === (isReversed ? 5 : 0) && (
+                                        <div className={styles.doubleFretmark}></div>
+                                    )}
+                            </div>
+                        ))}
+                    </div>
+                ))}
         </div>
     );
 };
