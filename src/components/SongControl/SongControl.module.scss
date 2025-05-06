@@ -16,9 +16,11 @@
 }
 .songBpm {
     display: flex;
+    align-items: center;
     gap: 1em;
 }
 
 .songBpm input {
     width: 3rem;
+    padding: 10px;
 }
