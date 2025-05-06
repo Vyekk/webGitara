@@ -94,11 +94,13 @@ const SongControl = ({ onGoBack, onPlay, onStop, onForward, onRepeat, defaultBpm
                 <Button transparent onClick={handleSubstractBpm} className={styles.bpmControlButton}>
                     <FontAwesomeIcon icon={faMinus} />
                 </Button>
-                <div>{songBpm}</div>
+                <div className={styles.songBpmWrapper}>{songBpm}</div>
                 <Button transparent onClick={handleAddBpm} className={styles.bpmControlButton}>
                     <FontAwesomeIcon icon={faPlus} />
                 </Button>
-                <Button onClick={handleSetDefaultBpm}>Domyślne</Button>
+                <Button className={styles.defaultButton} transparent onClick={handleSetDefaultBpm}>
+                    Domyślne
+                </Button>
             </div>
         </div>
     );
