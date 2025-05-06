@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect, useRef, useState } from 'react';
 import styles from './SongControl.module.scss';
 import Button from 'components/Button/Button';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -12,6 +12,7 @@ import {
     faPlus,
 } from '@fortawesome/free-solid-svg-icons';
 import { Context } from 'views/PlayView/PlayView';
+import { useHoldPress } from 'hooks/useHoldPress';
 
 interface SongControlProps {
     onGoBack: () => void;
@@ -26,6 +27,7 @@ interface SongControlProps {
 const SongControl = ({ onGoBack, onPlay, onStop, onForward, onRepeat, defaultBpm, isStop }: SongControlProps) => {
     const [activeButton, setActiveButton] = useState<'play' | 'stop' | null>(null);
     const { songBpm, setSongBpm } = useContext(Context);
+    const songBpmRef = useRef(songBpm);
 
     useEffect(() => {
         if (isStop) {
@@ -33,13 +35,17 @@ const SongControl = ({ onGoBack, onPlay, onStop, onForward, onRepeat, defaultBpm
         }
     }, [isStop]);
 
+    useEffect(() => {
+        songBpmRef.current = songBpm;
+    }, [songBpm]);
+
     const handleButtonClick = (buttonName: 'play' | 'stop', action: () => void) => {
         setActiveButton(buttonName);
         action();
     };
 
     const handleAddBpm = () => {
-        const newBpm = songBpm + 1;
+        const newBpm = songBpmRef.current + 1;
         if (newBpm <= 300) {
             setSongBpm(newBpm);
             onStop();
@@ -48,7 +54,7 @@ const SongControl = ({ onGoBack, onPlay, onStop, onForward, onRepeat, defaultBpm
     };
 
     const handleSubstractBpm = () => {
-        const newBpm = songBpm - 1;
+        const newBpm = songBpmRef.current - 1;
         if (newBpm >= 30) {
             setSongBpm(newBpm);
             onStop();
@@ -61,6 +67,18 @@ const SongControl = ({ onGoBack, onPlay, onStop, onForward, onRepeat, defaultBpm
         onStop();
         setActiveButton('stop');
     };
+
+    const {
+        onMouseDown: minusMouseDown,
+        onMouseUp: minusMouseUp,
+        onMouseLeave: minusMouseLeave,
+    } = useHoldPress(handleSubstractBpm);
+
+    const {
+        onMouseDown: plusMouseDown,
+        onMouseUp: plusMouseUp,
+        onMouseLeave: plusMouseLeave,
+    } = useHoldPress(handleAddBpm);
 
     return (
         <div className={styles.songControl}>
@@ -91,11 +109,23 @@ const SongControl = ({ onGoBack, onPlay, onStop, onForward, onRepeat, defaultBpm
             </Button>
             <div className={styles.songBpm}>
                 <label htmlFor="songBpm">Bpm utworu:</label>
-                <Button transparent onClick={handleSubstractBpm} className={styles.bpmControlButton}>
+                <Button
+                    transparent
+                    onMouseDown={minusMouseDown}
+                    onMouseUp={minusMouseUp}
+                    onMouseLeave={minusMouseLeave}
+                    className={styles.bpmControlButton}
+                >
                     <FontAwesomeIcon icon={faMinus} />
                 </Button>
                 <div className={styles.songBpmWrapper}>{songBpm}</div>
-                <Button transparent onClick={handleAddBpm} className={styles.bpmControlButton}>
+                <Button
+                    transparent
+                    onMouseDown={plusMouseDown}
+                    onMouseUp={plusMouseUp}
+                    onMouseLeave={plusMouseLeave}
+                    className={styles.bpmControlButton}
+                >
                     <FontAwesomeIcon icon={faPlus} />
                 </Button>
                 <Button className={styles.defaultButton} transparent onClick={handleSetDefaultBpm}>
