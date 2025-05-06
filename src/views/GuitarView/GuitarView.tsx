@@ -14,7 +14,7 @@ const GuitarView = () => {
     const songs = songsData ? JSON.parse(songsData) : [];
     const [currentUrl, setCurrentUrl] = useState(window.location.href);
     const timeoutRef = useRef<NodeJS.Timeout | null>(null);
-    const [songBpm, setSongBpm] = useState(60);
+    const { songBpm, setSongBpm } = useContext(Context);
     const [currentStep, setCurrentStep] = useState(0);
     const location = useLocation();
     const navigate = useNavigate();
