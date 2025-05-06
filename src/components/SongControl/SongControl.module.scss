@@ -3,8 +3,8 @@
 .songControl {
     display: flex;
     justify-content: center;
-    margin-top: 3em;
-    gap: 5em;
+    margin-top: 2em;
+    gap: 3em;
     align-items: center;
     margin-bottom: 1em;
 }
@@ -13,4 +13,12 @@
 }
 .activeControl {
     color: $primary-color;
+}
+.songBpm {
+    display: flex;
+    gap: 1em;
+}
+
+.songBpm input {
+    width: 3rem;
 }
