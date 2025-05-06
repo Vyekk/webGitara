@@ -11,11 +11,15 @@ import React from 'react';
 interface ContextType {
     isFretboardReversed: boolean;
     setIsFretboardReversed: React.Dispatch<React.SetStateAction<boolean>>;
+    songBpm: number;
+    setSongBpm: React.Dispatch<React.SetStateAction<number>>;
 }
 
 export const Context = React.createContext<ContextType>({
     isFretboardReversed: false,
     setIsFretboardReversed: () => void 0,
+    songBpm: 120,
+    setSongBpm: () => void 0,
 });
 
 const PlayView: React.FC = () => {
@@ -23,6 +27,7 @@ const PlayView: React.FC = () => {
     const toolbarRef = useRef<HTMLDivElement | null>(null);
     const modalRef = useRef<HTMLDivElement | null>(null);
     const [isFretboardReversed, setIsFretboardReversed] = useState(false);
+    const [songBpm, setSongBpm] = useState(120);
 
     useEffect(() => {
         if (!isModalOpen || !closeModal) return;
@@ -45,7 +50,7 @@ const PlayView: React.FC = () => {
     }, [isModalOpen, closeModal]);
 
     return (
-        <Context.Provider value={{ isFretboardReversed, setIsFretboardReversed }}>
+        <Context.Provider value={{ isFretboardReversed, setIsFretboardReversed, songBpm, setSongBpm }}>
             <Section id={styles.playBackground}>
                 {isModalOpen && (
                     <Modal ref={modalRef} onClose={closeModal}>
