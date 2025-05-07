@@ -24,13 +24,13 @@ const Toolbar = forwardRef<HTMLDivElement, ToolbarProps>(({ hasControls }, ref) 
     return (
         <div ref={ref} className={styles.wrapper}>
             {hasControls && <Button isDark>BPM</Button>}
-            <Button className={styles.secondOption} href="../new" transparent>
-                Nowy utwór
-            </Button>
             <Button className={styles.libraryButton} onClick={() => handleOpenModal(<MainMenu />)} circle>
                 <div className={styles.libraryIcon}>
                     <FontAwesomeIcon icon={faBook} />
                 </div>
+            </Button>
+            <Button className={styles.secondOption} href="/play/new" transparent>
+                Nowy utwór
             </Button>
             <Button className={styles.secondOption} onClick={() => handleOpenModal(<Settings />)} transparent>
                 <FontAwesomeIcon icon={faGear} className={styles.settingsIcon} />
