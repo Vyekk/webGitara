@@ -10,6 +10,15 @@
     padding: 20px;
     height: 4em;
     z-index: 10000;
+    .secondOption {
+        width: 7%;
+        text-align: center;
+        display: flex;
+        justify-content: center;
+        &:nth-child(3) {
+            width: 3%;
+        }
+    }
     .settingsIcon {
         font-size: 2em;
     }
