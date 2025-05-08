@@ -9,6 +9,7 @@ import SongControl from 'components/SongControl/SongControl';
 import Fretboard from 'components/Fretboard/Fretboard';
 import { Context } from 'views/PlayView/PlayView';
 import { setupSamplePlayer, playNote } from 'utils/playNote';
+import { start } from 'tone';
 
 const GuitarView = () => {
     const songsData = localStorage.getItem('songs');
@@ -177,7 +178,8 @@ const GuitarView = () => {
         playNext(currentStep);
     };
 
-    const handleClickPlay = () => {
+    const handleClickPlay = async () => {
+        await start();
         if (sliderChanged) {
             setSliderChanged(false);
         }
