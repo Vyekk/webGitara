@@ -10,6 +10,7 @@ import {
     faRotateLeft,
     faMinus,
     faPlus,
+    faVolumeHigh,
 } from '@fortawesome/free-solid-svg-icons';
 import { Context } from 'views/PlayView/PlayView';
 import { useHoldPress } from 'hooks/useHoldPress';
@@ -22,9 +23,21 @@ interface SongControlProps {
     onRepeat: () => void;
     defaultBpm: number;
     isStop?: boolean;
+    songLength: number;
+    currentStep: number;
 }
 
-const SongControl = ({ onGoBack, onPlay, onStop, onForward, onRepeat, defaultBpm, isStop }: SongControlProps) => {
+const SongControl = ({
+    onGoBack,
+    onPlay,
+    onStop,
+    onForward,
+    onRepeat,
+    songLength,
+    currentStep,
+    defaultBpm,
+    isStop,
+}: SongControlProps) => {
     const [activeButton, setActiveButton] = useState<'play' | 'stop' | null>(null);
     const { songBpm, setSongBpm } = useContext(Context);
     const songBpmRef = useRef(songBpm);
@@ -40,6 +53,9 @@ const SongControl = ({ onGoBack, onPlay, onStop, onForward, onRepeat, defaultBpm
     }, [songBpm]);
 
     const handleButtonClick = (buttonName: 'play' | 'stop', action: () => void) => {
+        if (currentStep >= songLength - 1) {
+            return;
+        }
         setActiveButton(buttonName);
         action();
     };
@@ -106,6 +122,9 @@ const SongControl = ({ onGoBack, onPlay, onStop, onForward, onRepeat, defaultBpm
             </Button>
             <Button className={styles.repeatButton} onClick={onRepeat} transparent title="Resetuj">
                 <FontAwesomeIcon icon={faRotateLeft} />
+            </Button>
+            <Button className={styles.soundButton} transparent>
+                <FontAwesomeIcon icon={faVolumeHigh} />
             </Button>
             <div className={styles.songBpm}>
                 <label htmlFor="songBpm">Bpm utworu:</label>
