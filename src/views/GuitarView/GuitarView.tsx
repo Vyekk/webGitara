@@ -8,6 +8,7 @@ import { Link } from 'react-router-dom';
 import SongControl from 'components/SongControl/SongControl';
 import Fretboard from 'components/Fretboard/Fretboard';
 import { Context } from 'views/PlayView/PlayView';
+import { setupSamplePlayer, playNote } from 'utils/playNote';
 
 const GuitarView = () => {
     const songsData = localStorage.getItem('songs');
@@ -31,6 +32,10 @@ const GuitarView = () => {
         nextStep: TabNote[] | null;
     }>();
     const { isFretboardReversed } = useContext(Context);
+
+    useEffect(() => {
+        setupSamplePlayer();
+    }, []);
 
     useEffect(() => {
         setupSong();
@@ -120,7 +125,6 @@ const GuitarView = () => {
 
     const playSong = () => {
         if (!song?.tabulature || song.tabulature.length === 0) {
-            console.warn('Play is not possible: No tabulature available for the song.');
             return;
         }
 
@@ -153,6 +157,13 @@ const GuitarView = () => {
                     : '4n';
 
             const delay = getDurationInMs(durationStr);
+            const durationSec = delay / 1000;
+
+            stepNotes.forEach(async (note) => {
+                if (!note.rest) {
+                    await playNote(note.guitarString, note.guitarFret, durationSec);
+                }
+            });
 
             timeoutRef.current = setTimeout(() => {
                 if (stepIndex + 1 < song.tabulature.length) {
