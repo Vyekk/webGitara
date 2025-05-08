@@ -172,6 +172,7 @@ const songs = [
             [{ guitarString: 2, guitarFret: 8, duration: '8n' }],
             [{ guitarString: 2, guitarFret: 6, duration: '8n' }],
             [{ guitarString: 2, guitarFret: 8, duration: '4n' }],
+            [{ guitarString: 2, guitarFret: 6, duration: '4n' }],
         ],
     },
     {
