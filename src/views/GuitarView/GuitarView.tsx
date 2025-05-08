@@ -125,7 +125,7 @@ const GuitarView = () => {
     };
 
     const playSong = () => {
-        if (!song?.tabulature || song.tabulature.length === 0) {
+        if (!song?.tabulature || song.tabulature.length === 0 || currentStep >= song.tabulature.length - 1) {
             return;
         }
 
@@ -236,6 +236,8 @@ const GuitarView = () => {
                 onForward={handleNextStep}
                 onRepeat={handleRepeat}
                 defaultBpm={songDefaultBpm}
+                currentStep={currentStep}
+                songLength={song ? song.tabulature.length : 0}
                 isStop={
                     song && (currentStep === song.tabulature.length - 1 || currentStep === 0 || sliderChanged)
                         ? true
