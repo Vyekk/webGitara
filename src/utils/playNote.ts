@@ -1,4 +1,4 @@
-import { Frequency, Sampler } from 'tone';
+import { Frequency, Sampler, Volume } from 'tone';
 
 const tuning: Record<number, number> = {
     1: 64, // E4
@@ -20,7 +20,7 @@ const baseUrls: Record<number, string> = {
 
 const samplers: Record<number, Sampler> = {};
 
-export async function setupSamplePlayer() {
+export async function setupSamplePlayer(volume: Volume) {
     const promises = Object.entries(baseUrls).map(async ([stringNumber, url]) => {
         const midi = tuning[Number(stringNumber)];
         const note = Frequency(midi, 'midi').toNote();
@@ -31,7 +31,7 @@ export async function setupSamplePlayer() {
             },
             release: 1,
             baseUrl: '',
-        }).toDestination();
+        }).connect(volume);
 
         samplers[Number(stringNumber)] = sampler;
     });
