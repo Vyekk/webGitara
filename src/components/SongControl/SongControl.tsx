@@ -11,6 +11,7 @@ import {
     faMinus,
     faPlus,
     faVolumeHigh,
+    faVolumeXmark,
 } from '@fortawesome/free-solid-svg-icons';
 import { Context } from 'views/PlayView/PlayView';
 import { useHoldPress } from 'hooks/useHoldPress';
@@ -21,6 +22,7 @@ interface SongControlProps {
     onStop: () => void;
     onForward: () => void;
     onRepeat: () => void;
+    onVolumeChange: () => void;
     defaultBpm: number;
     isStop?: boolean;
     songLength: number;
@@ -33,12 +35,14 @@ const SongControl = ({
     onStop,
     onForward,
     onRepeat,
+    onVolumeChange,
     songLength,
     currentStep,
     defaultBpm,
     isStop,
 }: SongControlProps) => {
     const [activeButton, setActiveButton] = useState<'play' | 'stop' | null>(null);
+    const [isVolumeMuted, setIsVolumeMuted] = useState(false);
     const { songBpm, setSongBpm } = useContext(Context);
     const songBpmRef = useRef(songBpm);
 
@@ -84,6 +88,16 @@ const SongControl = ({
         setActiveButton('stop');
     };
 
+    const handleVolumeMute = () => {
+        if (isVolumeMuted) {
+            setIsVolumeMuted(false);
+            onVolumeChange();
+        } else {
+            setIsVolumeMuted(true);
+            onVolumeChange();
+        }
+    };
+
     const {
         onMouseDown: minusMouseDown,
         onMouseUp: minusMouseUp,
@@ -123,8 +137,8 @@ const SongControl = ({
             <Button className={styles.repeatButton} onClick={onRepeat} transparent title="Resetuj">
                 <FontAwesomeIcon icon={faRotateLeft} />
             </Button>
-            <Button className={styles.soundButton} transparent>
-                <FontAwesomeIcon icon={faVolumeHigh} />
+            <Button className={styles.soundButton} transparent onClick={handleVolumeMute} title="Zmień głośność">
+                {isVolumeMuted ? <FontAwesomeIcon icon={faVolumeXmark} /> : <FontAwesomeIcon icon={faVolumeHigh} />}
             </Button>
             <div className={styles.songBpm}>
                 <label htmlFor="songBpm">Bpm utworu:</label>
