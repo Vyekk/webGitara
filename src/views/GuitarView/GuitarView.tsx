@@ -9,7 +9,7 @@ import SongControl from 'components/SongControl/SongControl';
 import Fretboard from 'components/Fretboard/Fretboard';
 import { Context } from 'views/PlayView/PlayView';
 import { setupSamplePlayer, playNote } from 'utils/playNote';
-import { start } from 'tone';
+import { start, Volume } from 'tone';
 
 const GuitarView = () => {
     const songsData = localStorage.getItem('songs');
@@ -19,6 +19,8 @@ const GuitarView = () => {
     const { songBpm, setSongBpm } = useContext(Context);
     const [songDefaultBpm, setSongDefaultBpm] = useState(120);
     const [currentStep, setCurrentStep] = useState(0);
+    const [isVolumeMuted, setIsVolumeMuted] = useState(false);
+    const songVolumeRef = useRef<Volume | null>(null);
     const location = useLocation();
     const navigate = useNavigate();
     const [song, setSong] = useState<Song | null>(() => {
@@ -35,7 +37,9 @@ const GuitarView = () => {
     const { isFretboardReversed } = useContext(Context);
 
     useEffect(() => {
-        setupSamplePlayer();
+        const volume = new Volume(0).toDestination();
+        songVolumeRef.current = volume;
+        setupSamplePlayer(volume);
     }, []);
 
     useEffect(() => {
@@ -212,6 +216,19 @@ const GuitarView = () => {
         setCurrentStep(0);
     };
 
+    const handleVolumeChange = () => {
+        if (!songVolumeRef.current) {
+            return;
+        }
+        if (isVolumeMuted) {
+            setIsVolumeMuted(false);
+            songVolumeRef.current.volume.value = 0;
+        } else {
+            setIsVolumeMuted(true);
+            songVolumeRef.current.volume.value = -Infinity;
+        }
+    };
+
     return (
         <div>
             <div className={styles.linkWrapper}>
@@ -235,6 +252,7 @@ const GuitarView = () => {
                 onStop={handleClickStop}
                 onForward={handleNextStep}
                 onRepeat={handleRepeat}
+                onVolumeChange={handleVolumeChange}
                 defaultBpm={songDefaultBpm}
                 currentStep={currentStep}
                 songLength={song ? song.tabulature.length : 0}
