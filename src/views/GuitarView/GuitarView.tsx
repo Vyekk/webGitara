@@ -158,7 +158,7 @@ const GuitarView = () => {
             const stepNotes = song.tabulature[stepIndex];
             const durationStr =
                 Array.isArray(stepNotes) && stepNotes.length > 0 && 'duration' in stepNotes[0]
-                    ? (stepNotes[0] as any).duration || '4n'
+                    ? (stepNotes[0] as TabNote).duration
                     : '4n';
 
             const delay = getDurationInMs(durationStr);
