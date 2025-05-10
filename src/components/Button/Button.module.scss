@@ -14,7 +14,7 @@
         color: $white;
         cursor: pointer;
         transform: scale(1.05);
-        font-weight: 700
+        font-weight: 700;
     }
     &Circle {
         @extend .button;
@@ -41,5 +41,7 @@
     }
     &Active {
         color: $primary-color;
+        transform: scale(1.05);
+        font-weight: 700;
     }
 }
