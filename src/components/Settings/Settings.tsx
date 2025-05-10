@@ -1,16 +1,17 @@
 import Button from 'components/Button/Button';
 import styles from 'components/Settings/Settings.module.scss';
 import Title from 'components/Title/Title';
-import { useContext, useState } from 'react';
+import { useContext, useEffect, useRef, useState } from 'react';
 import { Context } from 'views/PlayView/PlayView';
 
 const Settings = () => {
     const [settingsScreen, setSettingsScreen] = useState('myAccount');
+    const reverseGuitarRef = useRef<HTMLInputElement>(null);
     const setIsFretboardReversed = useContext(Context)?.setIsFretboardReversed;
 
     const handeChangeInterface = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        console.log('zmieniono interfejs');
+        localStorage.setItem('isFretboardReversed', JSON.stringify(e.currentTarget.reverseGuitar.checked));
     };
 
     const handleCheckReverseGuitar = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -19,6 +20,16 @@ const Settings = () => {
             setIsFretboardReversed(isChecked);
         }
     };
+    useEffect(() => {
+        if (settingsScreen === 'playgroundSettings') {
+            const isFretboardReversedUser = localStorage.getItem('isFretboardReversed');
+            if (isFretboardReversedUser) {
+                if (reverseGuitarRef.current) {
+                    reverseGuitarRef.current.checked = JSON.parse(isFretboardReversedUser);
+                }
+            }
+        }
+    }, [settingsScreen]);
 
     const myAccountContent = (
         <>
@@ -71,7 +82,13 @@ const Settings = () => {
                     <form onSubmit={handeChangeInterface}>
                         <div className={styles.formGroup}>
                             <div className={styles.formGroup}>
-                                <input type="checkbox" id="reverseGuitar" onChange={handleCheckReverseGuitar} />
+                                <input
+                                    ref={reverseGuitarRef}
+                                    name="reverseGuitar"
+                                    type="checkbox"
+                                    id="reverseGuitar"
+                                    onChange={handleCheckReverseGuitar}
+                                />
                                 <label htmlFor="reverseGuitar">Odwróć gitarę</label>
                             </div>
                             <div className={styles.formGroup}>

@@ -30,6 +30,13 @@ const PlayView: React.FC = () => {
     const [songBpm, setSongBpm] = useState(120);
 
     useEffect(() => {
+        const isFretboardReversedUser = localStorage.getItem('isFretboardReversed');
+        if (isFretboardReversedUser) {
+            setIsFretboardReversed(JSON.parse(isFretboardReversedUser));
+        }
+    }, []);
+
+    useEffect(() => {
         if (!isModalOpen || !closeModal) return;
 
         const handleClickOutside = (event: MouseEvent) => {
