@@ -13,8 +13,14 @@
         background-color: #7e291d;
         color: $white;
         cursor: pointer;
-        transform: scale(1.05);
-        font-weight: 700;
+        .buttonContentWrapper {
+            transform: scale(1.05);
+            font-weight: 700;
+        }
+        .linkContentWrapper {
+            transform: scale(1.05);
+            font-weight: 700;
+        }
     }
     &Circle {
         @extend .button;
@@ -41,7 +47,9 @@
     }
     &Active {
         color: $primary-color;
-        transform: scale(1.05);
-        font-weight: 700;
+        .buttonContentWrapper {
+            transform: scale(1.05);
+            font-weight: 700;
+        }
     }
 }

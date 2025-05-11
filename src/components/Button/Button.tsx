@@ -29,14 +29,14 @@ const Button = ({ children, href, circle, isDark, transparent, className, isActi
     if (href) {
         return (
             <Link to={href} className={buttonClassName}>
-                {children}
+                <div className={styles.linkContentWrapper}>{children}</div>
             </Link>
         );
     }
 
     return (
         <button {...props} className={buttonClassName}>
-            {children}
+            <div className={styles.buttonContentWrapper}>{children}</div>
         </button>
     );
 };
