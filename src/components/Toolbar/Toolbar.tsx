@@ -4,7 +4,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBook, faGear } from '@fortawesome/free-solid-svg-icons';
 import { ModalContext } from 'components/Modal/ModalContext';
 import { ReactNode, useContext, forwardRef } from 'react';
-import { MainMenu } from 'components/MainMenu/MainMenu';
+import { MainMenu } from 'components/MainMenu/SongsLibrary';
 import { Settings } from 'components/Settings/Settings';
 
 interface ToolbarProps {
