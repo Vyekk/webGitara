@@ -1,5 +1,5 @@
 import Button from 'components/Button/Button';
-import styles from './MainMenu.module.scss';
+import styles from './SongsLibrary.module.scss';
 import { SongsList } from 'components/SongsList/SongsList';
 import { useEffect, useState } from 'react';
 import Input from 'components/Input/Input';
@@ -33,11 +33,9 @@ export const MainMenu = () => {
                 >
                     Moje utwory
                 </Button>
-                {buttonType === 'allSongs' && (
-                    <Input id="search" onChange={handleSearch}>
-                        Wyszukaj utwór
-                    </Input>
-                )}
+                <Input id="search" onChange={handleSearch}>
+                    Wyszukaj utwór
+                </Input>
                 <Button
                     transparent
                     isActive={buttonType === 'allSongs' ? true : false}
