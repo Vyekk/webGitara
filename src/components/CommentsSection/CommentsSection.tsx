@@ -1,6 +1,6 @@
 import Button from 'components/Button/Button';
 import styles from 'components/CommentsSection/CommentsSection.module.scss';
-import { MainMenu } from 'components/MainMenu/MainMenu';
+import { MainMenu } from 'components/MainMenu/SongsLibrary';
 import { ModalContext } from 'components/Modal/ModalContext';
 import Title from 'components/Title/Title';
 import { useContext, useState } from 'react';
