@@ -1,4 +1,4 @@
-import styles from './TabulatureEditor.module.scss';
+import styles from 'components/TabulatureEditor/TabulatureEditor.module.scss';
 
 const TabulatureEditor = () => {
     return <div className={styles.tabulatureEditorWrapper}></div>;
