@@ -4,6 +4,7 @@ import styles from 'views/PlayView/PlayView.module.scss';
 import { Route, Routes, Navigate } from 'react-router-dom';
 import DashboardView from 'views/DashboardView/DashboardView';
 import { GuitarView } from 'views/GuitarView/GuitarView';
+import { TabulatureEditorView } from 'views/TabulatureEditorView/TabulatureEditorView';
 import Modal from 'components/Modal/Modal';
 import { ModalContext } from 'components/Modal/ModalContext';
 import Toolbar from 'components/Toolbar/Toolbar';
@@ -68,6 +69,8 @@ const PlayView: React.FC = () => {
                     <Route path="dashboard" element={<DashboardView />} />
                     <Route path="guitar" element={<Navigate to="1" replace />} />
                     <Route path="guitar/:id" element={<GuitarView />} />
+                    <Route path="edit" element={<TabulatureEditorView />} />
+                    <Route path="edit/:id" element={<TabulatureEditorView />} />
                 </Routes>
                 <Toolbar ref={toolbarRef} />
             </Section>
