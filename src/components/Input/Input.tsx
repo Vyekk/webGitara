@@ -4,12 +4,23 @@ interface InputProps {
     children: string;
     id: string;
     type?: string;
+    value?: string;
+    readOnly?: boolean;
     onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
-const Input = ({ children, id, type = 'text', onChange }: InputProps) => (
+const Input = ({ children, id, type = 'text', value, onChange, ...props }: InputProps) => (
     <div className={styles.wrapper}>
-        <input type={type} className={styles.input} placeholder={children} id={id} onChange={onChange} required />
+        <input
+            type={type}
+            className={styles.input}
+            value={value}
+            placeholder={children}
+            id={id}
+            onChange={onChange}
+            required
+            {...props}
+        />
     </div>
 );
 
