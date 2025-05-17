@@ -9,6 +9,12 @@
     border: 0;
     font-weight: 700;
     transition: all 0.3s ease-in-out;
+    .buttonContentWrapper {
+        transition: all 0.3s ease-in-out;
+    }
+    .linkContentWrapper {
+        transition: all 0.3s ease-in-out;
+    }
     &:hover {
         background-color: #7e291d;
         color: $white;
