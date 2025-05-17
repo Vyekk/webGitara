@@ -29,7 +29,7 @@ const Toolbar = forwardRef<HTMLDivElement, ToolbarProps>(({ hasControls }, ref) 
                     <FontAwesomeIcon icon={faBook} />
                 </div>
             </Button>
-            <Button className={styles.secondOption} href="/play/new" transparent>
+            <Button className={styles.secondOption} href="/play/edit" transparent>
                 Nowy utwór
             </Button>
             <Button className={styles.secondOption} onClick={() => handleOpenModal(<Settings />)} transparent>
