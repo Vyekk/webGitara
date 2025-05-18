@@ -3,4 +3,10 @@
     .input {
         padding: 10px 30px 10px 10px;
     }
+    .input:focus {
+        outline: none;
+        border-color: none;
+        -webkit-box-shadow: none;
+        box-shadow: none;
+    }
 }
