@@ -43,7 +43,7 @@ const TabulatureEditorView = () => {
                         Nazwa utworu
                     </Input>
                     <Input id="authorName" readOnly>
-                        {song ? song.author : ''}
+                        {song ? song.author : 'Autor'}
                     </Input>
                     <Button>Zapisz utwór</Button>
                 </form>
