@@ -17,7 +17,7 @@ const DashboardView = () => {
 
     useEffect(() => {
         fetchSongsUserStorge();
-    });
+    }, []);
 
     return (
         <>
