@@ -26,9 +26,6 @@ $section-height: 434px;
 
 $fretboard-height: 300;
 $number-of-strings: 6;
-$string-height: 10;
-$half-string-height: $string-height / 2;
-$string-top-position: ($fretboard-height / $number-of-strings / 2) - $half-string-height;
 $double-fretmark-position-1: $fretboard-height * 0.25;
 $double-fretmark-position-2: $fretboard-height * 0.75;
 $note-dot-opacity: 0;
@@ -40,6 +37,6 @@ $d-string-color: rgb(0, 0, 255);
 $g-string-color: rgb(255, 165, 0);
 $b-string-color: rgb(0, 128, 0);
 
-
+$strings-height: 5, 6, 7, 8, 9, 10;
 $string-colors: $e-bottom-string-color, $b-string-color, $g-string-color, $d-string-color, $a-string-color, $e-top-string-color;
 
