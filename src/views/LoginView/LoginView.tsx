@@ -8,6 +8,7 @@ import styles from 'views/LoginView/LoginView.module.scss';
 import Modal from 'components/Modal/Modal';
 import AuthForm from 'components/Form/AuthForm';
 import Button from 'components/Button/Button';
+import { login } from 'utils/auth';
 
 interface User {
     username: string;
@@ -17,12 +18,6 @@ interface User {
 const LoginView = () => {
     const [incorrectData, setIncorrectData] = React.useState(false);
     const navigate = useNavigate();
-    const users: User[] = [
-        { username: 'user1', password: 'password123' },
-        { username: 'user2', password: 'mysecurepassword' },
-        { username: 'admin', password: 'admin123' },
-    ];
-
     const authError = (
         <div className={styles.authError}>
             <p>Nieprawidłowe dane logowania</p>
@@ -36,9 +31,8 @@ const LoginView = () => {
     const handleLogin = (e: React.MouseEvent<HTMLButtonElement>, user: User) => {
         // Symulacja logowania
         e.preventDefault();
-        const loggingUser = users.find((u) => u.username === user.username && u.password === user.password);
-        if (loggingUser) {
-            localStorage.setItem('user', JSON.stringify({ username: user.username }));
+        const isUserLoggedIn = login(user.username, user.password);
+        if (isUserLoggedIn) {
             navigate('/play/dashboard');
         } else {
             setIncorrectData(true);
