@@ -5,13 +5,13 @@ import Title from 'components/Title/Title';
 import { useEffect, useState } from 'react';
 import { Song } from 'types';
 import styles from 'views/DashboardView/Dashboard.module.scss';
+import { loadSongs } from 'utils/storage';
 
 const DashboardView = () => {
     const [bestSongsList, setBestSongsList] = useState<Song[]>([]);
 
     const fetchSongsUserStorge = async () => {
-        const songsData = localStorage.getItem('songs');
-        const songs = songsData ? JSON.parse(songsData) : [];
+        const songs = await loadSongs();
         setBestSongsList([songs[0], songs[1], songs[2]]);
     };
 

@@ -4,6 +4,7 @@ import { SongsList } from 'components/SongsList/SongsList';
 import { useEffect, useState } from 'react';
 import Input from 'components/Input/Input';
 import { Song } from 'types';
+import { loadSongs } from 'utils/storage';
 
 export const MainMenu = () => {
     const [buttonType, setButtonType] = useState('allSongs');
@@ -14,8 +15,7 @@ export const MainMenu = () => {
     };
 
     const fetchSongsUserStorge = async () => {
-        const songsData = localStorage.getItem('songs');
-        const songs = songsData ? JSON.parse(songsData) : [];
+        const songs = await loadSongs();
         setSongsListTest(songs);
     };
 

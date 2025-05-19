@@ -3,6 +3,7 @@ import styles from 'components/Settings/Settings.module.scss';
 import Title from 'components/Title/Title';
 import { useContext, useEffect, useRef, useState } from 'react';
 import { Context } from 'views/PlayView/PlayView';
+import { loadIsFretboardReversed, saveIsFretboardReversed } from 'utils/storage';
 
 const Settings = () => {
     const [settingsScreen, setSettingsScreen] = useState('myAccount');
@@ -11,7 +12,7 @@ const Settings = () => {
 
     const handeChangeInterface = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        localStorage.setItem('isFretboardReversed', JSON.stringify(e.currentTarget.reverseGuitar.checked));
+        saveIsFretboardReversed(e.currentTarget.reverseGuitar.checked);
     };
 
     const handleCheckReverseGuitar = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -22,10 +23,10 @@ const Settings = () => {
     };
     useEffect(() => {
         if (settingsScreen === 'playgroundSettings') {
-            const isFretboardReversedUser = localStorage.getItem('isFretboardReversed');
+            const isFretboardReversedUser = loadIsFretboardReversed();
             if (isFretboardReversedUser) {
                 if (reverseGuitarRef.current) {
-                    reverseGuitarRef.current.checked = JSON.parse(isFretboardReversedUser);
+                    reverseGuitarRef.current.checked = isFretboardReversedUser;
                 }
             }
         }

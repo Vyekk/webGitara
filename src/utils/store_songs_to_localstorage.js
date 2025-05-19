@@ -1,3 +1,5 @@
+import { saveSongs } from 'utils/storage';
+
 const songs = [
     {
         id: 1,
@@ -281,5 +283,5 @@ const songs = [
         song.place = index + 1;
     });
 
-    localStorage.setItem('songs', JSON.stringify(songsPlaces));
+    saveSongs(songsPlaces);
 })();

@@ -10,10 +10,9 @@ import Fretboard from 'components/Fretboard/Fretboard';
 import { Context } from 'views/PlayView/PlayView';
 import { setupSamplePlayer, playNote } from 'utils/playNote';
 import { start, Volume } from 'tone';
+import { loadSongs } from 'utils/storage';
 
 const GuitarView = () => {
-    const songsData = localStorage.getItem('songs');
-    const songs = songsData ? JSON.parse(songsData) : [];
     const [currentUrl, setCurrentUrl] = useState(window.location.href);
     const timeoutRef = useRef<NodeJS.Timeout | null>(null);
     const { songBpm, setSongBpm } = useContext(Context);
@@ -23,10 +22,7 @@ const GuitarView = () => {
     const songVolumeRef = useRef<Volume | null>(null);
     const location = useLocation();
     const navigate = useNavigate();
-    const [song, setSong] = useState<Song | null>(() => {
-        const songId = currentUrl.split('/').pop();
-        return songs.find((song: Song) => song.id === Number(songId)) || null;
-    });
+    const [song, setSong] = useState<Song | null>(null);
     const [sliderChanged, setSliderChanged] = useState(false);
     const [isFretboardInitialized, setIsFretboardInitialized] = useState(false);
     const [infoToShow, setInfoToShow] = useState<{
@@ -37,6 +33,7 @@ const GuitarView = () => {
     const { isFretboardReversed } = useContext(Context);
 
     useEffect(() => {
+        setupSong();
         const volume = new Volume(0).toDestination();
         songVolumeRef.current = volume;
         setupSamplePlayer(volume);
@@ -107,6 +104,7 @@ const GuitarView = () => {
 
     const setupSong = () => {
         const fetchSong = async () => {
+            const songs = await loadSongs();
             const songId = currentUrl.split('/').pop();
             const song = songs.find((song: Song) => song.id === Number(songId));
             if (!song) {

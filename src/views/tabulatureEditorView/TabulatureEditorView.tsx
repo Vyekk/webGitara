@@ -6,12 +6,11 @@ import Title from 'components/Title/Title';
 import styles from 'views/TabulatureEditorView/TabulatureEditorView.module.scss';
 import { useEffect, useState } from 'react';
 import { Song } from 'types';
+import { loadSongs } from 'utils/storage';
 
 const TabulatureEditorView = () => {
     const { id } = useParams();
     const [song, setSong] = useState<Song | null>(null);
-    const songsData = localStorage.getItem('songs');
-    const songs = songsData ? JSON.parse(songsData) : [];
 
     useEffect(() => {
         setupSong();
@@ -24,6 +23,7 @@ const TabulatureEditorView = () => {
 
     const setupSong = () => {
         const fetchSong = async () => {
+            const songs = await loadSongs();
             const song = songs.find((song: Song) => song.id === Number(id));
             if (!song) {
                 console.error('Song not found');
