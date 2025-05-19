@@ -39,6 +39,13 @@
             }
             &::after {
                 background: nth($string-colors, $i);
+                height: #{nth($strings-height, $i)}px;
+                top: #{($fretboard-height / $number-of-strings / 2) - (nth($strings-height, $i) / 2)}px;
+            }
+            &::before {
+                height: 10px;
+                height: #{nth($strings-height, $i)}px;
+                top: #{($fretboard-height / $number-of-strings / 2) - (nth($strings-height, $i) / 2)}px;
             }
         }
     }
@@ -46,22 +53,18 @@
     &::after {
         content: '';
         width: 100%;
-        height: #{$string-height}px;
         z-index: 1;
         position: absolute;
-        top: #{$string-top-position}px;
         opacity: $note-dot-opacity;
     }
 
     &::before {
         content: '';
         width: 100%;
-        height: #{$string-height}px;
         background: linear-gradient(#eee, #999);
         box-shadow: 76px 3px 10px #806233;
         z-index: 1;
         position: absolute;
-        top: #{$string-top-position}px;
     }
     &.activeEmptyString {
         &::after {
