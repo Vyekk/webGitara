@@ -16,11 +16,11 @@ export async function saveSongs(songs: Song[]) {
 }
 
 // IS_FRETBOARD_REVERSED
-export async function loadIsFretboardReversed() {
+export function loadIsFretboardReversed() {
     const raw = localStorage.getItem(STORAGE_KEYS.IS_FRETBOARD_REVERSED);
     return raw ? JSON.parse(raw) : false;
 }
 
-export async function saveIsFretboardReversed(value: boolean) {
+export function saveIsFretboardReversed(value: boolean) {
     localStorage.setItem(STORAGE_KEYS.IS_FRETBOARD_REVERSED, JSON.stringify(value));
 }
