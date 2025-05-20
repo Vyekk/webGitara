@@ -6,6 +6,7 @@ type SongsListProps = {
     isVertical?: boolean;
     songs: Song[];
     searchTerm?: string;
+    isShowingFavourites?: boolean;
 };
 
 const SongsList = ({ isVertical, songs, searchTerm }: SongsListProps) => {
