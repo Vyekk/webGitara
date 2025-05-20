@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import styles from 'components/Button/Button.module.scss';
 import classNames from 'classnames';
 
-interface IButtonProps {
+interface IButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
     children?: ReactNode;
     href?: string;
     circle?: boolean;
@@ -11,7 +11,6 @@ interface IButtonProps {
     transparent?: boolean;
     className?: string;
     isActive?: boolean;
-    [key: string]: any;
 }
 
 const Button = ({ children, href, circle, isDark, transparent, className, isActive, ...props }: IButtonProps) => {
