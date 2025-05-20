@@ -6,6 +6,8 @@ import styles from 'components/SongTile/SongTile.module.scss';
 import Title from 'components/Title/Title';
 import { useContext, useRef, useState } from 'react';
 import { Song } from 'types';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faHeart } from '@fortawesome/free-solid-svg-icons';
 
 type SongTileProps = {
     song: Song;
@@ -52,7 +54,13 @@ const SongTile = ({ song, isLarge }: SongTileProps) => {
             onMouseOut={handleMouseOut}
             onClick={() => handleSongTileClick(song.id)}
         >
-            <div className={songLiked ? styles.liked : styles.unliked} ref={likedRef} onClick={handleLikeClick}></div>
+            <div
+                className={`${songLiked ? styles.liked : styles.unliked} ${styles.favouriteWrapper}`}
+                ref={likedRef}
+                onClick={handleLikeClick}
+            >
+                <FontAwesomeIcon icon={faHeart} />
+            </div>
             <div className={styles.comments} ref={commentsRef} onClick={handleCommentsClick}></div>
             <Rating rating={song.rating} isHover={isHover} />
             <Title tag="h3">{song.songTitle}</Title>
