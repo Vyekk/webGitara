@@ -31,6 +31,9 @@
         height: 6vw; 
         border-radius: 50%;
         overflow: hidden;
+        display: flex;
+        justify-content: center;
+        align-items: center;
     
         .libraryIcon {
             position: relative;
