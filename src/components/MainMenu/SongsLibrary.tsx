@@ -66,7 +66,9 @@ export const MainMenu = () => {
                 </Button>
             </div>
             <div className={styles.songsWrapper}>
-                {buttonType === 'allSongs' ? <SongsList songs={songsListTest} searchTerm={searchTerm} /> : null}
+                {buttonType === 'allSongs' ? (
+                    <SongsList songs={songsListTest} searchTerm={searchTerm} isShowingFavourites />
+                ) : null}
             </div>
         </div>
     );
