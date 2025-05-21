@@ -120,39 +120,50 @@ const WebsiteView = () => {
             </Section>
             <Section id="contact" dark>
                 <div className={styles.contactWrapper}>
-                    <div>
+                    <div className={styles.contact}>
                         <Title tag="h2">Kontakt</Title>
                         <ul>
                             <li>
                                 <a href="tel:+48000000000">📞 +48 000 000 000</a>
                             </li>
                             <li>
-                                <a href="mailto:kontakt@mail.com">✉ kontakt@mail.com</a>
+                                <a href="mailto:kontakt@mail.com">✉️ kontakt@mail.com</a>
                             </li>
                             <li>
                                 <a href="#">🌐 webGitara</a>
                             </li>
                         </ul>
                     </div>
+                    <div className={styles.separateLine}></div>
                     <div>
                         <Title tag="h2">Inne projekty</Title>
                         <ul>
                             <li>
-                                <a href="https://www.przykladowa-strona.pl" target="_blank" rel="noopener noreferrer">
-                                    🔗 www.przykladowa-strona.pl
+                                <a href="https://github.com/Vyekk" target="_blank" rel="noopener noreferrer">
+                                    🔗 Tu możesz zobaczyć mój kod
+                                </a>
+                            </li>
+                            <li>
+                                <a
+                                    href="https://www.linkedin.com/in/konradkoluch/"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                >
+                                    🔗 Zapraszam na mój profil LinkedIn
                                 </a>
                             </li>
                             <li>
                                 <a href="https://www.przykladowa-strona.pl" target="_blank" rel="noopener noreferrer">
-                                    🔗 www.przykladowa-strona.pl
-                                </a>
-                            </li>
-                            <li>
-                                <a href="https://www.przykladowa-strona.pl" target="_blank" rel="noopener noreferrer">
-                                    🔗 www.przykladowa-strona.pl
+                                    🔗 Tu przeczytasz więcej o mnie
                                 </a>
                             </li>
                         </ul>
+                    </div>
+                    <div className={styles.promoWrapper}>
+                        <Title>Dołącz do nas klikając przycisk poniżej!</Title>
+                        <Button className={styles.startButton} href="/login">
+                            Zacznij grać &gt;
+                        </Button>
                     </div>
                 </div>
             </Section>
