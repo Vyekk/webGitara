@@ -1,4 +1,4 @@
-@import 'variables.scss';
+@use 'variables' as *;
 
 .websiteViewWrapper {
     line-height: 1.6;

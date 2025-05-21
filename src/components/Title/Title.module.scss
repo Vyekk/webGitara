@@ -1,4 +1,4 @@
-@import 'variables.scss';
+@use 'variables' as *;
 .title {
     margin: 0;
     @at-root h1#{&} {

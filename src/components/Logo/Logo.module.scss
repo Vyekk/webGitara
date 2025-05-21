@@ -1,4 +1,4 @@
-@import "variables.scss";
+@use 'variables' as *;
 .logo {
     font-size: $bigger-font-size;
     font-weight: 700;

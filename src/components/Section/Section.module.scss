@@ -1,4 +1,4 @@
-@import "variables.scss";
+@use 'variables' as *;
 .wrapper {
     background-color: $white;
     min-height: $section-height;
