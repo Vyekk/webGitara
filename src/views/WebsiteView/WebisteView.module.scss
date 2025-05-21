@@ -84,8 +84,9 @@
 }
 .contactWrapper {
     display: flex;
-    justify-content: space-around;
-    text-align: center;
+    justify-content: flex-start;
+    gap: 4rem;
+    text-align: left;
     font-weight: 700;
     align-items: center;
     min-height: $section-height;
@@ -99,5 +100,21 @@
     }
     @media screen and (max-width: $desktop) {
         flex-direction: column;
+        text-align: center;
+        .separateLine {
+            display: none;
+        }
+    }
+    .separateLine {
+        background-color: $white;
+        width: 1px;
+        height: 300px;
+    }
+    .promoWrapper {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+        align-items: center;
+        justify-content: center;
     }
 }
