@@ -38,14 +38,17 @@ const TabulatureEditorView = () => {
             <div className={styles.textContentWrapper}>
                 <Title>Edycja utworu {song ? `"${song.songTitle}"` : ''}</Title>
                 <form>
-                    <TabulatureEditor />
                     <Input id="songName" value={song ? song.songTitle : ''}>
                         Nazwa utworu
                     </Input>
                     <Input id="authorName" readOnly>
                         {song ? song.author : 'Autor'}
                     </Input>
-                    <Button>Zapisz utwór</Button>
+                    <TabulatureEditor numberOfStrings={6} />
+                    <div className={styles.buttonWrapper}>
+                        <Button type="submit">Zapisz utwór</Button>
+                        <Button type="button">Dodaj linie</Button>
+                    </div>
                 </form>
             </div>
         </div>
