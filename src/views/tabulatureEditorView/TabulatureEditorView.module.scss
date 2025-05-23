@@ -7,3 +7,10 @@
 .textContentWrapper {
     padding: 2em 3em 0;
 }
+
+.buttonWrapper {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
+    width: 100%;
+}
