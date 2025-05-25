@@ -23,7 +23,7 @@ const GuitarView = () => {
     const location = useLocation();
     const navigate = useNavigate();
     const [song, setSong] = useState<Song | null>(null);
-    const [sliderChanged, setSliderChanged] = useState(false);
+    const [isSongStopped, setIsSongStopped] = useState(false);
     const [isFretboardInitialized, setIsFretboardInitialized] = useState(false);
     const [infoToShow, setInfoToShow] = useState<{
         prevStep: TabNote[] | null;
@@ -182,8 +182,8 @@ const GuitarView = () => {
 
     const handleClickPlay = async () => {
         await start();
-        if (sliderChanged) {
-            setSliderChanged(false);
+        if (isSongStopped) {
+            setIsSongStopped(false);
         }
         playSong();
     };
@@ -196,16 +196,20 @@ const GuitarView = () => {
     };
 
     const handlePreviousStep = () => {
+        handleClickStop();
+        setIsSongStopped(true);
         setCurrentStep((prevStep) => Math.max(prevStep - 1, 0));
     };
 
     const handleNextStep = () => {
+        handleClickStop();
+        setIsSongStopped(true);
         setCurrentStep((prevStep) => Math.min(prevStep + 1, (song?.tabulature?.length ?? 0) - 1 || prevStep));
     };
 
     const handleSliderChange = (value: number) => {
         handleClickStop();
-        setSliderChanged(true);
+        setIsSongStopped(true);
         setCurrentStep(value);
     };
 
@@ -255,7 +259,7 @@ const GuitarView = () => {
                 currentStep={currentStep}
                 songLength={song ? song.tabulature.length : 0}
                 isStop={
-                    song && (currentStep === song.tabulature.length - 1 || currentStep === 0 || sliderChanged)
+                    song && (currentStep === song.tabulature.length - 1 || currentStep === 0 || isSongStopped)
                         ? true
                         : false
                 }
