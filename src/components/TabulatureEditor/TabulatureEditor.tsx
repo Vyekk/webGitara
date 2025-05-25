@@ -15,7 +15,7 @@ const TabulatureEditor: React.FC<TabulatureEditorProps> = ({ numberOfStrings, is
                         {Array.from({ length: 50 }, (_, tabColumnIndex) => (
                             <div
                                 key={tabColumnIndex}
-                                className={styles.noteFret}
+                                className={styles.tabCell}
                                 data-string={stringIndex + 1}
                                 data-tabColumn={tabColumnIndex}
                             ></div>
