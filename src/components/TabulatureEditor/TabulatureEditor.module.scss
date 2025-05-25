@@ -1,15 +1,37 @@
 @use 'variables' as *;
 
 .tabulatureEditorWrapper {
-    background-color: $white;
-    height: 152px;
     display: flex;
     flex-direction: column;
-    gap: 20px;
-    padding: 20px 0;
+    background: $white;
+    width: 100%;
+    max-width: 100vw;
+    height: 150px;
+    overflow-x: hidden;
+    overflow-y: hidden;
+    padding: 10px 0px 10px 40px;
 }
 
 .string {
-    background-color: gray;
-    height: 2px;
+    display: flex;
+    position: relative;
+    width: 100%;
+    flex: 1;
+    &::before {
+        content: '';
+        width: 100%;
+        background: linear-gradient(#eee, #999);
+        z-index: 1;
+        position: absolute;
+        height: 2px;
+        top: calc(50% - 2px);
+    }
+}
+
+.tabCell {
+    display: flex;
+    flex: 1;
+    justify-content: center;
+    align-items: center;
+    position: relative;
 }
