@@ -2,11 +2,14 @@
 
 .tabulatureEditorWrapper {
     background-color: $white;
-    height: 135px;
+    height: 152px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding: 20px 0;
 }
 
 .string {
     background-color: gray;
     height: 2px;
-    margin-top: 20px;
 }
