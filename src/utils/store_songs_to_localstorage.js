@@ -260,7 +260,44 @@ const songs = [
             [{ guitarString: 2, guitarFret: 3, duration: '4n' }],
         ],
     },
+    {
+        id: 10,
+        songTitle: 'Strings test',
+        author: 'Admin',
+        rating: [4, 5, 4, 5, 4],
+        comments: [],
+        bpm: 160,
+        tabulature: [
+            [{ guitarString: 1, guitarFret: 0, duration: '4n' }],
+            [{ guitarString: 2, guitarFret: 0, duration: '4n' }],
+            [{ guitarString: 3, guitarFret: 0, duration: '4n' }],
+            [{ guitarString: 4, guitarFret: 0, duration: '4n' }],
+            [{ guitarString: 5, guitarFret: 0, duration: '4n' }],
+            [{ guitarString: 6, guitarFret: 0, duration: '4n' }],
+        ],
+    },
+    {
+        id: 11,
+        songTitle: 'Frets test',
+        author: 'Admin',
+        rating: [4, 5, 4, 5, 4],
+        comments: [],
+        bpm: 160,
+        tabulature: [],
+    },
 ];
+
+for (let string = 1; string <= 6; string++) {
+    for (let fret = 0; fret <= 24; fret++) {
+        songs[10].tabulature.push([
+            {
+                guitarString: string,
+                guitarFret: fret,
+                duration: '4n',
+            },
+        ]);
+    }
+}
 
 (() => {
     const songsPlaces = [];
