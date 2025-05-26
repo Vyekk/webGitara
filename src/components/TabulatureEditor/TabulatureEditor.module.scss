@@ -27,6 +27,13 @@
         top: calc(50% - 2px);
     }
 }
+.stringLabel {
+    color: $black;
+    position: absolute;
+    display: block;
+    z-index: 2;
+    transform: translateX(-20px);
+}
 
 .tabCell {
     display: flex;
