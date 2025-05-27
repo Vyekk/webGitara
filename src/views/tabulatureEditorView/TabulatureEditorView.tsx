@@ -11,6 +11,7 @@ import { loadSongs } from 'utils/storage';
 const TabulatureEditorView = () => {
     const { id } = useParams();
     const [song, setSong] = useState<Song | null>(null);
+    const [numberOfTabulatureLines, setNumberOfTabulatureLines] = useState(1);
 
     useEffect(() => {
         setupSong();
@@ -33,6 +34,16 @@ const TabulatureEditorView = () => {
         };
         fetchSong();
     };
+
+    const handleAddLine = () => {
+        setNumberOfTabulatureLines((prev) => prev + 1);
+    };
+
+    const handleRemoveLine = () => {
+        if (numberOfTabulatureLines > 1) {
+            setNumberOfTabulatureLines((prev) => prev - 1);
+        }
+    };
     return (
         <div className={styles.tabulatureEditorViewWrapper}>
             <div className={styles.textContentWrapper}>
@@ -44,10 +55,21 @@ const TabulatureEditorView = () => {
                     <Input id="authorName" readOnly>
                         {song ? song.author : 'Autor'}
                     </Input>
-                    <TabulatureEditor numberOfStrings={6} />
-                    <div className={styles.buttonWrapper}>
+                    {Array.from({ length: numberOfTabulatureLines }, (_, i) => (
+                        <TabulatureEditor key={i} numberOfStrings={6} />
+                    ))}
+                    <div className={styles.buttonsWrapper}>
                         <Button type="submit">Zapisz utwór</Button>
-                        <Button type="button">Dodaj linie</Button>
+                        <div className={styles.tabulatureEditButtonsWrapper}>
+                            {numberOfTabulatureLines > 1 && (
+                                <Button type="button" onClick={handleRemoveLine}>
+                                    Usuń linie
+                                </Button>
+                            )}
+                            <Button type="button" onClick={handleAddLine}>
+                                Dodaj linie
+                            </Button>
+                        </div>
                     </div>
                 </form>
             </div>
