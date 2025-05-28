@@ -10,7 +10,11 @@ const types = {
     register: 'rejestracja',
 };
 
-const AuthForm = ({ submitFn }: any) => {
+interface AuthFormProps {
+    submitFn: (e: React.FormEvent<HTMLFormElement>, user: { username: string; password: string }) => void;
+}
+
+const AuthForm = ({ submitFn }: AuthFormProps) => {
     const [activeOption, setActiveOption] = useState(types.login);
     const [isRegistered, setIsRegistered] = useState(false);
     const [username, setUsername] = useState('');
