@@ -28,7 +28,7 @@ const LoginView = () => {
         </div>
     );
 
-    const handleLogin = (e: React.MouseEvent<HTMLButtonElement>, user: User) => {
+    const handleLogin = (e: React.FormEvent<HTMLFormElement>, user: User) => {
         // Symulacja logowania
         e.preventDefault();
         const isUserLoggedIn = login(user.username, user.password);
