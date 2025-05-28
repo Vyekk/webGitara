@@ -1,11 +1,12 @@
 import styles from 'components/Input/Input.module.scss';
 
 interface InputProps {
-    children: string;
+    children?: string;
     id: string;
     type?: string;
     value?: string;
     readOnly?: boolean;
+    required?: boolean;
     onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
@@ -18,7 +19,6 @@ const Input = ({ children, id, type = 'text', value, onChange, ...props }: Input
             placeholder={children}
             id={id}
             onChange={onChange}
-            required
             {...props}
         />
     </div>
