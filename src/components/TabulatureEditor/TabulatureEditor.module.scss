@@ -37,8 +37,22 @@
 
 .tabCell {
     display: flex;
-    flex: 1;
     justify-content: center;
     align-items: center;
     position: relative;
+    input {
+        box-sizing: border-box;
+        width: 100%;
+        padding: 0;
+        margin: 0;
+        outline: none;
+        border: none;
+        background-color: transparent;
+        text-align: center;
+        z-index: 5;
+        font-weight: 700;
+        &:focus {
+            background-color: $primary-color;
+        }
+    }
 }
