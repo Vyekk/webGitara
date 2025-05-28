@@ -13,8 +13,12 @@ const TabulatureEditorView = () => {
     const { id } = useParams();
     const [song, setSong] = useState<Song | null>(null);
     const [numberOfTabulatureLines, setNumberOfTabulatureLines] = useState(1);
+    const [newSongTitle, setNewSongTitle] = useState('');
 
     useEffect(() => {
+        if (!id) {
+            return;
+        }
         setupSong();
     }, [id]);
 
@@ -53,7 +57,11 @@ const TabulatureEditorView = () => {
                 </div>
                 <Title>Edycja utworu {song ? `"${song.songTitle}"` : ''}</Title>
                 <form>
-                    <Input id="songName" value={song ? song.songTitle : ''}>
+                    <Input
+                        id="songName"
+                        value={song ? song.songTitle : newSongTitle}
+                        onChange={(e) => setNewSongTitle(e.target.value)}
+                    >
                         Nazwa utworu
                     </Input>
                     <Input id="authorName" readOnly>
