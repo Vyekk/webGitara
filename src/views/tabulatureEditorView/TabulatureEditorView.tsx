@@ -7,6 +7,7 @@ import styles from 'views/TabulatureEditorView/TabulatureEditorView.module.scss'
 import { useEffect, useState } from 'react';
 import { Song } from 'types';
 import { loadSongs } from 'utils/storage';
+import { Link } from 'react-router-dom';
 
 const TabulatureEditorView = () => {
     const { id } = useParams();
@@ -47,6 +48,9 @@ const TabulatureEditorView = () => {
     return (
         <div className={styles.tabulatureEditorViewWrapper}>
             <div className={styles.textContentWrapper}>
+                <div className={styles.linkWrapper}>
+                    <Link to="/play/dashboard"> &lt; powrót do dashboard</Link>
+                </div>
                 <Title>Edycja utworu {song ? `"${song.songTitle}"` : ''}</Title>
                 <form>
                     <Input id="songName" value={song ? song.songTitle : ''}>
