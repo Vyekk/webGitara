@@ -1,22 +1,29 @@
+@use 'variables' as *;
+
 .tabulatureEditorViewWrapper {
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-}
-
-.textContentWrapper {
-    padding: 2em 3em 0;
-    margin-bottom: 80px;
-}
-
-.buttonsWrapper {
     display: flex;
-    justify-content: space-between;
-    margin-top: 10px;
+    flex-direction: column;
     width: 100%;
-}
 
-.tabulatureEditButtonsWrapper {
-    display: flex;
-    gap: 10px;
+    .textContentWrapper {
+        padding: 2em 3em 0;
+        margin-bottom: 80px;
+    }
+
+    .linkWrapper {
+        a {
+            color: $white;
+        }
+    }
+
+    .buttonsWrapper {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 10px;
+        width: 100%;
+        .tabulatureEditButtonsWrapper {
+            display: flex;
+            gap: 10px;
+        }
+    }
 }
