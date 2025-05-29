@@ -35,6 +35,10 @@
     transform: translateX(-20px);
 }
 
+.activeTabColumn {
+    background-color: lighten($primary-color, 20%)
+}
+
 .tabCell {
     display: flex;
     justify-content: center;
