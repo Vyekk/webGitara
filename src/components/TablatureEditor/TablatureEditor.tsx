@@ -23,7 +23,7 @@ const TablatureEditor: React.FC<TablatureEditorProps> = ({ numberOfStrings, isRe
                     newFormData[`${stringIndex}${activeColumn}`] = fret.toString();
                 }
             });
-            setFormData(newFormData);
+            setFormData((prev) => ({ ...prev, ...newFormData }));
         }
     }, [insertChordPositions]);
 
