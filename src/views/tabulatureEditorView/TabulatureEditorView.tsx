@@ -8,6 +8,8 @@ import { useEffect, useState } from 'react';
 import { Song } from 'types';
 import { loadSongs } from 'utils/storage';
 import { Link } from 'react-router-dom';
+import GuitarChords from 'utils/guitarChords';
+import { ChordPosition } from 'types';
 
 const TabulatureEditorView = () => {
     const { id } = useParams();
@@ -15,6 +17,7 @@ const TabulatureEditorView = () => {
     const [numberOfTabulatureLines, setNumberOfTabulatureLines] = useState(1);
     const [newSongTitle, setNewSongTitle] = useState('');
     const [selectedChord, setSelectedChord] = useState<string>('A');
+    const [insertChordPositions, setInsertChordPositions] = useState<ChordPosition[]>([]);
 
     useEffect(() => {
         if (!id) {
@@ -52,7 +55,9 @@ const TabulatureEditorView = () => {
     };
 
     const handleInsertChord = () => {
-        console.log('Inserted chord:', selectedChord);
+        const selectedChordData = GuitarChords.find((chord) => chord.name === selectedChord);
+        const positions = selectedChordData?.positions || [];
+        setInsertChordPositions([...positions]);
     };
 
     return (
@@ -74,7 +79,7 @@ const TabulatureEditorView = () => {
                         {song ? song.author : 'Autor'}
                     </Input>
                     {Array.from({ length: numberOfTabulatureLines }, (_, i) => (
-                        <TabulatureEditor key={i} numberOfStrings={6} />
+                        <TabulatureEditor key={i} numberOfStrings={6} insertChordPositions={insertChordPositions} />
                     ))}
                     <div className={styles.buttonsWrapper}>
                         <Button type="submit">Zapisz utwór</Button>

@@ -1,15 +1,31 @@
 import styles from 'components/TabulatureEditor/TabulatureEditor.module.scss';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { ChordPosition } from 'types';
 
 interface TabulatureEditorProps {
     numberOfStrings: number;
     isReversed?: boolean;
+    insertChordPositions?: ChordPosition[];
 }
 
-const TabulatureEditor: React.FC<TabulatureEditorProps> = ({ numberOfStrings, isReversed }) => {
+const TabulatureEditor: React.FC<TabulatureEditorProps> = ({ numberOfStrings, isReversed, insertChordPositions }) => {
     const stringsLabels = ['E', 'A', 'D', 'G', 'B', 'E'];
     const [formData, setFormData] = useState<Record<string, string>>({});
     const [activeColumn, setActiveColumn] = useState<number | null>(null);
+
+    useEffect(() => {
+        if (insertChordPositions && insertChordPositions.length > 0) {
+            const newFormData: Record<string, string> = {};
+            insertChordPositions.forEach((position) => {
+                const stringIndex = position.guitarString;
+                const fret = position.guitarFret;
+                if (fret !== null) {
+                    newFormData[`${stringIndex}${activeColumn}`] = fret.toString();
+                }
+            });
+            setFormData(newFormData);
+        }
+    }, [insertChordPositions]);
 
     const handleTabulatureInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const stringIndex = e.target.dataset.string;
@@ -33,7 +49,11 @@ const TabulatureEditor: React.FC<TabulatureEditorProps> = ({ numberOfStrings, is
             {Array.from({ length: numberOfStrings }, (_, i) => i)
                 .map((i) => (isReversed ? i : numberOfStrings - 1 - i))
                 .map((stringIndex) => (
-                    <div key={stringIndex} className={styles.string} data-string={stringIndex + 1}>
+                    <div
+                        key={numberOfStrings - stringIndex}
+                        className={styles.string}
+                        data-string={numberOfStrings - stringIndex}
+                    >
                         <span key={stringIndex + stringsLabels[stringIndex]} className={styles.stringLabel}>
                             {stringsLabels[stringIndex]}
                         </span>
@@ -44,21 +64,20 @@ const TabulatureEditor: React.FC<TabulatureEditorProps> = ({ numberOfStrings, is
                                 className={`${styles.tabCell} ${
                                     activeColumn === tabColumnIndex + 1 ? styles.activeTabColumn : ''
                                 }`}
-                                data-string={stringIndex + 1}
+                                data-string={numberOfStrings - stringIndex}
                                 data-tabcolumn={tabColumnIndex + 1}
                             >
                                 <input
-                                    id={`${stringIndex + 1}-${tabColumnIndex + 1}`}
+                                    id={`${numberOfStrings - stringIndex}-${tabColumnIndex + 1}`}
                                     type="text"
-                                    key={`${stringIndex + 1}-${tabColumnIndex + 1}`}
-                                    data-string={stringIndex + 1}
+                                    key={`${numberOfStrings - stringIndex}-${tabColumnIndex + 1}`}
+                                    data-string={numberOfStrings - stringIndex}
                                     data-tabcolumn={tabColumnIndex + 1}
                                     onChange={handleTabulatureInputChange}
-                                    value={formData[`${stringIndex + 1}${tabColumnIndex + 1}`] || ''}
+                                    value={formData[`${numberOfStrings - stringIndex}${tabColumnIndex + 1}`] || ''}
                                     maxLength={2}
-                                    aria-hidden="true"
+                                    aria-label="Tabulature input"
                                     onFocus={handleTabulatureInputClick}
-                                    onBlur={() => setActiveColumn(null)}
                                 ></input>
                             </div>
                         ))}
