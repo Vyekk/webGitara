@@ -19,3 +19,8 @@ export type Song = {
     tabulature: Tabulature;
     bpm: number;
 };
+
+export type ChordPosition = {
+    guitarString: number;
+    guitarFret: number | null;
+};
