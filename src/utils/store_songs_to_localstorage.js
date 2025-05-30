@@ -11,7 +11,7 @@ const songs = [
             ['One of the best songs ever!', 'Ethan'],
         ],
         bpm: 56,
-        tabulature: [
+        tablature: [
             [{ guitarString: 5, guitarFret: 3, duration: '8n' }],
             [{ guitarString: 3, guitarFret: 0, duration: '8n' }],
             [{ guitarString: 2, guitarFret: 1, duration: '8n' }],
@@ -48,7 +48,7 @@ const songs = [
             ['Każdy od tego zaczyna!', 'Anna'],
         ],
         bpm: 112,
-        tabulature: [
+        tablature: [
             [{ guitarString: 4, guitarFret: 0, duration: '8n' }],
             [{ guitarString: 4, guitarFret: 3, duration: '8n' }],
             [{ guitarString: 4, guitarFret: 5, duration: '8n' }],
@@ -75,7 +75,7 @@ const songs = [
             ['Prosty i mocny riff!', 'John'],
         ],
         bpm: 120,
-        tabulature: [
+        tablature: [
             [{ guitarString: 6, guitarFret: 7, duration: '4n' }],
             [{ guitarString: 6, guitarFret: 7, duration: '8n' }],
             [{ guitarString: 6, guitarFret: 10, duration: '8n' }],
@@ -95,7 +95,7 @@ const songs = [
             ['Uwielbiam to intro', 'Sophie'],
         ],
         bpm: 96,
-        tabulature: [
+        tablature: [
             [{ guitarString: 6, guitarFret: 0, duration: '4n' }],
             [{ guitarString: 6, guitarFret: 3, duration: '4n' }],
             [{ guitarString: 5, guitarFret: 5, duration: '4n' }],
@@ -119,7 +119,7 @@ const songs = [
             ['Zawsze wpada w ucho!', 'Maya'],
         ],
         bpm: 136,
-        tabulature: [
+        tablature: [
             [{ guitarString: 5, guitarFret: 2, duration: '8n' }],
             [{ guitarString: 5, guitarFret: 4, duration: '8n' }],
             [{ guitarString: 5, guitarFret: 2, duration: '8n' }],
@@ -142,7 +142,7 @@ const songs = [
             ['Perfect for road trips!', 'Lily'],
         ],
         bpm: 100,
-        tabulature: [
+        tablature: [
             [{ guitarString: 2, guitarFret: 1, duration: '8n' }], // C
             [{ guitarString: 2, guitarFret: 1, duration: '8n' }], // C
             [{ guitarString: 2, guitarFret: 3, duration: '8n' }], // D
@@ -184,7 +184,7 @@ const songs = [
             ['I played this as a kid!', 'Tom'],
         ],
         bpm: 90,
-        tabulature: [
+        tablature: [
             [{ guitarString: 1, guitarFret: 0, duration: '8n' }],
             [{ guitarString: 1, guitarFret: 0, duration: '8n' }],
             [{ guitarString: 5, guitarFret: 4, duration: '8n' }],
@@ -212,7 +212,7 @@ const songs = [
             ['Sounds elegant even simple.', 'Liam'],
         ],
         bpm: 92,
-        tabulature: [
+        tablature: [
             [{ guitarString: 2, guitarFret: 0, duration: '8n' }],
             [{ guitarString: 2, guitarFret: 0, duration: '8n' }],
             [{ guitarString: 2, guitarFret: 1, duration: '8n' }],
@@ -242,7 +242,7 @@ const songs = [
             ['My kids love it!', 'Jack'],
         ],
         bpm: 160,
-        tabulature: [
+        tablature: [
             [{ guitarString: 2, guitarFret: 1, duration: '8n' }],
             [{ guitarString: 2, guitarFret: 0, duration: '8n' }],
             [{ guitarString: 2, guitarFret: -1, duration: '8n' }],
@@ -267,7 +267,7 @@ const songs = [
         rating: [4, 5, 4, 5, 4],
         comments: [],
         bpm: 160,
-        tabulature: [
+        tablature: [
             [{ guitarString: 1, guitarFret: 0, duration: '4n' }],
             [{ guitarString: 2, guitarFret: 0, duration: '4n' }],
             [{ guitarString: 3, guitarFret: 0, duration: '4n' }],
@@ -283,13 +283,13 @@ const songs = [
         rating: [4, 5, 4, 5, 4],
         comments: [],
         bpm: 160,
-        tabulature: [],
+        tablature: [],
     },
 ];
 
 for (let string = 1; string <= 6; string++) {
     for (let fret = 0; fret <= 24; fret++) {
-        songs[10].tabulature.push([
+        songs[10].tablature.push([
             {
                 guitarString: string,
                 guitarFret: fret,

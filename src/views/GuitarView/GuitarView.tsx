@@ -55,7 +55,7 @@ const GuitarView = () => {
         }
         const currentInfo = getCurrentStepInfo(0);
         let nextStepInfo: TabNote[] | null = null;
-        if (currentInfo && song && currentStep + 1 < song.tabulature.length) {
+        if (currentInfo && song && currentStep + 1 < song.tablature.length) {
             nextStepInfo = getCurrentStepInfo(currentStep + 1);
         }
         setInfoToShow((prev) => ({
@@ -68,7 +68,7 @@ const GuitarView = () => {
     useEffect(() => {
         const currentInfo = getCurrentStepInfo(currentStep);
         let nextStepInfo: TabNote[] | null = null;
-        if (song && currentInfo && currentStep + 1 < song.tabulature.length) {
+        if (song && currentInfo && currentStep + 1 < song.tablature.length) {
             nextStepInfo = getCurrentStepInfo(currentStep + 1);
         }
         setInfoToShow((prev) => ({
@@ -119,15 +119,15 @@ const GuitarView = () => {
     };
 
     const getCurrentStepInfo = (currentStep: number): TabNote[] | null => {
-        const tabulature = song?.tabulature;
-        if (!tabulature || tabulature.length === 0) {
+        const tablature = song?.tablature;
+        if (!tablature || tablature.length === 0) {
             return null;
         }
-        return tabulature[currentStep] || null;
+        return tablature[currentStep] || null;
     };
 
     const playSong = () => {
-        if (!song?.tabulature || song.tabulature.length === 0 || currentStep >= song.tabulature.length - 1) {
+        if (!song?.tablature || song.tablature.length === 0 || currentStep >= song.tablature.length - 1) {
             return;
         }
 
@@ -136,7 +136,7 @@ const GuitarView = () => {
         if (currentStep === 0) {
             const currentInfo = getCurrentStepInfo(currentStep);
             let nextStepInfo: TabNote[] | null = null;
-            if (currentInfo && currentStep + 1 < song.tabulature.length) {
+            if (currentInfo && currentStep + 1 < song.tablature.length) {
                 nextStepInfo = getCurrentStepInfo(currentStep + 1);
             }
             setInfoToShow((prev) => ({
@@ -147,13 +147,13 @@ const GuitarView = () => {
         }
 
         const playNext = (stepIndex: number) => {
-            if (!song || stepIndex >= song.tabulature.length) {
+            if (!song || stepIndex >= song.tablature.length) {
                 return;
             }
 
             setCurrentStep(stepIndex);
 
-            const stepNotes = song.tabulature[stepIndex];
+            const stepNotes = song.tablature[stepIndex];
             const durationStr =
                 Array.isArray(stepNotes) && stepNotes.length > 0 && 'duration' in stepNotes[0]
                     ? (stepNotes[0] as TabNote).duration
@@ -169,7 +169,7 @@ const GuitarView = () => {
             });
 
             timeoutRef.current = setTimeout(() => {
-                if (stepIndex + 1 < song.tabulature.length) {
+                if (stepIndex + 1 < song.tablature.length) {
                     playNext(stepIndex + 1);
                 } else {
                     handleClickStop();
@@ -204,7 +204,7 @@ const GuitarView = () => {
     const handleNextStep = () => {
         handleClickStop();
         setIsSongStopped(true);
-        setCurrentStep((prevStep) => Math.min(prevStep + 1, (song?.tabulature?.length ?? 0) - 1 || prevStep));
+        setCurrentStep((prevStep) => Math.min(prevStep + 1, (song?.tablature?.length ?? 0) - 1 || prevStep));
     };
 
     const handleSliderChange = (value: number) => {
@@ -247,7 +247,7 @@ const GuitarView = () => {
                 notesToShow={infoToShow || { prevStep: null, step: null, nextStep: null }}
                 isReversed={isFretboardReversed}
             />
-            {song && <Slider max={song.tabulature.length} value={currentStep} onChange={handleSliderChange} />}
+            {song && <Slider max={song.tablature.length} value={currentStep} onChange={handleSliderChange} />}
             <SongControl
                 onGoBack={handlePreviousStep}
                 onPlay={handleClickPlay}
@@ -257,9 +257,9 @@ const GuitarView = () => {
                 onVolumeChange={handleVolumeChange}
                 defaultBpm={songDefaultBpm}
                 currentStep={currentStep}
-                songLength={song ? song.tabulature.length : 0}
+                songLength={song ? song.tablature.length : 0}
                 isStop={
-                    song && (currentStep === song.tabulature.length - 1 || currentStep === 0 || isSongStopped)
+                    song && (currentStep === song.tablature.length - 1 || currentStep === 0 || isSongStopped)
                         ? true
                         : false
                 }
