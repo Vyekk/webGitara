@@ -60,6 +60,10 @@ const TablatureEditorView = () => {
         setInsertChordPositions([...positions]);
     };
 
+    const handleClearTabColumn = () => {
+        setInsertChordPositions([]);
+    };
+
     return (
         <div className={styles.tablatureEditorViewWrapper}>
             <div className={styles.textContentWrapper}>
@@ -112,6 +116,9 @@ const TablatureEditorView = () => {
                             </select>
                             <Button type="button" onClick={handleInsertChord}>
                                 Wprowadź
+                            </Button>
+                            <Button type="button" onClick={handleClearTabColumn}>
+                                X
                             </Button>
                         </div>
                         <div className={styles.tablatureEditButtonsWrapper}>

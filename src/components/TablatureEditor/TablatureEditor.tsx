@@ -20,17 +20,27 @@ const TablatureEditor: React.FC<TablatureEditorProps> = ({ numberOfStrings, isRe
                 const stringIndex = position.guitarString;
                 const fret = position.guitarFret;
                 if (fret !== null) {
-                    newFormData[`${stringIndex}${activeColumn}`] = fret.toString();
+                    newFormData[`string-${stringIndex}-column-${activeColumn}`] = fret.toString();
                 }
             });
             setFormData((prev) => ({ ...prev, ...newFormData }));
+        } else if (insertChordPositions && insertChordPositions.length === 0) {
+            setFormData((prev) => {
+                const newFormData: Record<string, string> = {};
+                for (let i = 1; i <= numberOfStrings; i++) {
+                    for (let j = 1; j <= 50; j++) {
+                        newFormData[`string-${i}-column-${activeColumn}`] = '';
+                    }
+                }
+                return { ...prev, ...newFormData };
+            });
         }
     }, [insertChordPositions]);
 
     const handleTablatureInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const stringIndex = e.target.dataset.string;
         const tabColumnIndex = e.target.dataset.tabcolumn;
-        const key = `${stringIndex}${tabColumnIndex}`;
+        const key = `string-${stringIndex}-column-${tabColumnIndex}`;
         const value = e.target.value;
 
         setFormData((prev) => ({
@@ -74,7 +84,11 @@ const TablatureEditor: React.FC<TablatureEditorProps> = ({ numberOfStrings, isRe
                                     data-string={numberOfStrings - stringIndex}
                                     data-tabcolumn={tabColumnIndex + 1}
                                     onChange={handleTablatureInputChange}
-                                    value={formData[`${numberOfStrings - stringIndex}${tabColumnIndex + 1}`] || ''}
+                                    value={
+                                        formData[
+                                            `string-${numberOfStrings - stringIndex}-column-${tabColumnIndex + 1}`
+                                        ] || ''
+                                    }
                                     maxLength={2}
                                     aria-label="Tablature input"
                                     onFocus={handleTablatureInputClick}
