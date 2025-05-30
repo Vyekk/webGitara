@@ -3,7 +3,6 @@ const GuitarChords = [
     {
         name: 'A',
         positions: [
-            { guitarString: 6, guitarFret: null },
             { guitarString: 5, guitarFret: 0 },
             { guitarString: 4, guitarFret: 2 },
             { guitarString: 3, guitarFret: 2 },
@@ -14,7 +13,6 @@ const GuitarChords = [
     {
         name: 'A#',
         positions: [
-            { guitarString: 6, guitarFret: null },
             { guitarString: 5, guitarFret: 1 },
             { guitarString: 4, guitarFret: 3 },
             { guitarString: 3, guitarFret: 3 },
@@ -25,7 +23,6 @@ const GuitarChords = [
     {
         name: 'B',
         positions: [
-            { guitarString: 6, guitarFret: null },
             { guitarString: 5, guitarFret: 2 },
             { guitarString: 4, guitarFret: 4 },
             { guitarString: 3, guitarFret: 4 },
@@ -36,7 +33,6 @@ const GuitarChords = [
     {
         name: 'C',
         positions: [
-            { guitarString: 6, guitarFret: null },
             { guitarString: 5, guitarFret: 3 },
             { guitarString: 4, guitarFret: 2 },
             { guitarString: 3, guitarFret: 0 },
@@ -47,7 +43,6 @@ const GuitarChords = [
     {
         name: 'C#',
         positions: [
-            { guitarString: 6, guitarFret: null },
             { guitarString: 5, guitarFret: 4 },
             { guitarString: 4, guitarFret: 6 },
             { guitarString: 3, guitarFret: 6 },
@@ -58,8 +53,6 @@ const GuitarChords = [
     {
         name: 'D',
         positions: [
-            { guitarString: 6, guitarFret: null },
-            { guitarString: 5, guitarFret: null },
             { guitarString: 4, guitarFret: 0 },
             { guitarString: 3, guitarFret: 2 },
             { guitarString: 2, guitarFret: 3 },
@@ -69,7 +62,6 @@ const GuitarChords = [
     {
         name: 'D#',
         positions: [
-            { guitarString: 6, guitarFret: null },
             { guitarString: 5, guitarFret: 6 },
             { guitarString: 4, guitarFret: 8 },
             { guitarString: 3, guitarFret: 8 },
@@ -126,7 +118,6 @@ const GuitarChords = [
     {
         name: 'Am',
         positions: [
-            { guitarString: 6, guitarFret: null },
             { guitarString: 5, guitarFret: 0 },
             { guitarString: 4, guitarFret: 2 },
             { guitarString: 3, guitarFret: 2 },
@@ -137,7 +128,6 @@ const GuitarChords = [
     {
         name: 'Am#',
         positions: [
-            { guitarString: 6, guitarFret: null },
             { guitarString: 5, guitarFret: 1 },
             { guitarString: 4, guitarFret: 3 },
             { guitarString: 3, guitarFret: 3 },
@@ -148,7 +138,6 @@ const GuitarChords = [
     {
         name: 'Bm',
         positions: [
-            { guitarString: 6, guitarFret: null },
             { guitarString: 5, guitarFret: 2 },
             { guitarString: 4, guitarFret: 4 },
             { guitarString: 3, guitarFret: 4 },
@@ -159,7 +148,6 @@ const GuitarChords = [
     {
         name: 'Cm',
         positions: [
-            { guitarString: 6, guitarFret: null },
             { guitarString: 5, guitarFret: 3 },
             { guitarString: 4, guitarFret: 5 },
             { guitarString: 3, guitarFret: 5 },
@@ -170,7 +158,6 @@ const GuitarChords = [
     {
         name: 'Cm#',
         positions: [
-            { guitarString: 6, guitarFret: null },
             { guitarString: 5, guitarFret: 4 },
             { guitarString: 4, guitarFret: 6 },
             { guitarString: 3, guitarFret: 6 },
@@ -181,8 +168,6 @@ const GuitarChords = [
     {
         name: 'Dm',
         positions: [
-            { guitarString: 6, guitarFret: null },
-            { guitarString: 5, guitarFret: null },
             { guitarString: 4, guitarFret: 0 },
             { guitarString: 3, guitarFret: 2 },
             { guitarString: 2, guitarFret: 3 },
@@ -192,7 +177,6 @@ const GuitarChords = [
     {
         name: 'Dm#',
         positions: [
-            { guitarString: 6, guitarFret: null },
             { guitarString: 5, guitarFret: 6 },
             { guitarString: 4, guitarFret: 8 },
             { guitarString: 3, guitarFret: 8 },
