@@ -1,9 +1,9 @@
 import { useParams } from 'react-router-dom';
 import Button from 'components/Button/Button';
 import Input from 'components/Input/Input';
-import TabulatureEditor from 'components/TabulatureEditor/TabulatureEditor';
+import TablatureEditor from 'components/TablatureEditor/TablatureEditor';
 import Title from 'components/Title/Title';
-import styles from 'views/TabulatureEditorView/TabulatureEditorView.module.scss';
+import styles from 'views/TablatureEditorView/TablatureEditorView.module.scss';
 import { useEffect, useState } from 'react';
 import { Song } from 'types';
 import { loadSongs } from 'utils/storage';
@@ -11,10 +11,10 @@ import { Link } from 'react-router-dom';
 import GuitarChords from 'utils/guitarChords';
 import { ChordPosition } from 'types';
 
-const TabulatureEditorView = () => {
+const TablatureEditorView = () => {
     const { id } = useParams();
     const [song, setSong] = useState<Song | null>(null);
-    const [numberOfTabulatureLines, setNumberOfTabulatureLines] = useState(1);
+    const [numberOfTablatureLines, setNumberOfTablatureLines] = useState(1);
     const [newSongTitle, setNewSongTitle] = useState('');
     const [selectedChord, setSelectedChord] = useState<string>('A');
     const [insertChordPositions, setInsertChordPositions] = useState<ChordPosition[]>([]);
@@ -45,12 +45,12 @@ const TabulatureEditorView = () => {
     };
 
     const handleAddLine = () => {
-        setNumberOfTabulatureLines((prev) => prev + 1);
+        setNumberOfTablatureLines((prev) => prev + 1);
     };
 
     const handleRemoveLine = () => {
-        if (numberOfTabulatureLines > 1) {
-            setNumberOfTabulatureLines((prev) => prev - 1);
+        if (numberOfTablatureLines > 1) {
+            setNumberOfTablatureLines((prev) => prev - 1);
         }
     };
 
@@ -61,7 +61,7 @@ const TabulatureEditorView = () => {
     };
 
     return (
-        <div className={styles.tabulatureEditorViewWrapper}>
+        <div className={styles.tablatureEditorViewWrapper}>
             <div className={styles.textContentWrapper}>
                 <div className={styles.linkWrapper}>
                     <Link to="/play/dashboard"> &lt; powrót do dashboard</Link>
@@ -78,13 +78,13 @@ const TabulatureEditorView = () => {
                     <Input id="authorName" readOnly>
                         {song ? song.author : 'Autor'}
                     </Input>
-                    {Array.from({ length: numberOfTabulatureLines }, (_, i) => (
-                        <TabulatureEditor key={i} numberOfStrings={6} insertChordPositions={insertChordPositions} />
+                    {Array.from({ length: numberOfTablatureLines }, (_, i) => (
+                        <TablatureEditor key={i} numberOfStrings={6} insertChordPositions={insertChordPositions} />
                     ))}
                     <div className={styles.buttonsWrapper}>
                         <Button type="submit">Zapisz utwór</Button>
 
-                        <div className={styles.tabulatureEditButtonsWrapper}>
+                        <div className={styles.tablatureEditButtonsWrapper}>
                             <select title="Wybierz akord" onChange={(e) => setSelectedChord(e.target.value)}>
                                 <option value="A">A</option>
                                 <option value="A#">A#</option>
@@ -114,8 +114,8 @@ const TabulatureEditorView = () => {
                                 Wprowadź
                             </Button>
                         </div>
-                        <div className={styles.tabulatureEditButtonsWrapper}>
-                            {numberOfTabulatureLines > 1 && (
+                        <div className={styles.tablatureEditButtonsWrapper}>
+                            {numberOfTablatureLines > 1 && (
                                 <Button type="button" onClick={handleRemoveLine}>
                                     Usuń linie
                                 </Button>
@@ -131,4 +131,4 @@ const TabulatureEditorView = () => {
     );
 };
 
-export { TabulatureEditorView };
+export { TablatureEditorView };

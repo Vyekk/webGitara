@@ -1,14 +1,14 @@
-import styles from 'components/TabulatureEditor/TabulatureEditor.module.scss';
+import styles from 'components/TablatureEditor/TablatureEditor.module.scss';
 import { useState, useEffect } from 'react';
 import { ChordPosition } from 'types';
 
-interface TabulatureEditorProps {
+interface TablatureEditorProps {
     numberOfStrings: number;
     isReversed?: boolean;
     insertChordPositions?: ChordPosition[];
 }
 
-const TabulatureEditor: React.FC<TabulatureEditorProps> = ({ numberOfStrings, isReversed, insertChordPositions }) => {
+const TablatureEditor: React.FC<TablatureEditorProps> = ({ numberOfStrings, isReversed, insertChordPositions }) => {
     const stringsLabels = ['E', 'A', 'D', 'G', 'B', 'E'];
     const [formData, setFormData] = useState<Record<string, string>>({});
     const [activeColumn, setActiveColumn] = useState<number | null>(null);
@@ -27,7 +27,7 @@ const TabulatureEditor: React.FC<TabulatureEditorProps> = ({ numberOfStrings, is
         }
     }, [insertChordPositions]);
 
-    const handleTabulatureInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const handleTablatureInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const stringIndex = e.target.dataset.string;
         const tabColumnIndex = e.target.dataset.tabcolumn;
         const key = `${stringIndex}${tabColumnIndex}`;
@@ -39,13 +39,13 @@ const TabulatureEditor: React.FC<TabulatureEditorProps> = ({ numberOfStrings, is
         }));
     };
 
-    const handleTabulatureInputClick = (e: React.FocusEvent<HTMLInputElement>) => {
+    const handleTablatureInputClick = (e: React.FocusEvent<HTMLInputElement>) => {
         e.preventDefault();
         setActiveColumn(Number(e.currentTarget.dataset.tabcolumn));
     };
 
     return (
-        <div className={styles.tabulatureEditorWrapper}>
+        <div className={styles.tablatureEditorWrapper}>
             {Array.from({ length: numberOfStrings }, (_, i) => i)
                 .map((i) => (isReversed ? i : numberOfStrings - 1 - i))
                 .map((stringIndex) => (
@@ -73,11 +73,11 @@ const TabulatureEditor: React.FC<TabulatureEditorProps> = ({ numberOfStrings, is
                                     key={`${numberOfStrings - stringIndex}-${tabColumnIndex + 1}`}
                                     data-string={numberOfStrings - stringIndex}
                                     data-tabcolumn={tabColumnIndex + 1}
-                                    onChange={handleTabulatureInputChange}
+                                    onChange={handleTablatureInputChange}
                                     value={formData[`${numberOfStrings - stringIndex}${tabColumnIndex + 1}`] || ''}
                                     maxLength={2}
-                                    aria-label="Tabulature input"
-                                    onFocus={handleTabulatureInputClick}
+                                    aria-label="Tablature input"
+                                    onFocus={handleTablatureInputClick}
                                 ></input>
                             </div>
                         ))}
@@ -87,4 +87,4 @@ const TabulatureEditor: React.FC<TabulatureEditorProps> = ({ numberOfStrings, is
     );
 };
 
-export default TabulatureEditor;
+export default TablatureEditor;
