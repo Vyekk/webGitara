@@ -6,7 +6,7 @@ export type TabNote = {
 };
 
 export type Step = TabNote[];
-export type Tabulature = Step[];
+export type Tablature = Step[];
 
 export type Song = {
     id: number;
@@ -16,7 +16,7 @@ export type Song = {
     place: number;
     liked?: boolean;
     comments?: [string, string][];
-    tabulature: Tabulature;
+    tablature: Tablature;
     bpm: number;
 };
 
