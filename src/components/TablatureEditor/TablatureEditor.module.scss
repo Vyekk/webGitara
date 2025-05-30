@@ -1,4 +1,5 @@
 @use 'variables' as *;
+@use 'sass:color' as color;
 
 .tablatureEditorWrapper {
     display: flex;
@@ -36,7 +37,7 @@
 }
 
 .activeTabColumn {
-    background-color: lighten($primary-color, 20%)
+    background-color: color.adjust($primary-color, $lightness: 20%);
 }
 
 .tabCell {
