@@ -10,6 +10,7 @@ import { loadSongs } from 'utils/storage';
 import { Link } from 'react-router-dom';
 import GuitarChords from 'utils/guitarChords';
 import { ChordPosition } from 'types';
+import { TablatureActiveLineColumn } from 'types';
 
 const TablatureEditorView = () => {
     const { id } = useParams();
@@ -18,6 +19,7 @@ const TablatureEditorView = () => {
     const [newSongTitle, setNewSongTitle] = useState('');
     const [selectedChord, setSelectedChord] = useState<string>('A');
     const [insertChordPositions, setInsertChordPositions] = useState<ChordPosition[]>([]);
+    const [activeColumn, setActiveColumn] = useState<TablatureActiveLineColumn | null>(null);
 
     useEffect(() => {
         if (!id) {
@@ -83,7 +85,14 @@ const TablatureEditorView = () => {
                         {song ? song.author : 'Autor'}
                     </Input>
                     {Array.from({ length: numberOfTablatureLines }, (_, i) => (
-                        <TablatureEditor key={i} numberOfStrings={6} insertChordPositions={insertChordPositions} />
+                        <TablatureEditor
+                            key={i}
+                            numberOfStrings={6}
+                            insertChordPositions={insertChordPositions}
+                            activeColumn={activeColumn}
+                            setActiveColumn={setActiveColumn}
+                            tablatureLineIndex={i + 1}
+                        />
                     ))}
                     <div className={styles.buttonsWrapper}>
                         <Button type="submit">Zapisz utwór</Button>
