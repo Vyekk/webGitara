@@ -22,6 +22,8 @@ const TablatureEditor: React.FC<TablatureEditorProps> = ({
 }) => {
     const stringsLabels = ['E', 'A', 'D', 'G', 'B', 'E'];
     const [formData, setFormData] = useState<Record<string, string>>({});
+    const tabulatureColumnNumber = activeColumn?.tabulatureColumnNumber ?? null;
+    const tabulatureLineNumber = activeColumn?.tabulatureLineNumber ?? null;
 
     useEffect(() => {
         if (insertChordPositions && insertChordPositions.length > 0) {
@@ -30,9 +32,8 @@ const TablatureEditor: React.FC<TablatureEditorProps> = ({
                 const stringIndex = position.guitarString;
                 const fret = position.guitarFret;
                 if (fret !== null) {
-                    newFormData[
-                        `string-${stringIndex}-column-${activeColumn?.tabulatureColumnNumber}-line-${activeColumn?.tabulatureLineNumber}`
-                    ] = fret.toString();
+                    newFormData[`string-${stringIndex}-column-${tabulatureColumnNumber}-line-${tabulatureLineNumber}`] =
+                        fret.toString();
                 }
             });
             setFormData((prev) => ({ ...prev, ...newFormData }));
@@ -41,9 +42,7 @@ const TablatureEditor: React.FC<TablatureEditorProps> = ({
                 const newFormData: Record<string, string> = {};
                 for (let i = 1; i <= numberOfStrings; i++) {
                     for (let j = 1; j <= 50; j++) {
-                        newFormData[
-                            `string-${i}-column-${activeColumn?.tabulatureColumnNumber}-line-${activeColumn?.tabulatureLineNumber}`
-                        ] = '';
+                        newFormData[`string-${i}-column-${tabulatureColumnNumber}-line-${tabulatureLineNumber}`] = '';
                     }
                 }
                 return { ...prev, ...newFormData };
@@ -89,8 +88,8 @@ const TablatureEditor: React.FC<TablatureEditorProps> = ({
                             <div
                                 key={tabColumnIndex + 1}
                                 className={`${styles.tabCell} ${
-                                    Number(activeColumn?.tabulatureColumnNumber) === tabColumnIndex + 1 &&
-                                    activeColumn?.tabulatureLineNumber === tablatureLineIndex
+                                    Number(tabulatureColumnNumber) === tabColumnIndex + 1 &&
+                                    tabulatureLineNumber === tablatureLineIndex
                                         ? styles.activeTabColumn
                                         : ''
                                 }`}
