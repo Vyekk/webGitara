@@ -24,3 +24,8 @@ export type ChordPosition = {
     guitarString: number;
     guitarFret: number | null;
 };
+
+export type TablatureActiveLineColumn = {
+    tabulatureLineNumber: number;
+    tabulatureColumnNumber: string | null;
+};
