@@ -22,7 +22,7 @@ export type Song = {
 
 export type ChordPosition = {
     guitarString: number;
-    guitarFret: number | null;
+    guitarFret: number | null | string;
 };
 
 export type TablatureActiveLineColumn = {
