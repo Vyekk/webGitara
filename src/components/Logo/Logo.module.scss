@@ -1,12 +1,9 @@
 @use 'variables' as *;
 .logo {
-    font-size: $bigger-font-size;
-    font-weight: 700;
-    color: $white;
-    &Primary {
-        color: $primary-color;
-    }
     a {
         color: $white;
+    }
+    img {
+        width: 100px;
     }
 }
