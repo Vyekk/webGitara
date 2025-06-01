@@ -56,6 +56,10 @@ const TablatureEditor: React.FC<TablatureEditorProps> = ({
         const key = `string-${stringIndex}-column-${tabColumnIndex}-line-${tablatureLineIndex}`;
         const value = e.target.value;
 
+        const isValid = value === '' || value === '|' || (/^\d{1,2}$/.test(value) && +value >= 0 && +value <= 24);
+
+        if (!isValid) return;
+
         setFormData((prev) => ({
             ...prev,
             [key]: value,
