@@ -122,6 +122,13 @@ const TablatureEditor: React.FC<TablatureEditorProps> = ({
                                             }-line-${tablatureLineIndex}`
                                         ] || ''
                                     }
+                                    readOnly={
+                                        formData[
+                                            `string-${numberOfStrings - stringIndex}-column-${
+                                                tabColumnIndex + 1
+                                            }-line-${tablatureLineIndex}`
+                                        ] === '|'
+                                    }
                                     maxLength={2}
                                     aria-label="Tablature input"
                                     onFocus={handleTablatureInputClick}
