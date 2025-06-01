@@ -17,6 +17,7 @@ const TablatureEditorView = () => {
     const [song, setSong] = useState<Song | null>(null);
     const [numberOfTablatureLines, setNumberOfTablatureLines] = useState(1);
     const [newSongTitle, setNewSongTitle] = useState('');
+    const [newSongBpm, setNewSongBpm] = useState(120);
     const [selectedChord, setSelectedChord] = useState<string>('A');
     const [insertChordPositions, setInsertChordPositions] = useState<ChordPosition[]>([]);
     const [activeColumn, setActiveColumn] = useState<TablatureActiveLineColumn | null>(null);
@@ -66,6 +67,20 @@ const TablatureEditorView = () => {
         setInsertChordPositions([]);
     };
 
+    const handleBpmChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const value = e.target.value;
+        const bpmValue = parseInt(value, 10);
+        if (!isNaN(bpmValue) && bpmValue >= 30 && bpmValue <= 300) {
+            setNewSongBpm(bpmValue);
+        }
+    };
+
+    const handleInsertBarline = () => {
+        const barline = GuitarChords.find((chord) => chord.name === 'barline');
+        const positions = barline?.positions || [];
+        setInsertChordPositions([...positions]);
+    };
+
     return (
         <div className={styles.tablatureEditorViewWrapper}>
             <div className={styles.textContentWrapper}>
@@ -74,16 +89,36 @@ const TablatureEditorView = () => {
                 </div>
                 <Title>Edycja utworu {song ? `"${song.songTitle}"` : ''}</Title>
                 <form>
-                    <Input
-                        id="songName"
-                        value={song ? song.songTitle : newSongTitle}
-                        onChange={(e) => setNewSongTitle(e.target.value)}
-                    >
-                        Nazwa utworu
-                    </Input>
-                    <Input id="authorName" readOnly>
-                        {song ? song.author : 'Autor'}
-                    </Input>
+                    <div className={styles.inputsWrapper}>
+                        <div className={styles.inputWrapper}>
+                            <label htmlFor="songName">Nazwa utworu</label>
+                            <Input
+                                id="songName"
+                                maxLength={40}
+                                value={song ? song.songTitle : newSongTitle}
+                                onChange={(e) => setNewSongTitle(e.target.value)}
+                            >
+                                Wprowadź nazwę
+                            </Input>
+                        </div>
+                        <div className={styles.inputWrapper}>
+                            <label htmlFor="authorName">Autor</label>
+                            <Input id="authorName" readOnly>
+                                {song ? song.author : 'Autor'}
+                            </Input>
+                        </div>
+                        <div className={styles.inputWrapper}>
+                            <label htmlFor="songName">Bpmn</label>
+                            <Input
+                                id="description"
+                                type="number"
+                                min={30}
+                                max={300}
+                                value={song ? song.bpm : newSongBpm}
+                                onChange={handleBpmChange}
+                            />
+                        </div>
+                    </div>
                     {Array.from({ length: numberOfTablatureLines }, (_, i) => (
                         <TablatureEditor
                             key={i}
@@ -128,6 +163,9 @@ const TablatureEditorView = () => {
                             </Button>
                             <Button type="button" onClick={handleClearTabColumn}>
                                 X
+                            </Button>
+                            <Button type="button" onClick={handleInsertBarline}>
+                                |
                             </Button>
                         </div>
                         <div className={styles.tablatureEditButtonsWrapper}>
