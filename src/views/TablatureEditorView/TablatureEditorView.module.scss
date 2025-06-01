@@ -7,7 +7,7 @@
 
     .textContentWrapper {
         padding: 2em 3em 0;
-        margin-bottom: 80px;
+        margin-bottom: 200px;
     }
 
     .linkWrapper {
@@ -24,7 +24,20 @@
         .tablatureEditButtonsWrapper {
             display: flex;
             gap: 10px;
+            button, select {
+                height: 40px;
+                font-size: 0.8em;
+                text-align: center;
+            }
+            .durationSelect {
+                font-size: 2em;
+                width: 40px;
+            }
         }
+    }
+    .tablatureAddLineButtonsWrapper {
+        display: flex;
+        gap: 10px;
     }
 
     .inputsWrapper {

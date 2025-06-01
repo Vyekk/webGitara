@@ -100,6 +100,14 @@ const TablatureEditor: React.FC<TablatureEditorProps> = ({
                                 data-string={numberOfStrings - stringIndex}
                                 data-tabcolumn={tabColumnIndex + 1}
                             >
+                                {numberOfStrings - stringIndex === 1 && (
+                                    <div
+                                        className={styles.durationWrapper}
+                                        key={`duration-${numberOfStrings - stringIndex}-${tabColumnIndex}`}
+                                    >
+                                        ♪
+                                    </div>
+                                )}
                                 <input
                                     id={`${numberOfStrings - stringIndex}-${tabColumnIndex + 1}`}
                                     type="text"

@@ -21,6 +21,7 @@ const TablatureEditorView = () => {
     const [selectedChord, setSelectedChord] = useState<string>('A');
     const [insertChordPositions, setInsertChordPositions] = useState<ChordPosition[]>([]);
     const [activeColumn, setActiveColumn] = useState<TablatureActiveLineColumn | null>(null);
+    const [duration, setDuration] = useState('4n');
 
     useEffect(() => {
         if (!id) {
@@ -79,6 +80,10 @@ const TablatureEditorView = () => {
         const barline = GuitarChords.find((chord) => chord.name === 'barline');
         const positions = barline?.positions || [];
         setInsertChordPositions([...positions]);
+    };
+
+    const handleSetDuration = () => {
+        console.log('Setting duration:', duration);
     };
 
     return (
@@ -159,16 +164,33 @@ const TablatureEditorView = () => {
                                 <option value="Gm#">Gm#</option>
                             </select>
                             <Button type="button" onClick={handleInsertChord}>
-                                Wprowadź
+                                Wstaw akord
                             </Button>
                             <Button type="button" onClick={handleClearTabColumn}>
-                                X
+                                Czyść
                             </Button>
                             <Button type="button" onClick={handleInsertBarline}>
                                 |
                             </Button>
+                            <select
+                                className={styles.durationSelect}
+                                title="Wstaw rytm"
+                                value={duration}
+                                onChange={(e) => setDuration(e.target.value)}
+                            >
+                                <option value="1n">𝅝</option>
+                                <option value="2n">𝅗𝅥</option>
+                                <option value="4n">♩</option>
+                                <option value="8n">♪</option>
+                                <option value="16n">𝅘𝅥𝅯</option>
+                                <option value="32n">𝅘𝅥𝅰</option>
+                                <option value="64n">𝅘𝅥𝅱</option>
+                            </select>
+                            <Button type="button" onClick={handleSetDuration}>
+                                Ustaw rytm
+                            </Button>
                         </div>
-                        <div className={styles.tablatureEditButtonsWrapper}>
+                        <div className={styles.tablatureAddLineButtonsWrapper}>
                             {numberOfTablatureLines > 1 && (
                                 <Button type="button" onClick={handleRemoveLine}>
                                     Usuń linie
