@@ -97,6 +97,10 @@ const GuitarView = () => {
                 return beatDuration / 2;
             case '16n':
                 return beatDuration / 4;
+            case '32n':
+                return beatDuration / 8;
+            case '64n':
+                return beatDuration / 16;
             default:
                 return beatDuration;
         }
