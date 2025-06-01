@@ -239,6 +239,17 @@ const GuitarChords = [
             { guitarString: 1, guitarFret: 4 },
         ],
     },
+    {
+        name: 'barline',
+        positions: [
+            { guitarString: 6, guitarFret: '|' },
+            { guitarString: 5, guitarFret: '|' },
+            { guitarString: 4, guitarFret: '|' },
+            { guitarString: 3, guitarFret: '|' },
+            { guitarString: 2, guitarFret: '|' },
+            { guitarString: 1, guitarFret: '|' },
+        ],
+    },
 ];
 
 export default GuitarChords;
