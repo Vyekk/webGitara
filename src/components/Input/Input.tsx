@@ -4,9 +4,12 @@ interface InputProps {
     children?: string;
     id: string;
     type?: string;
-    value?: string;
+    value?: string | number;
     readOnly?: boolean;
     required?: boolean;
+    maxLength?: number;
+    min?: number;
+    max?: number;
     onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
