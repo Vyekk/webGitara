@@ -1,12 +1,13 @@
 import styles from 'components/Logo/Logo.module.scss';
 import { Link } from 'react-router-dom';
+import logoImage from 'assets/webGitaraLogo.png';
 
 const Logo = () => (
-    <p className={styles.logo}>
+    <div className={styles.logo}>
         <Link to="/">
-            web<span className={styles.logoPrimary}>Gitara</span>
+            <img src={logoImage} alt="webGitara" />
         </Link>
-    </p>
+    </div>
 );
 
 export default Logo;
