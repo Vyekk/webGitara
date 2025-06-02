@@ -26,6 +26,6 @@ export type ChordPosition = {
 };
 
 export type TablatureActiveLineColumn = {
-    tabulatureLineNumber: number;
-    tabulatureColumnNumber: string | null;
+    tablatureLineNumber: number;
+    tablatureColumnNumber: string | null;
 };

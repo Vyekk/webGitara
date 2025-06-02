@@ -25,12 +25,17 @@ const TablatureEditor: React.FC<TablatureEditorProps> = ({
     const stringsLabels = ['E', 'A', 'D', 'G', 'B', 'E'];
     const [formData, setFormData] = useState<Record<string, string>>({});
     const [formDataDuration, setFormDataDuration] = useState<Record<string, string>>({});
-    const tabulatureColumnNumber = activeColumn?.tabulatureColumnNumber ?? null;
-    const tabulatureLineNumber = activeColumn?.tabulatureLineNumber ?? null;
+    const tablatureColumnNumber = activeColumn?.tablatureColumnNumber ?? null;
+    const tablatureLineNumber = activeColumn?.tablatureLineNumber ?? null;
 
     useEffect(() => {
-        if (insertColumnDuration && activeColumn && activeColumn?.tabulatureColumnNumber !== null) {
-            const key = `duration-${tablatureLineIndex}-${activeColumn.tabulatureColumnNumber}`;
+        if (
+            insertColumnDuration &&
+            activeColumn &&
+            activeColumn?.tablatureColumnNumber !== null &&
+            activeColumn.tablatureLineNumber === tablatureLineIndex
+        ) {
+            const key = `duration-${tablatureLineIndex}-${activeColumn.tablatureColumnNumber}`;
             setFormDataDuration((prev) => ({
                 ...prev,
                 [key]: insertColumnDuration.value,
@@ -45,7 +50,7 @@ const TablatureEditor: React.FC<TablatureEditorProps> = ({
                 const stringIndex = position.guitarString;
                 const fret = position.guitarFret;
                 if (fret !== null) {
-                    newFormData[`string-${stringIndex}-column-${tabulatureColumnNumber}-line-${tabulatureLineNumber}`] =
+                    newFormData[`string-${stringIndex}-column-${tablatureColumnNumber}-line-${tablatureLineNumber}`] =
                         fret.toString();
                 }
             });
@@ -55,7 +60,7 @@ const TablatureEditor: React.FC<TablatureEditorProps> = ({
                 const newFormData: Record<string, string> = {};
                 for (let i = 1; i <= numberOfStrings; i++) {
                     for (let j = 1; j <= 50; j++) {
-                        newFormData[`string-${i}-column-${tabulatureColumnNumber}-line-${tabulatureLineNumber}`] = '';
+                        newFormData[`string-${i}-column-${tablatureColumnNumber}-line-${tablatureLineNumber}`] = '';
                     }
                 }
                 return { ...prev, ...newFormData };
@@ -82,8 +87,8 @@ const TablatureEditor: React.FC<TablatureEditorProps> = ({
     const handleTablatureInputClick = (e: React.FocusEvent<HTMLInputElement>) => {
         e.preventDefault();
         setActiveColumn({
-            tabulatureLineNumber: tablatureLineIndex,
-            tabulatureColumnNumber: e.target.dataset.tabcolumn ?? null,
+            tablatureLineNumber: tablatureLineIndex,
+            tablatureColumnNumber: e.target.dataset.tabcolumn ?? null,
         });
     };
 
@@ -105,8 +110,8 @@ const TablatureEditor: React.FC<TablatureEditorProps> = ({
                             <div
                                 key={tabColumnIndex + 1}
                                 className={`${styles.tabCell} ${
-                                    Number(tabulatureColumnNumber) === tabColumnIndex + 1 &&
-                                    tabulatureLineNumber === tablatureLineIndex
+                                    Number(tablatureColumnNumber) === tabColumnIndex + 1 &&
+                                    tablatureLineNumber === tablatureLineIndex
                                         ? styles.activeTabColumn
                                         : ''
                                 }`}
