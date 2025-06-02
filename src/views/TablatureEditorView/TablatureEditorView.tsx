@@ -22,7 +22,9 @@ const TablatureEditorView = () => {
     const [insertChordPositions, setInsertChordPositions] = useState<ChordPosition[]>([]);
     const [activeColumn, setActiveColumn] = useState<TablatureActiveLineColumn | null>(null);
     const [duration, setDuration] = useState('4n');
-    const [insertColumnDuration, setInsertColumnDuration] = useState<string>('4n');
+    const [insertColumnDuration, setInsertColumnDuration] = useState<{ value: string }>({
+        value: '4n',
+    });
 
     useEffect(() => {
         if (!id) {
@@ -67,6 +69,7 @@ const TablatureEditorView = () => {
 
     const handleClearTabColumn = () => {
         setInsertChordPositions([]);
+        setInsertColumnDuration({ value: '' });
     };
 
     const handleBpmChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -84,7 +87,7 @@ const TablatureEditorView = () => {
     };
 
     const handleSetDuration = () => {
-        setInsertColumnDuration(duration);
+        setInsertColumnDuration({ value: duration });
     };
 
     return (

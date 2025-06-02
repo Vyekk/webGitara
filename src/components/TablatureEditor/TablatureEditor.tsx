@@ -10,7 +10,7 @@ interface TablatureEditorProps {
     setActiveColumn: React.Dispatch<React.SetStateAction<TablatureActiveLineColumn | null>>;
     isReversed?: boolean;
     insertChordPositions?: ChordPosition[];
-    insertColumnDuration?: string;
+    insertColumnDuration?: { value: string };
 }
 
 const TablatureEditor: React.FC<TablatureEditorProps> = ({
@@ -33,7 +33,7 @@ const TablatureEditor: React.FC<TablatureEditorProps> = ({
             const key = `duration-${tablatureLineIndex}-${activeColumn.tabulatureColumnNumber}`;
             setFormDataDuration((prev) => ({
                 ...prev,
-                [key]: insertColumnDuration,
+                [key]: insertColumnDuration.value,
             }));
         }
     }, [insertColumnDuration]);
