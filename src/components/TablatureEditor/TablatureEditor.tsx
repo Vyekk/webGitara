@@ -29,6 +29,12 @@ const TablatureEditor: React.FC<TablatureEditorProps> = ({
     const tablatureLineNumber = activeColumn?.tablatureLineNumber ?? null;
 
     useEffect(() => {
+        return () => {
+            setActiveColumn(null);
+        };
+    }, []);
+
+    useEffect(() => {
         if (
             insertColumnDuration &&
             activeColumn &&
