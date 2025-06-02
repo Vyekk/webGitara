@@ -22,6 +22,7 @@ const TablatureEditorView = () => {
     const [insertChordPositions, setInsertChordPositions] = useState<ChordPosition[]>([]);
     const [activeColumn, setActiveColumn] = useState<TablatureActiveLineColumn | null>(null);
     const [duration, setDuration] = useState('4n');
+    const [insertColumnDuration, setInsertColumnDuration] = useState<string>('4n');
 
     useEffect(() => {
         if (!id) {
@@ -83,7 +84,7 @@ const TablatureEditorView = () => {
     };
 
     const handleSetDuration = () => {
-        console.log('Setting duration:', duration);
+        setInsertColumnDuration(duration);
     };
 
     return (
@@ -129,6 +130,7 @@ const TablatureEditorView = () => {
                             key={i}
                             numberOfStrings={6}
                             insertChordPositions={insertChordPositions}
+                            insertColumnDuration={insertColumnDuration}
                             activeColumn={activeColumn}
                             setActiveColumn={setActiveColumn}
                             tablatureLineIndex={i + 1}

@@ -10,20 +10,33 @@ interface TablatureEditorProps {
     setActiveColumn: React.Dispatch<React.SetStateAction<TablatureActiveLineColumn | null>>;
     isReversed?: boolean;
     insertChordPositions?: ChordPosition[];
+    insertColumnDuration?: string;
 }
 
 const TablatureEditor: React.FC<TablatureEditorProps> = ({
     numberOfStrings,
     isReversed,
     insertChordPositions,
+    insertColumnDuration,
     activeColumn,
     tablatureLineIndex,
     setActiveColumn,
 }) => {
     const stringsLabels = ['E', 'A', 'D', 'G', 'B', 'E'];
     const [formData, setFormData] = useState<Record<string, string>>({});
+    const [formDataDuration, setFormDataDuration] = useState<Record<string, string>>({});
     const tabulatureColumnNumber = activeColumn?.tabulatureColumnNumber ?? null;
     const tabulatureLineNumber = activeColumn?.tabulatureLineNumber ?? null;
+
+    useEffect(() => {
+        if (insertColumnDuration && activeColumn && activeColumn?.tabulatureColumnNumber !== null) {
+            const key = `duration-${tablatureLineIndex}-${activeColumn.tabulatureColumnNumber}`;
+            setFormDataDuration((prev) => ({
+                ...prev,
+                [key]: insertColumnDuration,
+            }));
+        }
+    }, [insertColumnDuration]);
 
     useEffect(() => {
         if (insertChordPositions && insertChordPositions.length > 0) {
@@ -103,9 +116,21 @@ const TablatureEditor: React.FC<TablatureEditorProps> = ({
                                 {numberOfStrings - stringIndex === 1 && (
                                     <div
                                         className={styles.durationWrapper}
-                                        key={`duration-${numberOfStrings - stringIndex}-${tabColumnIndex}`}
+                                        key={`duration-${tablatureLineIndex}-${tabColumnIndex + 1}`}
                                     >
-                                        ♪
+                                        <input
+                                            id={`duration-${tabColumnIndex + 1}`}
+                                            key={`duration-${tablatureLineIndex}-${tabColumnIndex + 1}`}
+                                            aria-label="Column duration"
+                                            type="text"
+                                            readOnly
+                                            value={
+                                                formDataDuration[
+                                                    `duration-${tablatureLineIndex}-${tabColumnIndex + 1}`
+                                                ] || ''
+                                            }
+                                            data-tabcolumn={tabColumnIndex + 1}
+                                        />
                                     </div>
                                 )}
                                 <input
