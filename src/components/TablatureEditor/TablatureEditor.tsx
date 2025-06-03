@@ -60,6 +60,7 @@ const TablatureEditor: React.FC<TablatureEditorProps> = ({
                         fret.toString();
                 }
             });
+            insertDefaultDuration();
             setFormData((prev) => ({ ...prev, ...newFormData }));
         } else if (insertChordPositions && insertChordPositions.length === 0) {
             setFormData((prev) => {
@@ -74,6 +75,18 @@ const TablatureEditor: React.FC<TablatureEditorProps> = ({
         }
     }, [insertChordPositions]);
 
+    const insertDefaultDuration = () => {
+        if (activeColumn) {
+            const durationKey = `duration-${tablatureLineIndex}-${activeColumn.tablatureColumnNumber}`;
+            if (!formDataDuration[durationKey]) {
+                setFormDataDuration((prev) => ({
+                    ...prev,
+                    [durationKey]: '♩',
+                }));
+            }
+        }
+    };
+
     const handleTablatureInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const stringIndex = e.target.dataset.string;
         const tabColumnIndex = e.target.dataset.tabcolumn;
@@ -81,9 +94,8 @@ const TablatureEditor: React.FC<TablatureEditorProps> = ({
         const value = e.target.value;
 
         const isValid = value === '' || value === '|' || (/^\d{1,2}$/.test(value) && +value >= 0 && +value <= 24);
-
         if (!isValid) return;
-
+        insertDefaultDuration();
         setFormData((prev) => ({
             ...prev,
             [key]: value,
