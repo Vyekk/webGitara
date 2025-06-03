@@ -2,7 +2,8 @@ import styles from 'components/Input/Input.module.scss';
 
 interface InputProps {
     children?: string;
-    id: string;
+    id?: string;
+    name?: string;
     type?: string;
     value?: string | number;
     readOnly?: boolean;
