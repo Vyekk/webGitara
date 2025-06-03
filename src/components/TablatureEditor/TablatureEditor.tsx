@@ -66,9 +66,7 @@ const TablatureEditor: React.FC<TablatureEditorProps> = ({
             setFormData((prev) => {
                 const newFormData: Record<string, string> = {};
                 for (let i = 1; i <= numberOfStrings; i++) {
-                    for (let j = 1; j <= 50; j++) {
-                        newFormData[`string-${i}-column-${tablatureColumnNumber}-line-${tablatureLineNumber}`] = '';
-                    }
+                    newFormData[`string-${i}-column-${tablatureColumnNumber}-line-${tablatureLineNumber}`] = '';
                 }
                 return { ...prev, ...newFormData };
             });
