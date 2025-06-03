@@ -27,6 +27,8 @@ const TablatureEditor: React.FC<TablatureEditorProps> = ({
     const [formDataDuration, setFormDataDuration] = useState<Record<string, string>>({});
     const tablatureColumnNumber = activeColumn?.tablatureColumnNumber ?? null;
     const tablatureLineNumber = activeColumn?.tablatureLineNumber ?? null;
+    // const [tablatureData, setTablatureData] = useState<Record<string, string>>({});
+    // const [tablatureDurations, setTablatureDurations] = useState<Record<string, string>>({});
 
     useEffect(() => {
         return () => {
@@ -41,10 +43,12 @@ const TablatureEditor: React.FC<TablatureEditorProps> = ({
             activeColumn?.tablatureColumnNumber !== null &&
             activeColumn.tablatureLineNumber === tablatureLineIndex
         ) {
-            const key = `duration-${tablatureLineIndex}-${activeColumn.tablatureColumnNumber}`;
+            const keyDuration = `duration-${tablatureLineIndex}-${activeColumn.tablatureColumnNumber}`;
+            const checkIfBarline =
+                formData[`string-1-column-${activeColumn.tablatureColumnNumber}-line-${tablatureLineNumber}`] === '|';
             setFormDataDuration((prev) => ({
                 ...prev,
-                [key]: insertColumnDuration.value,
+                [keyDuration]: !checkIfBarline ? insertColumnDuration.value : '',
             }));
         }
     }, [insertColumnDuration]);
@@ -60,7 +64,9 @@ const TablatureEditor: React.FC<TablatureEditorProps> = ({
                         fret.toString();
                 }
             });
-            insertDefaultDuration();
+            newFormData[`string-1-column-${tablatureColumnNumber}-line-${tablatureLineNumber}`] === '|'
+                ? insertDefaultDuration(true)
+                : insertDefaultDuration();
             setFormData((prev) => ({ ...prev, ...newFormData }));
         } else if (insertChordPositions && insertChordPositions.length === 0) {
             setFormData((prev) => {
@@ -73,13 +79,18 @@ const TablatureEditor: React.FC<TablatureEditorProps> = ({
         }
     }, [insertChordPositions]);
 
-    const insertDefaultDuration = () => {
+    const insertDefaultDuration = (isBarline = false) => {
         if (activeColumn) {
             const durationKey = `duration-${tablatureLineIndex}-${activeColumn.tablatureColumnNumber}`;
             if (!formDataDuration[durationKey]) {
                 setFormDataDuration((prev) => ({
                     ...prev,
-                    [durationKey]: '♩',
+                    [durationKey]: isBarline ? '' : '♩',
+                }));
+            } else if (formDataDuration[durationKey] && isBarline) {
+                setFormDataDuration((prev) => ({
+                    ...prev,
+                    [durationKey]: '',
                 }));
             }
         }
@@ -91,7 +102,7 @@ const TablatureEditor: React.FC<TablatureEditorProps> = ({
         const key = `string-${stringIndex}-column-${tabColumnIndex}-line-${tablatureLineIndex}`;
         const value = e.target.value;
 
-        const isValid = value === '' || value === '|' || (/^\d{1,2}$/.test(value) && +value >= 0 && +value <= 24);
+        const isValid = value === '' || (/^\d{1,2}$/.test(value) && +value >= 0 && +value <= 24);
         if (!isValid) return;
         insertDefaultDuration();
         setFormData((prev) => ({
