@@ -65,8 +65,11 @@
         position: absolute;
         display: flex;
         justify-content: center;
-        top: -20px;
+        top: -25px;
         width: 100%;
         color: $black;
+        input {
+            font-size: 1.2em;
+        }
     }
 }
