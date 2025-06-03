@@ -90,6 +90,10 @@ const TablatureEditorView = () => {
         setInsertColumnDuration({ value: duration });
     };
 
+    const handleSaveSong = (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+    };
+
     return (
         <div className={styles.tablatureEditorViewWrapper}>
             <div className={styles.textContentWrapper}>
@@ -97,11 +101,12 @@ const TablatureEditorView = () => {
                     <Link to="/play/dashboard"> &lt; powrót do dashboard</Link>
                 </div>
                 <Title>Edycja utworu {song ? `"${song.songTitle}"` : ''}</Title>
-                <form>
+                <form onSubmit={handleSaveSong}>
                     <div className={styles.inputsWrapper}>
                         <div className={styles.inputWrapper}>
                             <label htmlFor="songName">Nazwa utworu</label>
                             <Input
+                                name="songName"
                                 id="songName"
                                 maxLength={40}
                                 value={song ? song.songTitle : newSongTitle}
@@ -112,14 +117,15 @@ const TablatureEditorView = () => {
                         </div>
                         <div className={styles.inputWrapper}>
                             <label htmlFor="authorName">Autor</label>
-                            <Input id="authorName" readOnly>
+                            <Input name="authorName" id="authorName" readOnly>
                                 {song ? song.author : 'Autor'}
                             </Input>
                         </div>
                         <div className={styles.inputWrapper}>
-                            <label htmlFor="songName">Bpmn</label>
+                            <label htmlFor="bpmn">Bpmn</label>
                             <Input
-                                id="description"
+                                name="bpmn"
+                                id="bpmn"
                                 type="number"
                                 min={30}
                                 max={300}
