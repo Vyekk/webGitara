@@ -130,7 +130,7 @@ const TablatureEditorView = () => {
                     </div>
                     {Array.from({ length: numberOfTablatureLines }, (_, i) => (
                         <TablatureEditor
-                            key={i}
+                            key={`tablature-line-${i + 1}`}
                             numberOfStrings={6}
                             insertChordPositions={insertChordPositions}
                             insertColumnDuration={insertColumnDuration}
