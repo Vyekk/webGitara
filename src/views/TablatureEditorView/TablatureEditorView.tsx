@@ -21,9 +21,9 @@ const TablatureEditorView = () => {
     const [selectedChord, setSelectedChord] = useState<string>('A');
     const [insertChordPositions, setInsertChordPositions] = useState<ChordPosition[]>([]);
     const [activeColumn, setActiveColumn] = useState<TablatureActiveLineColumn | null>(null);
-    const [duration, setDuration] = useState('4n');
+    const [duration, setDuration] = useState('♩');
     const [insertColumnDuration, setInsertColumnDuration] = useState<{ value: string }>({
-        value: '4n',
+        value: '♩',
     });
 
     useEffect(() => {
@@ -183,13 +183,13 @@ const TablatureEditorView = () => {
                                 value={duration}
                                 onChange={(e) => setDuration(e.target.value)}
                             >
-                                <option value="1n">𝅝</option>
-                                <option value="2n">𝅗𝅥</option>
-                                <option value="4n">♩</option>
-                                <option value="8n">♪</option>
-                                <option value="16n">𝅘𝅥𝅯</option>
-                                <option value="32n">𝅘𝅥𝅰</option>
-                                <option value="64n">𝅘𝅥𝅱</option>
+                                <option value="𝅝">𝅝</option>
+                                <option value="𝅗𝅥">𝅗𝅥</option>
+                                <option value="♩">♩</option>
+                                <option value="♪">♪</option>
+                                <option value="𝅘𝅥𝅯">𝅘𝅥𝅯</option>
+                                <option value="𝅘𝅥𝅰">𝅘𝅥𝅰</option>
+                                <option value="𝅘𝅥𝅱">𝅘𝅥𝅱</option>
                             </select>
                             <Button type="button" onClick={handleSetDuration}>
                                 Ustaw rytm
