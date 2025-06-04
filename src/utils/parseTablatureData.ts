@@ -12,8 +12,8 @@ export const convertFormDataToTablature = (formData: FormDataMap, formDataDurati
         for (const key in formData) {
             const match = key.match(/^string-(\d+)-column-(\d+)-line-(\d+)$/);
             if (!match) continue;
-
-            const [stringIndexRaw, columnRaw, lineIndexRaw] = match;
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
+            const [_, stringIndexRaw, columnRaw, lineIndexRaw] = match;
             const stringIndex = parseInt(stringIndexRaw);
             const columnIndex = parseInt(columnRaw);
             const lineIndex = parseInt(lineIndexRaw);
