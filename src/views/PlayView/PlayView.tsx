@@ -67,6 +67,7 @@ const PlayView: React.FC = () => {
                     </Modal>
                 )}
                 <Routes>
+                    <Route path="/" element={<Navigate to="dashboard" replace />} />
                     <Route path="dashboard" element={<DashboardView />} />
                     <Route path="guitar" element={<Navigate to="1" replace />} />
                     <Route path="guitar/:id" element={<GuitarView />} />
