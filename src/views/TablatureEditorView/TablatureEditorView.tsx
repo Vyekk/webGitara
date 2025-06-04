@@ -28,9 +28,9 @@ const TablatureEditorView = () => {
     const [insertColumnDuration, setInsertColumnDuration] = useState<{ value: string }>({
         value: '♩',
     });
-    const [tablatureData, setTablatureData] = useState<Record<string, string>>({});
-    const [tablatureDurations, setTablatureDurations] = useState<Record<string, string>>({});
     const [errorMessage, setErrorMessage] = useState<string | null>(null);
+    const [fullFormData, setFullFormData] = useState<Record<string, string>>({});
+    const [fullFormDataDuration, setFullFormDataDuration] = useState<Record<string, string>>({});
 
     useEffect(() => {
         if (!id) {
@@ -104,7 +104,7 @@ const TablatureEditorView = () => {
             return;
         }
 
-        const tablature = convertFormDataToTablature(tablatureData, tablatureDurations);
+        const tablature = convertFormDataToTablature(fullFormData, fullFormDataDuration);
         const hasNotes = tablature.some((step) => step.length > 0);
 
         if (!hasNotes) {
@@ -123,6 +123,20 @@ const TablatureEditorView = () => {
         };
         // await addSong(newSong);
         console.log('New song to be saved:', newSong);
+    };
+
+    const handleTablatureDataChange = (lineData: Record<string, string>) => {
+        setFullFormData((prev) => ({
+            ...prev,
+            ...lineData, // nadpisujemy dane dla danej linii i kolumn
+        }));
+    };
+
+    const handleDurationDataChange = (lineDurationData: Record<string, string>) => {
+        setFullFormDataDuration((prev) => ({
+            ...prev,
+            ...lineDurationData,
+        }));
     };
 
     const closeModal = () => setErrorMessage(null);
@@ -176,8 +190,8 @@ const TablatureEditorView = () => {
                             activeColumn={activeColumn}
                             setActiveColumn={setActiveColumn}
                             tablatureLineIndex={i + 1}
-                            onChangeTablatureData={setTablatureData}
-                            onChangeDurationData={setTablatureDurations}
+                            onChangeTablatureData={handleTablatureDataChange}
+                            onChangeDurationData={handleDurationDataChange}
                         />
                     ))}
                     <div className={styles.buttonsWrapper}>
