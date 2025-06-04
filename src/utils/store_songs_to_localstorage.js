@@ -2,7 +2,7 @@ import { saveSongs } from 'utils/storage';
 
 const songs = [
     {
-        id: 1,
+        id: '1',
         songTitle: 'Hallelujah',
         author: 'Leonard Cohen',
         rating: [5, 5, 5, 5, 5],
@@ -39,7 +39,7 @@ const songs = [
         ],
     },
     {
-        id: 2,
+        id: '2',
         songTitle: 'Smoke on the Water',
         author: 'Deep Purple',
         rating: [5, 5, 4, 5, 4],
@@ -66,7 +66,7 @@ const songs = [
         ],
     },
     {
-        id: 3,
+        id: '3',
         songTitle: 'Seven Nation Army',
         author: 'The White Stripes',
         rating: [5, 4, 4, 5, 4],
@@ -86,7 +86,7 @@ const songs = [
         ],
     },
     {
-        id: 4,
+        id: '4',
         songTitle: 'Iron Man',
         author: 'Black Sabbath',
         rating: [4, 4, 4, 4, 5],
@@ -110,7 +110,7 @@ const songs = [
         ],
     },
     {
-        id: 5,
+        id: '5',
         songTitle: 'Satisfaction',
         author: 'The Rolling Stones',
         rating: [4, 5, 4, 5, 4],
@@ -132,7 +132,7 @@ const songs = [
         ],
     },
     {
-        id: 6,
+        id: '6',
         songTitle: 'Happy Birthday',
         author: 'unknown',
         rating: [3, 3, 4, 4, 5, 5],
@@ -175,7 +175,7 @@ const songs = [
         ],
     },
     {
-        id: 7,
+        id: '7',
         songTitle: 'Twinkle Twinkle Little Star',
         author: 'Traditional',
         rating: [4, 4, 4, 5, 5],
@@ -203,7 +203,7 @@ const songs = [
         ],
     },
     {
-        id: 8,
+        id: '8',
         songTitle: 'Ode to Joy',
         author: 'Ludwig van Beethoven',
         rating: [5, 5, 5, 4, 4],
@@ -233,7 +233,7 @@ const songs = [
         ],
     },
     {
-        id: 9,
+        id: '9',
         songTitle: 'Mary Had a Little Lamb',
         author: 'Traditional',
         rating: [4, 5, 4, 5, 4],
@@ -261,7 +261,7 @@ const songs = [
         ],
     },
     {
-        id: 10,
+        id: '10',
         songTitle: 'Strings test',
         author: 'Admin',
         rating: [4, 5, 4, 5, 4],
@@ -277,7 +277,7 @@ const songs = [
         ],
     },
     {
-        id: 11,
+        id: '11',
         songTitle: 'Frets test',
         author: 'Admin',
         rating: [4, 5, 4, 5, 4],
