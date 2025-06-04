@@ -1,4 +1,4 @@
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import Button from 'components/Button/Button';
 import Input from 'components/Input/Input';
 import TablatureEditor from 'components/TablatureEditor/TablatureEditor';
@@ -33,6 +33,7 @@ const TablatureEditorView = () => {
     const [infoMessage, setInfoMessage] = useState<string | null>(null);
     const [fullFormData, setFullFormData] = useState<Record<string, string>>({});
     const [fullFormDataDuration, setFullFormDataDuration] = useState<Record<string, string>>({});
+    const navigate = useNavigate();
     const { openModal, setModal } = useContext(ModalContext);
 
     useEffect(() => {
@@ -70,7 +71,7 @@ const TablatureEditorView = () => {
             const songs = await loadSongs();
             const song = songs.find((song: Song) => song.id === id);
             if (!song) {
-                console.error('Song not found');
+                navigate(`/play/edit`);
                 return;
             }
             setSong(song);
@@ -171,7 +172,10 @@ const TablatureEditorView = () => {
                 <div className={styles.linkWrapper}>
                     <Link to="/play/dashboard"> &lt; powrót do dashboard</Link>
                 </div>
-                <Title>Edycja utworu {song ? `"${song.songTitle}"` : ''}</Title>
+                <Title>
+                    {`${!song ? 'Tworzenie utworu' : 'Edycja utworu '}`}
+                    {song ? `"${song.songTitle}"` : ''}
+                </Title>
                 <form onSubmit={handleSaveSong}>
                     <div className={styles.inputsWrapper}>
                         <div className={styles.inputWrapper}>
