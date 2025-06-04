@@ -11,6 +11,8 @@ interface TablatureEditorProps {
     isReversed?: boolean;
     insertChordPositions?: ChordPosition[];
     insertColumnDuration?: { value: string };
+    onChangeTablatureData: (data: Record<string, string>) => void;
+    onChangeDurationData: (data: Record<string, string>) => void;
 }
 
 const TablatureEditor: React.FC<TablatureEditorProps> = ({
@@ -21,20 +23,28 @@ const TablatureEditor: React.FC<TablatureEditorProps> = ({
     activeColumn,
     tablatureLineIndex,
     setActiveColumn,
+    onChangeTablatureData,
+    onChangeDurationData,
 }) => {
     const stringsLabels = ['E', 'A', 'D', 'G', 'B', 'E'];
     const [formData, setFormData] = useState<Record<string, string>>({});
     const [formDataDuration, setFormDataDuration] = useState<Record<string, string>>({});
     const tablatureColumnNumber = activeColumn?.tablatureColumnNumber ?? null;
     const tablatureLineNumber = activeColumn?.tablatureLineNumber ?? null;
-    // const [tablatureData, setTablatureData] = useState<Record<string, string>>({});
-    // const [tablatureDurations, setTablatureDurations] = useState<Record<string, string>>({});
 
     useEffect(() => {
         return () => {
             setActiveColumn(null);
         };
     }, []);
+
+    useEffect(() => {
+        onChangeTablatureData(formData);
+    }, [formData]);
+
+    useEffect(() => {
+        onChangeDurationData(formDataDuration);
+    }, [formDataDuration]);
 
     useEffect(() => {
         if (
@@ -45,7 +55,7 @@ const TablatureEditor: React.FC<TablatureEditorProps> = ({
         ) {
             const keyDuration = `duration-${tablatureLineIndex}-${activeColumn.tablatureColumnNumber}`;
             const checkIfBarline =
-                formData[`string-1-column-${activeColumn.tablatureColumnNumber}-line-${tablatureLineNumber}`] === '|';
+                formData[`string-1-column-${activeColumn.tablatureColumnNumber}-line-${tablatureLineIndex}`] === '|';
             setFormDataDuration((prev) => ({
                 ...prev,
                 [keyDuration]: !checkIfBarline ? insertColumnDuration.value : '',
@@ -54,7 +64,11 @@ const TablatureEditor: React.FC<TablatureEditorProps> = ({
     }, [insertColumnDuration]);
 
     useEffect(() => {
-        if (insertChordPositions && insertChordPositions.length > 0) {
+        if (
+            insertChordPositions &&
+            insertChordPositions.length > 0 &&
+            activeColumn?.tablatureLineNumber === tablatureLineIndex
+        ) {
             const newFormData: Record<string, string> = {};
             insertChordPositions.forEach((position) => {
                 const stringIndex = position.guitarString;
@@ -64,11 +78,15 @@ const TablatureEditor: React.FC<TablatureEditorProps> = ({
                         fret.toString();
                 }
             });
-            newFormData[`string-1-column-${tablatureColumnNumber}-line-${tablatureLineNumber}`] === '|'
+            newFormData[`string-1-column-${tablatureColumnNumber}-line-${activeColumn?.tablatureLineNumber}`] === '|'
                 ? insertDefaultDuration(true)
                 : insertDefaultDuration();
             setFormData((prev) => ({ ...prev, ...newFormData }));
-        } else if (insertChordPositions && insertChordPositions.length === 0) {
+        } else if (
+            insertChordPositions &&
+            insertChordPositions.length === 0 &&
+            activeColumn?.tablatureLineNumber === tablatureLineIndex
+        ) {
             setFormData((prev) => {
                 const newFormData: Record<string, string> = {};
                 for (let i = 1; i <= numberOfStrings; i++) {
