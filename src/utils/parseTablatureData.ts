@@ -13,7 +13,7 @@ export const convertFormDataToTablature = (formData: FormDataMap, formDataDurati
             const match = key.match(/^string-(\d+)-column-(\d+)-line-(\d+)$/);
             if (!match) continue;
 
-            const [_, stringIndexRaw, columnRaw, lineIndexRaw] = match;
+            const [stringIndexRaw, columnRaw, lineIndexRaw] = match;
             const stringIndex = parseInt(stringIndexRaw);
             const columnIndex = parseInt(columnRaw);
             const lineIndex = parseInt(lineIndexRaw);
