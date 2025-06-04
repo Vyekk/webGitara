@@ -147,7 +147,7 @@ const TablatureEditorView = () => {
         };
         await addSong(newSong);
         setTimeout(() => {
-            setInfoMessage('Pomyślnie zapisano utwór.');
+            setInfoMessage(`Pomyślnie ${song ? 'zmodyfikowano' : 'stworzono'} utwór`);
         }, 0);
     };
 
