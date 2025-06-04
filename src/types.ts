@@ -1,9 +1,16 @@
-export type TabNote = {
-    guitarString: number;
-    guitarFret: number;
-    duration: string;
-    rest?: boolean;
-};
+export type TabNote =
+    | {
+          rest: true;
+          duration: string;
+          guitarString?: never;
+          guitarFret?: never;
+      }
+    | {
+          rest?: false;
+          duration: string;
+          guitarString: number;
+          guitarFret: number;
+      };
 
 export type Step = TabNote[];
 export type Tablature = Step[];
