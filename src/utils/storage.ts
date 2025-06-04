@@ -24,3 +24,9 @@ export function loadIsFretboardReversed() {
 export function saveIsFretboardReversed(value: boolean) {
     localStorage.setItem(STORAGE_KEYS.IS_FRETBOARD_REVERSED, JSON.stringify(value));
 }
+
+export async function addSong(newSong: Song): Promise<void> {
+    const songs = await loadSongs();
+    songs.push(newSong);
+    await saveSongs(songs);
+}
