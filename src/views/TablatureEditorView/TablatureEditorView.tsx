@@ -11,6 +11,9 @@ import { Link } from 'react-router-dom';
 import GuitarChords from 'utils/guitarChords';
 import { ChordPosition } from 'types';
 import { TablatureActiveLineColumn } from 'types';
+import { convertFormDataToTablature } from 'utils/parseTablatureData';
+// import { addSong } from 'utils/storage';
+import Modal from 'components/Modal/Modal';
 
 const TablatureEditorView = () => {
     const { id } = useParams();
@@ -25,6 +28,9 @@ const TablatureEditorView = () => {
     const [insertColumnDuration, setInsertColumnDuration] = useState<{ value: string }>({
         value: '♩',
     });
+    const [tablatureData, setTablatureData] = useState<Record<string, string>>({});
+    const [tablatureDurations, setTablatureDurations] = useState<Record<string, string>>({});
+    const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
     useEffect(() => {
         if (!id) {
@@ -90,9 +96,36 @@ const TablatureEditorView = () => {
         setInsertColumnDuration({ value: duration });
     };
 
-    const handleSaveSong = (e: React.FormEvent<HTMLFormElement>) => {
+    const handleSaveSong = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
+
+        if (!newSongTitle.trim()) {
+            setErrorMessage('Proszę podać tytuł utworu.');
+            return;
+        }
+
+        const tablature = convertFormDataToTablature(tablatureData, tablatureDurations);
+        const hasNotes = tablature.some((step) => step.length > 0);
+
+        if (!hasNotes) {
+            setErrorMessage('Tablatura nie może być pusta.');
+            return;
+        }
+
+        const newSong: Song = {
+            id: Date.now(),
+            songTitle: newSongTitle,
+            author: 'Autor',
+            bpm: newSongBpm,
+            tablature,
+            rating: [],
+            place: 0,
+        };
+        // await addSong(newSong);
+        console.log('New song to be saved:', newSong);
     };
+
+    const closeModal = () => setErrorMessage(null);
 
     return (
         <div className={styles.tablatureEditorViewWrapper}>
@@ -143,6 +176,8 @@ const TablatureEditorView = () => {
                             activeColumn={activeColumn}
                             setActiveColumn={setActiveColumn}
                             tablatureLineIndex={i + 1}
+                            onChangeTablatureData={setTablatureData}
+                            onChangeDurationData={setTablatureDurations}
                         />
                     ))}
                     <div className={styles.buttonsWrapper}>
@@ -213,6 +248,11 @@ const TablatureEditorView = () => {
                         </div>
                     </div>
                 </form>
+                {errorMessage && (
+                    <Modal onClose={closeModal}>
+                        <p>{errorMessage}</p>
+                    </Modal>
+                )}
             </div>
         </div>
     );
