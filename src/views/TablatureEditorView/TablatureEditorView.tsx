@@ -196,7 +196,7 @@ const TablatureEditorView = () => {
                         />
                     ))}
                     <div className={styles.buttonsWrapper}>
-                        <Button type="submit">Zapisz utwór</Button>
+                        <Button type="submit">{song ? 'Edytuj utwór' : 'Zapisz utwór'}</Button>
 
                         <div className={styles.tablatureEditButtonsWrapper}>
                             <select title="Wybierz akord" onChange={(e) => setSelectedChord(e.target.value)}>
