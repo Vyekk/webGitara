@@ -43,7 +43,7 @@ const SongTile = ({ song, isLarge }: SongTileProps) => {
         openModal();
     };
 
-    const handleSongTileClick = (songId: number) => {
+    const handleSongTileClick = (songId: string) => {
         navigate(`/play/guitar/${songId}`);
     };
 

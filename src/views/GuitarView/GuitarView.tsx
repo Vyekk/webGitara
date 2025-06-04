@@ -110,7 +110,7 @@ const GuitarView = () => {
         const fetchSong = async () => {
             const songs = await loadSongs();
             const songId = currentUrl.split('/').pop();
-            const song = songs.find((song: Song) => song.id === Number(songId));
+            const song = songs.find((song: Song) => song.id === songId);
             if (!song) {
                 navigate('/play/guitar/1');
                 return;
