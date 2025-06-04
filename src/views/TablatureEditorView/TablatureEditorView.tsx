@@ -11,7 +11,7 @@ import { Link } from 'react-router-dom';
 import GuitarChords from 'utils/guitarChords';
 import { ChordPosition } from 'types';
 import { TablatureActiveLineColumn } from 'types';
-import { convertFormDataToTablature } from 'utils/parseTablatureData';
+import { convertFormDataToTablature } from 'utils/tablatureConverters';
 import { addSong } from 'utils/storage';
 import { ModalContext } from 'components/Modal/ModalContext';
 import { v4 as uuidv4 } from 'uuid';
