@@ -16,7 +16,7 @@ export type Step = TabNote[];
 export type Tablature = Step[];
 
 export type Song = {
-    id: number;
+    id: string;
     songTitle: string;
     author: string;
     rating: number[];
