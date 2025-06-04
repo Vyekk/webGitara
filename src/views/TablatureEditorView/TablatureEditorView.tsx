@@ -4,7 +4,7 @@ import Input from 'components/Input/Input';
 import TablatureEditor from 'components/TablatureEditor/TablatureEditor';
 import Title from 'components/Title/Title';
 import styles from 'views/TablatureEditorView/TablatureEditorView.module.scss';
-import { useEffect, useState } from 'react';
+import { ReactNode, useContext, useEffect, useState } from 'react';
 import { Song } from 'types';
 import { loadSongs } from 'utils/storage';
 import { Link } from 'react-router-dom';
@@ -13,7 +13,7 @@ import { ChordPosition } from 'types';
 import { TablatureActiveLineColumn } from 'types';
 import { convertFormDataToTablature } from 'utils/parseTablatureData';
 // import { addSong } from 'utils/storage';
-import Modal from 'components/Modal/Modal';
+import { ModalContext } from 'components/Modal/ModalContext';
 import { v4 as uuidv4 } from 'uuid';
 
 const TablatureEditorView = () => {
@@ -32,6 +32,7 @@ const TablatureEditorView = () => {
     const [errorMessage, setErrorMessage] = useState<string | null>(null);
     const [fullFormData, setFullFormData] = useState<Record<string, string>>({});
     const [fullFormDataDuration, setFullFormDataDuration] = useState<Record<string, string>>({});
+    const { openModal, setModal } = useContext(ModalContext);
 
     useEffect(() => {
         if (!id) {
@@ -44,6 +45,18 @@ const TablatureEditorView = () => {
         if (!song) return;
         console.log('Song:', song);
     }, [song]);
+
+    useEffect(() => {
+        if (errorMessage) {
+            handleOpenModal(<div className={styles.errorMessage}>{errorMessage}</div>);
+        }
+    }, [errorMessage]);
+
+    const handleOpenModal = (content: ReactNode) => {
+        const modalContent = content;
+        setModal(modalContent);
+        openModal();
+    };
 
     const setupSong = () => {
         const fetchSong = async () => {
@@ -99,17 +112,20 @@ const TablatureEditorView = () => {
 
     const handleSaveSong = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-
+        setErrorMessage(null);
         if (!newSongTitle.trim()) {
-            setErrorMessage('Proszę podać tytuł utworu.');
+            setTimeout(() => {
+                setErrorMessage('Proszę podać tytuł utworu.');
+            }, 0);
             return;
         }
 
         const tablature = convertFormDataToTablature(fullFormData, fullFormDataDuration);
         const hasNotes = tablature.some((step) => step.length > 0);
-
-        if (!hasNotes) {
-            setErrorMessage('Tablatura nie może być pusta.');
+        if (!hasNotes || tablature.length < 5) {
+            setTimeout(() => {
+                setErrorMessage('Tablatura nie może być pusta lub zawierać mniej niż 5 dźwięków');
+            }, 0);
             return;
         }
 
@@ -139,8 +155,6 @@ const TablatureEditorView = () => {
             ...lineDurationData,
         }));
     };
-
-    const closeModal = () => setErrorMessage(null);
 
     return (
         <div className={styles.tablatureEditorViewWrapper}>
@@ -263,11 +277,6 @@ const TablatureEditorView = () => {
                         </div>
                     </div>
                 </form>
-                {errorMessage && (
-                    <Modal onClose={closeModal}>
-                        <p>{errorMessage}</p>
-                    </Modal>
-                )}
             </div>
         </div>
     );
