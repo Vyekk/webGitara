@@ -14,6 +14,7 @@ import { TablatureActiveLineColumn } from 'types';
 import { convertFormDataToTablature } from 'utils/parseTablatureData';
 // import { addSong } from 'utils/storage';
 import Modal from 'components/Modal/Modal';
+import { v4 as uuidv4 } from 'uuid';
 
 const TablatureEditorView = () => {
     const { id } = useParams();
@@ -47,7 +48,7 @@ const TablatureEditorView = () => {
     const setupSong = () => {
         const fetchSong = async () => {
             const songs = await loadSongs();
-            const song = songs.find((song: Song) => song.id === Number(id));
+            const song = songs.find((song: Song) => song.id === id);
             if (!song) {
                 console.error('Song not found');
                 return;
@@ -113,7 +114,7 @@ const TablatureEditorView = () => {
         }
 
         const newSong: Song = {
-            id: Date.now(),
+            id: uuidv4(),
             songTitle: newSongTitle,
             author: 'Autor',
             bpm: newSongBpm,
@@ -128,7 +129,7 @@ const TablatureEditorView = () => {
     const handleTablatureDataChange = (lineData: Record<string, string>) => {
         setFullFormData((prev) => ({
             ...prev,
-            ...lineData, // nadpisujemy dane dla danej linii i kolumn
+            ...lineData,
         }));
     };
 
