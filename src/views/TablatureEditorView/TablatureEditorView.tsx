@@ -12,7 +12,7 @@ import GuitarChords from 'utils/guitarChords';
 import { ChordPosition } from 'types';
 import { TablatureActiveLineColumn } from 'types';
 import { convertFormDataToTablature } from 'utils/parseTablatureData';
-// import { addSong } from 'utils/storage';
+import { addSong } from 'utils/storage';
 import { ModalContext } from 'components/Modal/ModalContext';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -30,6 +30,7 @@ const TablatureEditorView = () => {
         value: '♩',
     });
     const [errorMessage, setErrorMessage] = useState<string | null>(null);
+    const [infoMessage, setInfoMessage] = useState<string | null>(null);
     const [fullFormData, setFullFormData] = useState<Record<string, string>>({});
     const [fullFormDataDuration, setFullFormDataDuration] = useState<Record<string, string>>({});
     const { openModal, setModal } = useContext(ModalContext);
@@ -51,6 +52,12 @@ const TablatureEditorView = () => {
             handleOpenModal(<div className={styles.errorMessage}>{errorMessage}</div>);
         }
     }, [errorMessage]);
+
+    useEffect(() => {
+        if (infoMessage) {
+            handleOpenModal(<div className={styles.infoMessage}>{infoMessage}</div>);
+        }
+    }, [infoMessage]);
 
     const handleOpenModal = (content: ReactNode) => {
         const modalContent = content;
@@ -115,7 +122,7 @@ const TablatureEditorView = () => {
         setErrorMessage(null);
         if (!newSongTitle.trim()) {
             setTimeout(() => {
-                setErrorMessage('Proszę podać tytuł utworu.');
+                setErrorMessage('Proszę podać nazwę utworu');
             }, 0);
             return;
         }
@@ -138,8 +145,10 @@ const TablatureEditorView = () => {
             rating: [],
             place: 0,
         };
-        // await addSong(newSong);
-        console.log('New song to be saved:', newSong);
+        await addSong(newSong);
+        setTimeout(() => {
+            setInfoMessage('Pomyślnie zapisano utwór.');
+        }, 0);
     };
 
     const handleTablatureDataChange = (lineData: Record<string, string>) => {
