@@ -14,6 +14,7 @@ import { TablatureActiveLineColumn } from 'types';
 import { convertFormDataToTablature } from 'utils/tablatureConverters';
 import { addSong } from 'utils/storage';
 import { ModalContext } from 'components/Modal/ModalContext';
+import { convertTablatureToFormData } from 'utils/tablatureConverters';
 import { v4 as uuidv4 } from 'uuid';
 
 const TablatureEditorView = () => {
@@ -35,6 +36,8 @@ const TablatureEditorView = () => {
     const [fullFormDataDuration, setFullFormDataDuration] = useState<Record<string, string>>({});
     const navigate = useNavigate();
     const { openModal, setModal } = useContext(ModalContext);
+    const [formData, setFormData] = useState<Record<string, string>>({});
+    const [formDataDuration, setFormDataDuration] = useState<Record<string, string>>({});
 
     useEffect(() => {
         if (!id) {
@@ -45,7 +48,7 @@ const TablatureEditorView = () => {
 
     useEffect(() => {
         if (!song) return;
-        console.log('Song:', song);
+        setFormData(convertTablatureToFormData(song.tablature));
     }, [song]);
 
     useEffect(() => {
@@ -150,6 +153,7 @@ const TablatureEditorView = () => {
         setTimeout(() => {
             setInfoMessage(`Pomyślnie ${song ? 'zmodyfikowano' : 'stworzono'} utwór`);
         }, 0);
+        console.log(formData);
     };
 
     const handleTablatureDataChange = (lineData: Record<string, string>) => {
@@ -220,6 +224,10 @@ const TablatureEditorView = () => {
                             tablatureLineIndex={i + 1}
                             onChangeTablatureData={handleTablatureDataChange}
                             onChangeDurationData={handleDurationDataChange}
+                            formData={formData}
+                            setFormData={setFormData}
+                            formDataDuration={formDataDuration}
+                            setFormDataDuration={setFormDataDuration}
                         />
                     ))}
                     <div className={styles.buttonsWrapper}>
