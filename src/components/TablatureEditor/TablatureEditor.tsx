@@ -1,5 +1,5 @@
 import styles from 'components/TablatureEditor/TablatureEditor.module.scss';
-import { useState, useEffect } from 'react';
+import { useEffect } from 'react';
 import { ChordPosition } from 'types';
 import { TablatureActiveLineColumn } from 'types';
 
@@ -13,6 +13,10 @@ interface TablatureEditorProps {
     insertColumnDuration?: { value: string };
     onChangeTablatureData: (data: Record<string, string>) => void;
     onChangeDurationData: (data: Record<string, string>) => void;
+    formData: Record<string, string>;
+    setFormData: React.Dispatch<React.SetStateAction<Record<string, string>>>;
+    formDataDuration: Record<string, string>;
+    setFormDataDuration: React.Dispatch<React.SetStateAction<Record<string, string>>>;
 }
 
 const TablatureEditor: React.FC<TablatureEditorProps> = ({
@@ -25,10 +29,12 @@ const TablatureEditor: React.FC<TablatureEditorProps> = ({
     setActiveColumn,
     onChangeTablatureData,
     onChangeDurationData,
+    formData,
+    setFormData,
+    formDataDuration,
+    setFormDataDuration,
 }) => {
     const stringsLabels = ['E', 'A', 'D', 'G', 'B', 'E'];
-    const [formData, setFormData] = useState<Record<string, string>>({});
-    const [formDataDuration, setFormDataDuration] = useState<Record<string, string>>({});
     const tablatureColumnNumber = activeColumn?.tablatureColumnNumber ?? null;
     const tablatureLineNumber = activeColumn?.tablatureLineNumber ?? null;
 
@@ -172,6 +178,7 @@ const TablatureEditor: React.FC<TablatureEditorProps> = ({
                                             id={`duration-${tabColumnIndex + 1}`}
                                             key={`duration-${tablatureLineIndex}-${tabColumnIndex + 1}`}
                                             aria-label="Column duration"
+                                            tabIndex={-1}
                                             type="text"
                                             readOnly
                                             value={
