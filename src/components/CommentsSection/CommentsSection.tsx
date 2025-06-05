@@ -26,12 +26,16 @@ const CommentsSection = ({ song }: CommentsSectionProps) => {
     const handleSendComment = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         const target = e.target as HTMLFormElement;
+        const newComment = {
+            content: target.commentContent.value,
+            author: 'Autor',
+        };
+
         setCommentedSong((prev: Song) => ({
             ...prev,
-            comments: prev.comments
-                ? [...prev.comments, [target.commentContent.value, 'Autor']]
-                : [[target.commentContent.value, 'Autor']],
+            comments: prev.comments ? [...prev.comments, newComment] : [newComment],
         }));
+
         setIsCommenting(false);
     };
 
@@ -84,8 +88,8 @@ const CommentsSection = ({ song }: CommentsSectionProps) => {
                 {commentedSong.comments?.map((comment, index) => (
                     <div className={styles.commentContainer} key={index}>
                         <div className={styles.comment}>
-                            <div className={styles.commentText}>{comment[0]}</div>
-                            <div className={styles.commentAuthor}>{comment[1]}</div>
+                            <div className={styles.commentContent}>{comment.content}</div>
+                            <div className={styles.commentAuthor}>{comment.author}</div>
                             <div className={styles.deleteCommentButton} onClick={() => handleDeleteComment(index)}>
                                 X
                             </div>

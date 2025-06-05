@@ -22,7 +22,10 @@ export type Song = {
     rating: number[];
     place: number;
     liked?: boolean;
-    comments?: [string, string][];
+    comments?: {
+        content: string;
+        author: string;
+    }[];
     tablature: Tablature;
     bpm: number;
 };
