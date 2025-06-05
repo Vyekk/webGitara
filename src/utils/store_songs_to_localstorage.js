@@ -1,4 +1,6 @@
-import { saveSongs } from 'utils/storage';
+import { saveSongs, loadSongs } from 'utils/storage';
+
+const existingSongs = loadSongs();
 
 const songs = [
     {
@@ -7,8 +9,8 @@ const songs = [
         author: 'Leonard Cohen',
         rating: [5, 5, 5, 5, 5],
         comments: [
-            ['So moving!', 'Ella'],
-            ['One of the best songs ever!', 'Ethan'],
+            { content: 'So moving!', author: 'Ella' },
+            { content: 'One of the best songs ever!', author: 'Ethan' },
         ],
         bpm: 56,
         tablature: [
@@ -44,8 +46,8 @@ const songs = [
         author: 'Deep Purple',
         rating: [5, 5, 4, 5, 4],
         comments: [
-            ['Ikoniczny riff!', 'Tom'],
-            ['Każdy od tego zaczyna!', 'Anna'],
+            { content: 'Ikoniczny riff!', author: 'Tom' },
+            { content: 'Każdy od tego zaczyna!', author: 'Anna' },
         ],
         bpm: 112,
         tablature: [
@@ -71,8 +73,8 @@ const songs = [
         author: 'The White Stripes',
         rating: [5, 4, 4, 5, 4],
         comments: [
-            ['Mega groove!', 'Kate'],
-            ['Prosty i mocny riff!', 'John'],
+            { content: 'Mega groove!', author: 'Kate' },
+            { content: 'Prosty i mocny riff!', author: 'John' },
         ],
         bpm: 120,
         tablature: [
@@ -91,8 +93,8 @@ const songs = [
         author: 'Black Sabbath',
         rating: [4, 4, 4, 4, 5],
         comments: [
-            ['Ciężki riff, klasyka!', 'Mike'],
-            ['Uwielbiam to intro', 'Sophie'],
+            { content: 'Ciężki riff, klasyka!', author: 'Mike' },
+            { content: 'Uwielbiam to intro', author: 'Sophie' },
         ],
         bpm: 96,
         tablature: [
@@ -115,8 +117,8 @@ const songs = [
         author: 'The Rolling Stones',
         rating: [4, 5, 4, 5, 4],
         comments: [
-            ['Ikoniczny riff z lat 60.', 'Jack'],
-            ['Zawsze wpada w ucho!', 'Maya'],
+            { content: 'Ikoniczny riff z lat 60.', author: 'Jack' },
+            { content: 'Zawsze wpada w ucho!', author: 'Maya' },
         ],
         bpm: 136,
         tablature: [
@@ -138,8 +140,8 @@ const songs = [
         rating: [3, 3, 4, 4, 5, 5],
         liked: true,
         comments: [
-            ['Great vibe!', 'Charlie'],
-            ['Perfect for road trips!', 'Lily'],
+            { content: 'Great vibe!', author: 'Charlie' },
+            { content: 'Perfect for road trips!', author: 'Lily' },
         ],
         bpm: 100,
         tablature: [
@@ -180,8 +182,8 @@ const songs = [
         author: 'Traditional',
         rating: [4, 4, 4, 5, 5],
         comments: [
-            ['Great for beginners!', 'Anna'],
-            ['I played this as a kid!', 'Tom'],
+            { content: 'Great for beginners!', author: 'Anna' },
+            { content: 'I played this as a kid!', author: 'Tom' },
         ],
         bpm: 90,
         tablature: [
@@ -208,8 +210,8 @@ const songs = [
         author: 'Ludwig van Beethoven',
         rating: [5, 5, 5, 4, 4],
         comments: [
-            ['Beethoven for beginners!', 'Clara'],
-            ['Sounds elegant even simple.', 'Liam'],
+            { content: 'Beethoven for beginners!', author: 'Clara' },
+            { content: 'Sounds elegant even simple.', author: 'Liam' },
         ],
         bpm: 92,
         tablature: [
@@ -238,8 +240,8 @@ const songs = [
         author: 'Traditional',
         rating: [4, 5, 4, 5, 4],
         comments: [
-            ['Fun and easy to learn!', 'Nina'],
-            ['My kids love it!', 'Jack'],
+            { content: 'Fun and easy to learn!', author: 'Nina' },
+            { content: 'My kids love it!', author: 'Jack' },
         ],
         bpm: 160,
         tablature: [
@@ -319,6 +321,7 @@ for (let string = 1; string <= 6; string++) {
     songsPlaces.forEach((song, index) => {
         song.place = index + 1;
     });
-
-    saveSongs(songsPlaces);
+    if (!Array.isArray(existingSongs) || existingSongs.length === 0) {
+        saveSongs(songsPlaces);
+    }
 })();
