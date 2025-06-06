@@ -1,4 +1,4 @@
-import { getDurationValueFromSymbol } from 'utils/durationMapper';
+import { getDurationValueFromSymbol, getSymbolFromDurationValue } from 'utils/durationMapper';
 import { Step, TabNote, Tablature } from 'types';
 
 type FormDataMap = Record<string, string>;
@@ -66,8 +66,12 @@ export const convertFormDataToTablature = (formData: FormDataMap, formDataDurati
     return tablature;
 };
 
-export const convertTablatureToFormData = (tablature: Tablature, lineNumber = 0): FormDataMap => {
+export const convertTablatureToFormData = (
+    tablature: Tablature,
+    lineNumber = 0,
+): { formData: FormDataMap; formDataDuration: FormDataMap } => {
     const formData: FormDataMap = {};
+    const formDataDuration: FormDataMap = {};
 
     tablature.forEach((step: TabNote[], columnIndex: number) => {
         step.forEach((note) => {
@@ -78,10 +82,15 @@ export const convertTablatureToFormData = (tablature: Tablature, lineNumber = 0)
                 const value = `${note.guitarFret}`;
                 formData[key] = value;
             }
+            const durationSymbol = getSymbolFromDurationValue(note.duration);
+            if (durationSymbol) {
+                const durationKey = `duration-${lineNumber + 1}-${columnIndex + 1}`;
+                formDataDuration[durationKey] = durationSymbol;
+            }
         });
     });
 
-    return formData;
+    return { formData, formDataDuration };
 };
 
 // tablature.forEach((step, columnIndex) => {
