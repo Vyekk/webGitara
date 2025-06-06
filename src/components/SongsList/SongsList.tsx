@@ -9,7 +9,7 @@ type SongsListProps = {
     isShowingFavourites?: boolean;
 };
 
-const SongsList = ({ isVertical, songs, searchTerm }: SongsListProps) => {
+const SongsList = ({ isVertical, songs = [], searchTerm }: SongsListProps) => {
     const filteredSongs = songs.filter((song) =>
         searchTerm ? song.songTitle.toLowerCase().includes(searchTerm.toLowerCase()) : true,
     );
