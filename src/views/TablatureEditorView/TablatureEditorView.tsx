@@ -85,6 +85,7 @@ const TablatureEditorView = () => {
             }
             setSong(song);
             setNewSongTitle(song.songTitle);
+            setNewSongBpm(song.bpm);
         };
         fetchSong();
     };
@@ -215,7 +216,7 @@ const TablatureEditorView = () => {
                                 type="number"
                                 min={30}
                                 max={300}
-                                value={song ? song.bpm : newSongBpm}
+                                value={newSongBpm}
                                 onChange={handleBpmChange}
                             />
                         </div>
