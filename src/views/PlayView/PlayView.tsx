@@ -71,7 +71,7 @@ const PlayView: React.FC = () => {
                     <Route path="dashboard" element={<DashboardView />} />
                     <Route path="guitar" element={<Navigate to="1" replace />} />
                     <Route path="guitar/:id" element={<GuitarView />} />
-                    <Route path="edit/" element={<TablatureEditorView />} />
+                    <Route path="edit" element={<TablatureEditorView />} />
                     <Route path="edit/:id" element={<TablatureEditorView />} />
                 </Routes>
                 <Toolbar ref={toolbarRef} />

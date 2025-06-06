@@ -80,7 +80,7 @@ const TablatureEditorView = () => {
             const songs = await loadSongs();
             const song = songs.find((song: Song) => song.id === id);
             if (!song) {
-                navigate(`/play/edit/`);
+                navigate(`/play/edit`);
                 return;
             }
             setSong(song);
