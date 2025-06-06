@@ -27,6 +27,12 @@ export function saveIsFretboardReversed(value: boolean) {
 
 export async function addSong(newSong: Song): Promise<void> {
     const songs = await loadSongs();
-    songs.push(newSong);
+    const existingIndex = songs.findIndex((song: Song) => song.id === newSong.id);
+    if (existingIndex !== -1) {
+        songs[existingIndex] = newSong;
+    } else {
+        songs.push(newSong);
+    }
+
     await saveSongs(songs);
 }
