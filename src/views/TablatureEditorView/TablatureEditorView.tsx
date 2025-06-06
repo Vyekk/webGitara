@@ -48,7 +48,11 @@ const TablatureEditorView = () => {
 
     useEffect(() => {
         if (!song) return;
-        setFormData(convertTablatureToFormData(song.tablature));
+        const { formData: convertedFormData, formDataDuration: convertedFormDataDuration } = convertTablatureToFormData(
+            song.tablature,
+        );
+        setFormData(convertedFormData);
+        setFormDataDuration(convertedFormDataDuration);
     }, [song]);
 
     useEffect(() => {
