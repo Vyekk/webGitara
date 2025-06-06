@@ -159,13 +159,13 @@ const TablatureEditorView = () => {
         }
 
         const newSong: Song = {
-            id: uuidv4(),
+            id: song ? song.id : uuidv4(),
             songTitle: newSongTitle,
             author: 'Autor',
             bpm: newSongBpm,
             tablature,
-            rating: [],
-            place: 0,
+            rating: song ? song.rating : [],
+            place: song ? song.place : 0,
         };
         await addSong(newSong);
         setTimeout(() => {
