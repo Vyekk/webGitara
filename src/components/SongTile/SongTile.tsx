@@ -63,8 +63,10 @@ const SongTile = ({ song, isLarge }: SongTileProps) => {
             </div>
             <div className={styles.comments} ref={commentsRef} onClick={handleCommentsClick}></div>
             <Rating rating={song.rating} isHover={isHover} />
-            <Title tag="h3">{song.songTitle}</Title>
-            <div className={styles.songAuthor}>{song.author}</div>
+            <div className={styles.textWrapper}>
+                <Title tag="h3">{song.songTitle}</Title>
+                <div className={styles.songAuthor}>{song.author}</div>
+            </div>
             {song.place === 1 && <div className={`${styles.songTop} ${styles.songTopGold}`}>{song.place}</div>}
             {song.place === 2 && <div className={`${styles.songTop} ${styles.songTopSilver}`}>{song.place}</div>}
             {song.place === 3 && <div className={`${styles.songTop} ${styles.songTopBronze}`}>{song.place}</div>}
