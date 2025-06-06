@@ -33,7 +33,7 @@ const Settings = () => {
     }, [settingsScreen]);
 
     const myAccountContent = (
-        <>
+        <div className={styles.accountSettingsWrapper}>
             <div className={styles.settingsContentLeft}>
                 <Title tag="h4">Informacje o koncie</Title>
                 <ul>
@@ -72,37 +72,35 @@ const Settings = () => {
                     <Button>Zmień hasło</Button>
                 </form>
             </div>
-        </>
+        </div>
     );
 
     const mySettingsContent = (
-        <>
-            <div>
-                <Title tag="h4">Interfejs aplikacji</Title>
-                <div className={styles.gameInterfaceSettingsContent}>
-                    <form onSubmit={handeChangeInterface}>
+        <div className={styles.interfaceSettingsWrapper}>
+            <Title tag="h4">Interfejs aplikacji</Title>
+            <div className={styles.gameInterfaceSettingsContent}>
+                <form onSubmit={handeChangeInterface}>
+                    <div className={styles.formGroup}>
                         <div className={styles.formGroup}>
-                            <div className={styles.formGroup}>
-                                <input
-                                    ref={reverseGuitarRef}
-                                    name="reverseGuitar"
-                                    type="checkbox"
-                                    id="reverseGuitar"
-                                    onChange={handleCheckReverseGuitar}
-                                />
-                                <label htmlFor="reverseGuitar">Odwróć gitarę</label>
-                            </div>
-                            <div className={styles.formGroup}>
-                                <input type="checkbox" id="reverseTab" />
-
-                                <label htmlFor="reverseTab">Odwróć tabulaturę</label>
-                            </div>
+                            <input
+                                ref={reverseGuitarRef}
+                                name="reverseGuitar"
+                                type="checkbox"
+                                id="reverseGuitar"
+                                onChange={handleCheckReverseGuitar}
+                            />
+                            <label htmlFor="reverseGuitar">Odwróć gitarę</label>
                         </div>
-                        <Button>Zapisz zmiany</Button>
-                    </form>
-                </div>
+                        <div className={styles.formGroup}>
+                            <input type="checkbox" id="reverseTab" />
+
+                            <label htmlFor="reverseTab">Odwróć tabulaturę</label>
+                        </div>
+                    </div>
+                    <Button>Zapisz zmiany</Button>
+                </form>
             </div>
-        </>
+        </div>
     );
 
     return (
