@@ -1,4 +1,4 @@
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams, useLocation } from 'react-router-dom';
 import Button from 'components/Button/Button';
 import Input from 'components/Input/Input';
 import TablatureEditor from 'components/TablatureEditor/TablatureEditor';
@@ -38,13 +38,15 @@ const TablatureEditorView = () => {
     const { openModal, setModal } = useContext(ModalContext);
     const [formData, setFormData] = useState<Record<string, string>>({});
     const [formDataDuration, setFormDataDuration] = useState<Record<string, string>>({});
+    const location = useLocation();
 
     useEffect(() => {
+        songReset();
         if (!id) {
             return;
         }
         setupSong();
-    }, [id]);
+    }, [location]);
 
     useEffect(() => {
         if (!song) return;
@@ -88,6 +90,14 @@ const TablatureEditorView = () => {
             setNewSongBpm(song.bpm);
         };
         fetchSong();
+    };
+
+    const songReset = () => {
+        setSong(null);
+        setNewSongTitle('');
+        setNewSongBpm(120);
+        setFormData({});
+        setFormDataDuration({});
     };
 
     const handleAddLine = () => {
