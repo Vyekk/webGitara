@@ -36,3 +36,29 @@ export async function addSong(newSong: Song): Promise<void> {
 
     await saveSongs(songs);
 }
+
+type SongWithAverage = Song & { averageRating: number };
+
+export async function getTopRatedSongs(): Promise<Song[]> {
+    const songs: Song[] = await loadSongs();
+
+    if (songs.length === 0) {
+        return [];
+    }
+
+    const songsWithAvg: SongWithAverage[] = songs.map((song) => {
+        const averageRating =
+            song.rating.length > 0 ? song.rating.reduce((sum, rate) => sum + rate, 0) / song.rating.length : 0;
+
+        return {
+            ...song,
+            averageRating,
+        };
+    });
+
+    const sorted = songsWithAvg.sort((a, b) => b.averageRating - a.averageRating).slice(0, 3);
+
+    const topSongs: Song[] = sorted.map(({ averageRating, ...song }) => song);
+
+    return topSongs;
+}
