@@ -84,6 +84,7 @@ const TablatureEditorView = () => {
                 return;
             }
             setSong(song);
+            setNewSongTitle(song.songTitle);
         };
         fetchSong();
     };
@@ -194,7 +195,7 @@ const TablatureEditorView = () => {
                                 name="songName"
                                 id="songName"
                                 maxLength={40}
-                                value={song ? song.songTitle : newSongTitle}
+                                value={newSongTitle}
                                 onChange={(e) => setNewSongTitle(e.target.value)}
                             >
                                 Wprowadź nazwę
