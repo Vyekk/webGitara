@@ -22,12 +22,16 @@
         margin-top: 10px;
         width: 100%;
         .tablatureEditButtonsWrapper {
+            padding: 0 10px;
             display: flex;
             gap: 10px;
             button, select {
                 height: 40px;
                 font-size: 0.8em;
                 text-align: center;
+            }
+            button {
+                padding: 10px;
             }
             .durationSelect {
                 font-size: 2em;
