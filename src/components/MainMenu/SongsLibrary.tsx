@@ -11,7 +11,7 @@ import { faHeart } from '@fortawesome/free-solid-svg-icons';
 export const MainMenu = () => {
     const [buttonType, setButtonType] = useState('allSongs');
     const [searchTerm, setSearchTerm] = useState('');
-    const [songsListTest, setSongsListTest] = useState<Song[]>([]);
+    const [songsList, setSongsList] = useState<Song[]>([]);
     const [isShowingFavourites, setIsShowingFavourites] = useState(false);
     const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
         setSearchTerm(event.target.value);
@@ -19,7 +19,7 @@ export const MainMenu = () => {
 
     const fetchSongsUserStorge = async () => {
         const songs = await loadSongs();
-        setSongsListTest(songs);
+        setSongsList(songs);
     };
 
     const handleShowFavorites = () => {
@@ -67,7 +67,7 @@ export const MainMenu = () => {
             </div>
             <div className={styles.songsWrapper}>
                 {buttonType === 'allSongs' ? (
-                    <SongsList songs={songsListTest} searchTerm={searchTerm} isShowingFavourites />
+                    <SongsList songs={songsList} searchTerm={searchTerm} isShowingFavourites />
                 ) : null}
             </div>
         </div>
