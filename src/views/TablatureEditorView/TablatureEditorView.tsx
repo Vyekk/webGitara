@@ -171,7 +171,6 @@ const TablatureEditorView = () => {
         setTimeout(() => {
             setInfoMessage(`Pomyślnie ${song ? 'zmodyfikowano' : 'stworzono'} utwór`);
         }, 0);
-        console.log(formData);
     };
 
     const handleTablatureDataChange = (lineData: Record<string, string>) => {
