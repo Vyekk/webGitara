@@ -37,13 +37,6 @@ export const MainMenu = () => {
     return (
         <div>
             <div className={styles.playTopWrapper}>
-                <Button
-                    transparent
-                    isActive={buttonType === 'mySongs' ? true : false}
-                    onClick={() => setButtonType('mySongs')}
-                >
-                    Moje utwory
-                </Button>
                 <div className={styles.searchWrapper}>
                     <Input id="search" onChange={handleSearch}>
                         Wyszukaj utwór
@@ -59,6 +52,13 @@ export const MainMenu = () => {
                 </div>
                 <Button
                     transparent
+                    isActive={buttonType === 'mySongs' ? true : false}
+                    onClick={() => setButtonType('mySongs')}
+                >
+                    Moje utwory
+                </Button>
+                <Button
+                    transparent
                     isActive={buttonType === 'allSongs' ? true : false}
                     onClick={() => setButtonType('allSongs')}
                 >
@@ -68,7 +68,9 @@ export const MainMenu = () => {
             <div className={styles.songsWrapper}>
                 {buttonType === 'allSongs' ? (
                     <SongsList songs={songsList} searchTerm={searchTerm} isShowingFavourites />
-                ) : null}
+                ) : (
+                    <SongsList songs={[]} searchTerm={searchTerm} />
+                )}
             </div>
         </div>
     );
