@@ -1,5 +1,9 @@
 @use 'variables' as *;
 
+.songsLibraryWrapper {
+    min-width: 780px;
+}
+
 .playTopWrapper {
     display: flex;
     flex-wrap: wrap;
@@ -8,7 +12,12 @@
     align-items: center;
     z-index: 1000000;
     padding-bottom: 20px;
-    min-width: 780px;
+    button {
+        min-width: 170px;
+        text-align: center;
+        display: flex;
+        justify-content: center;
+    }
     .playButton {
         position: absolute;
         bottom: 0;
@@ -45,6 +54,9 @@
 .searchWrapper {
     position: relative;
     display: flex;
+    input {
+        width: 217px;
+    }
 }
 
 .favouriteWrapper {

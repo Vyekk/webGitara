@@ -35,7 +35,7 @@ export const MainMenu = () => {
     }, []);
 
     return (
-        <div>
+        <div className={styles.songsLibraryWrapper}>
             <div className={styles.playTopWrapper}>
                 <div className={styles.searchWrapper}>
                     <Input id="search" onChange={handleSearch}>
@@ -52,17 +52,17 @@ export const MainMenu = () => {
                 </div>
                 <Button
                     transparent
-                    isActive={buttonType === 'mySongs' ? true : false}
-                    onClick={() => setButtonType('mySongs')}
-                >
-                    Moje utwory
-                </Button>
-                <Button
-                    transparent
                     isActive={buttonType === 'allSongs' ? true : false}
                     onClick={() => setButtonType('allSongs')}
                 >
                     Wszystkie utwory
+                </Button>
+                <Button
+                    transparent
+                    isActive={buttonType === 'mySongs' ? true : false}
+                    onClick={() => setButtonType('mySongs')}
+                >
+                    Moje utwory
                 </Button>
             </div>
             <div className={styles.songsWrapper}>
