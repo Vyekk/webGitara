@@ -51,6 +51,8 @@ const TablatureEditorView = () => {
         const { formData: convertedFormData, formDataDuration: convertedFormDataDuration } = convertTablatureToFormData(
             song.tablature,
         );
+        const numberOfLines = Math.ceil(song.tablature.length / 50);
+        setNumberOfTablatureLines(numberOfLines);
         setFormData(convertedFormData);
         setFormDataDuration(convertedFormDataDuration);
     }, [song]);
@@ -78,7 +80,7 @@ const TablatureEditorView = () => {
             const songs = await loadSongs();
             const song = songs.find((song: Song) => song.id === id);
             if (!song) {
-                navigate(`/play/edit`);
+                navigate(`/play/edit/`);
                 return;
             }
             setSong(song);
