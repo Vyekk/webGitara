@@ -1,5 +1,12 @@
 @use 'variables' as *;
 
+.commentsSectionWrapper {
+    min-width: 780px;
+    min-height: 500px;
+    padding: 40px;
+    text-align: left;
+}
+
 .commentsTopSectionWraper {
     display: flex;
     flex-wrap: wrap;
@@ -7,7 +14,24 @@
     align-items: center;
     z-index: 1000000;
     padding-bottom: 20px;
+    button {
+        width: 200px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
 }
+
+.commentFormWrapper {
+    display: flex;
+    width: 100%;
+    flex-direction: column;
+    margin-bottom: 1em;
+    textarea {
+        margin: 10px 0;
+    }
+}
+
 .commentsWrapper {
     overflow-y: auto;
     height: 370px;
