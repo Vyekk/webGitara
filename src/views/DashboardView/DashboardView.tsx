@@ -5,18 +5,25 @@ import Title from 'components/Title/Title';
 import { useEffect, useState } from 'react';
 import { Song } from 'types';
 import styles from 'views/DashboardView/Dashboard.module.scss';
-import { getTopRatedSongs } from 'utils/storage';
+import { useSongs } from 'context/SongsContext';
+import { useLocation } from 'react-router';
 
 const DashboardView = () => {
     const [bestSongsList, setBestSongsList] = useState<Song[]>([]);
+    const { getTopRated } = useSongs();
+    const location = useLocation();
 
     const fetchSongsUserStorge = async () => {
-        setBestSongsList(await getTopRatedSongs());
+        if (getTopRated) {
+            setBestSongsList((await getTopRated()) || []);
+        } else {
+            setBestSongsList([]);
+        }
     };
 
     useEffect(() => {
         fetchSongsUserStorge();
-    }, []);
+    }, [location]);
 
     return (
         <>
@@ -41,16 +48,20 @@ const DashboardView = () => {
                             <ol className={styles.manualList}>
                                 <li>
                                     Na ekranie głównym możesz wybrać najpopularniejsze lub ostatnio grane przez siebie
-                                    utwory. W celu praktyki kliknij na utwór lub wybierz przycisk play na pasku zadań.
+                                    utwory. W celu praktyki kliknij utwór lub wybierz przycisk biblioteki na pasku
+                                    zadań, aby wybrać utwór z listy. W bibliotece możesz również oceniać utwory, dodawać
+                                    komentarze, oraz dodać je do ulubionych w celu łatwiejszego wyszukiwania.
                                 </li>
                                 <li>
-                                    Po wybraniu utworu zobaczysz swoją wirtualną gitarę oraz pasek zadań z dodatkowymi
-                                    opcjami. Jeśli uruchomiłeś utwór przez menu główne, za pomocą paska sterowania
-                                    utworem możesz zacząć praktykę. W przypadku kliknięcia przycisku start, należy
-                                    wybrać utwór poprzez kliknięcie w przycisk biblioteki, następnie przejść do
-                                    biblioteki wszystkich utworów i wybranie konkretnego poprzez kliknięcie.
+                                    Po wybraniu utworu zobaczysz swoją wirtualną gitarę wraz z kontrolkami do sterowania
+                                    utworem. Teraz możesz dostosować tempo utworu, przewijać go i sterować. Na pasku
+                                    zadań posiadasz również przycisk do dodawania własnych utworów do biblioteki. Po
+                                    jego naciśnięciu otworzy się widok tabulatury, którą możesz edytować, dostosować
+                                    domyślne tempo, dobrać odpowiednie wartości rytmiczne. Po zapisaniu utworu będzie on
+                                    dostępny w ogólnej bibliotece oraz w zakładce moje utwory, w której możesz dalej go
+                                    edytować lub usunąć.
                                 </li>
-                                <li>Praktykuj grę na gitarze</li>
+                                <li>Baw się dobrze i praktykuj grę na gitarze</li>
                             </ol>
                         </Modal>
                     </div>
