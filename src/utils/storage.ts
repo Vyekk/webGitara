@@ -46,17 +46,28 @@ export async function getTopRatedSongs(): Promise<Song[]> {
         return [];
     }
 
-    const songsWithAvg: SongWithAverage[] = songs.map((song) => {
-        const averageRating =
-            song.rating.length > 0 ? song.rating.reduce((sum, rate) => sum + rate, 0) / song.rating.length : 0;
+    const totalRatings = songs.reduce((sum, song) => sum + song.rating.length, 0);
+    const totalAverage = songs.reduce((sum, song) => {
+        return sum + song.rating.reduce((s, r) => s + r, 0);
+    }, 0);
+
+    const globalAverage = totalRatings > 0 ? totalAverage / totalRatings : 0;
+    const m = totalRatings / songs.length;
+
+    const songsWithWeighted: SongWithAverage[] = songs.map((song) => {
+        const r = song.rating.length > 0 ? song.rating.reduce((sum, rate) => sum + rate, 0) / song.rating.length : 0;
+
+        const v = song.rating.length;
+
+        const weightedScore = (v / (v + m)) * r + (m / (v + m)) * globalAverage;
 
         return {
             ...song,
-            averageRating,
+            averageRating: weightedScore,
         };
     });
 
-    const sorted = songsWithAvg.sort((a, b) => b.averageRating - a.averageRating).slice(0, 3);
+    const sorted = songsWithWeighted.sort((a, b) => b.averageRating - a.averageRating).slice(0, 3);
 
     const topSongs: Song[] = sorted.map(({ averageRating, ...song }) => song);
 
