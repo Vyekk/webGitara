@@ -1,38 +1,26 @@
 import Button from 'components/Button/Button';
 import styles from './SongsLibrary.module.scss';
 import { SongsList } from 'components/SongsList/SongsList';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import Input from 'components/Input/Input';
-import { Song } from 'types';
-import { loadSongs } from 'utils/storage';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHeart } from '@fortawesome/free-solid-svg-icons';
+import { useSongs } from 'context/SongsContext';
 
-export const MainMenu = () => {
-    const [buttonType, setButtonType] = useState('allSongs');
+const SongsLibrary = () => {
+    const [buttonType, setButtonType] = useState<'allSongs' | 'mySongs'>('allSongs');
     const [searchTerm, setSearchTerm] = useState('');
-    const [songsList, setSongsList] = useState<Song[]>([]);
     const [isShowingFavourites, setIsShowingFavourites] = useState(false);
+
+    const { songs } = useSongs();
+
     const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
         setSearchTerm(event.target.value);
     };
 
-    const fetchSongsUserStorge = async () => {
-        const songs = await loadSongs();
-        setSongsList(songs);
-    };
-
     const handleShowFavorites = () => {
-        if (isShowingFavourites) {
-            setIsShowingFavourites(false);
-        } else {
-            setIsShowingFavourites(true);
-        }
+        setIsShowingFavourites((prev) => !prev);
     };
-
-    useEffect(() => {
-        fetchSongsUserStorge();
-    }, []);
 
     return (
         <div className={styles.songsLibraryWrapper}>
@@ -50,24 +38,16 @@ export const MainMenu = () => {
                         <FontAwesomeIcon icon={faHeart} />
                     </div>
                 </div>
-                <Button
-                    transparent
-                    isActive={buttonType === 'allSongs' ? true : false}
-                    onClick={() => setButtonType('allSongs')}
-                >
+                <Button transparent isActive={buttonType === 'allSongs'} onClick={() => setButtonType('allSongs')}>
                     Wszystkie utwory
                 </Button>
-                <Button
-                    transparent
-                    isActive={buttonType === 'mySongs' ? true : false}
-                    onClick={() => setButtonType('mySongs')}
-                >
+                <Button transparent isActive={buttonType === 'mySongs'} onClick={() => setButtonType('mySongs')}>
                     Moje utwory
                 </Button>
             </div>
             <div className={styles.songsWrapper}>
                 {buttonType === 'allSongs' ? (
-                    <SongsList songs={songsList} searchTerm={searchTerm} isShowingFavourites />
+                    <SongsList songs={songs} searchTerm={searchTerm} isShowingFavourites={isShowingFavourites} />
                 ) : (
                     <SongsList songs={[]} searchTerm={searchTerm} />
                 )}
@@ -75,3 +55,5 @@ export const MainMenu = () => {
         </div>
     );
 };
+
+export default SongsLibrary;
