@@ -10,10 +10,9 @@ import Fretboard from 'components/Fretboard/Fretboard';
 import { Context } from 'views/PlayView/PlayView';
 import { setupSamplePlayer, playNote } from 'utils/playNote';
 import { start, Volume } from 'tone';
-import { loadSongs } from 'utils/storage';
+import { useSongs } from 'context/SongsContext';
 
 const GuitarView = () => {
-    const [currentUrl, setCurrentUrl] = useState(window.location.href);
     const timeoutRef = useRef<NodeJS.Timeout | null>(null);
     const { songBpm, setSongBpm } = useContext(Context);
     const [songDefaultBpm, setSongDefaultBpm] = useState(120);
@@ -31,20 +30,15 @@ const GuitarView = () => {
         nextStep: TabNote[] | null;
     }>();
     const { isFretboardReversed } = useContext(Context);
+    const { songs } = useSongs();
 
     useEffect(() => {
-        setupSong();
         const volume = new Volume(0).toDestination();
         songVolumeRef.current = volume;
         setupSamplePlayer(volume);
     }, []);
 
     useEffect(() => {
-        setupSong();
-    }, [currentUrl]);
-
-    useEffect(() => {
-        setCurrentUrl(location.pathname);
         setCurrentStep(0);
     }, [location]);
 
@@ -106,21 +100,22 @@ const GuitarView = () => {
         }
     };
 
-    const setupSong = () => {
-        const fetchSong = async () => {
-            const songs = await loadSongs();
-            const songId = currentUrl.split('/').pop();
-            const song = songs.find((song: Song) => song.id === songId);
-            if (!song) {
-                navigate('/play/guitar/1');
-                return;
-            }
-            setSong(song);
-            setSongBpm(song.bpm);
-            setSongDefaultBpm(song.bpm);
-        };
-        fetchSong();
-    };
+    useEffect(() => {
+        if (!songs || songs.length === 0) {
+            return;
+        }
+        const songId = location.pathname.split('/').pop();
+        const foundSong = songs.find((s) => s.id === songId);
+        if (!foundSong) {
+            navigate('/play/guitar/1');
+            return;
+        }
+
+        setSong(foundSong);
+        setSongBpm(foundSong.bpm);
+        setSongDefaultBpm(foundSong.bpm);
+        setCurrentStep(0);
+    }, [songs, location.pathname]);
 
     const getCurrentStepInfo = (currentStep: number): TabNote[] | null => {
         const tablature = song?.tablature;

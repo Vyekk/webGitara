@@ -7,7 +7,8 @@ import Title from 'components/Title/Title';
 import { useContext, useRef, useState } from 'react';
 import { Song } from 'types';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faHeart } from '@fortawesome/free-solid-svg-icons';
+import { faComment, faHeart, faPenToSquare, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { useSongs } from 'context/SongsContext';
 
 type SongTileProps = {
     song: Song;
@@ -19,17 +20,18 @@ const SongTile = ({ song, isLarge }: SongTileProps) => {
     const [isHover, setIsHover] = useState(false);
     const { openModal, setModal } = useContext(ModalContext);
     const likedRef = useRef<HTMLDivElement>(null);
-    const commentsRef = useRef<HTMLDivElement>(null);
+    const managementButtonsRef = useRef<HTMLDivElement>(null);
     const navigate = useNavigate();
     const handleMouseOver = () => {
         likedRef.current?.classList.add(styles.hoverItem);
-        commentsRef.current?.classList.add(styles.hoverItem);
+        managementButtonsRef.current?.classList.add(styles.hoverItem);
         setIsHover(true);
     };
+    const { deleteSong } = useSongs();
 
     const handleMouseOut = () => {
         likedRef.current?.classList.remove(styles.hoverItem);
-        commentsRef.current?.classList.remove(styles.hoverItem);
+        managementButtonsRef.current?.classList.remove(styles.hoverItem);
         setIsHover(false);
     };
 
@@ -43,8 +45,18 @@ const SongTile = ({ song, isLarge }: SongTileProps) => {
         openModal();
     };
 
-    const handleSongTileClick = (songId: string) => {
-        navigate(`/play/guitar/${songId}`);
+    const handleSongTileClick = () => {
+        navigate(`/play/guitar/${song.id}`);
+    };
+
+    const handleModifyClick = (event: React.MouseEvent) => {
+        event.stopPropagation();
+        navigate(`/play/edit/${song.id}`);
+    };
+
+    const handleDeleteClick = (event: React.MouseEvent) => {
+        event.stopPropagation();
+        deleteSong(song.id);
     };
 
     return (
@@ -52,7 +64,7 @@ const SongTile = ({ song, isLarge }: SongTileProps) => {
             className={`${styles.songTile} ${isLarge ? styles.isLarge : ''}`}
             onMouseOver={handleMouseOver}
             onMouseOut={handleMouseOut}
-            onClick={() => handleSongTileClick(song.id)}
+            onClick={() => handleSongTileClick()}
         >
             <div
                 className={`${songLiked ? styles.liked : styles.unliked} ${styles.favouriteWrapper}`}
@@ -61,7 +73,17 @@ const SongTile = ({ song, isLarge }: SongTileProps) => {
             >
                 <FontAwesomeIcon icon={faHeart} />
             </div>
-            <div className={styles.comments} ref={commentsRef} onClick={handleCommentsClick}></div>
+            <div className={styles.managementButtons} ref={managementButtonsRef}>
+                <div className={styles.comments} onClick={handleCommentsClick}>
+                    <FontAwesomeIcon icon={faComment} />
+                </div>
+                <div className={styles.modify} onClick={handleModifyClick}>
+                    <FontAwesomeIcon icon={faPenToSquare} />
+                </div>
+                <div className={styles.delete} onClick={handleDeleteClick}>
+                    <FontAwesomeIcon icon={faTrash} />
+                </div>
+            </div>
             <Rating rating={song.rating} isHover={isHover} />
             <div className={styles.textWrapper}>
                 <Title tag="h3">{song.songTitle}</Title>

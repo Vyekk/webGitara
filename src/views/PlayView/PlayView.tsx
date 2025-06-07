@@ -10,6 +10,7 @@ import { ModalContext } from 'components/Modal/ModalContext';
 import Toolbar from 'components/Toolbar/Toolbar';
 import React from 'react';
 import { loadIsFretboardReversed } from 'utils/storage';
+import { SongsProvider } from 'context/SongsContext';
 interface ContextType {
     isFretboardReversed: boolean;
     setIsFretboardReversed: React.Dispatch<React.SetStateAction<boolean>>;
@@ -59,24 +60,26 @@ const PlayView: React.FC = () => {
     }, [isModalOpen, closeModal]);
 
     return (
-        <Context.Provider value={{ isFretboardReversed, setIsFretboardReversed, songBpm, setSongBpm }}>
-            <Section id={styles.playBackground}>
-                {isModalOpen && (
-                    <Modal ref={modalRef} onClose={closeModal}>
-                        {modalContent}
-                    </Modal>
-                )}
-                <Routes>
-                    <Route path="/" element={<Navigate to="dashboard" replace />} />
-                    <Route path="dashboard" element={<DashboardView />} />
-                    <Route path="guitar" element={<Navigate to="1" replace />} />
-                    <Route path="guitar/:id" element={<GuitarView />} />
-                    <Route path="edit" element={<TablatureEditorView />} />
-                    <Route path="edit/:id" element={<TablatureEditorView />} />
-                </Routes>
-                <Toolbar ref={toolbarRef} />
-            </Section>
-        </Context.Provider>
+        <SongsProvider>
+            <Context.Provider value={{ isFretboardReversed, setIsFretboardReversed, songBpm, setSongBpm }}>
+                <Section id={styles.playBackground}>
+                    {isModalOpen && (
+                        <Modal ref={modalRef} onClose={closeModal}>
+                            {modalContent}
+                        </Modal>
+                    )}
+                    <Routes>
+                        <Route path="/" element={<Navigate to="dashboard" replace />} />
+                        <Route path="dashboard" element={<DashboardView />} />
+                        <Route path="guitar" element={<Navigate to="1" replace />} />
+                        <Route path="guitar/:id" element={<GuitarView />} />
+                        <Route path="edit" element={<TablatureEditorView />} />
+                        <Route path="edit/:id" element={<TablatureEditorView />} />
+                    </Routes>
+                    <Toolbar ref={toolbarRef} />
+                </Section>
+            </Context.Provider>
+        </SongsProvider>
     );
 };
 
