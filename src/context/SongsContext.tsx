@@ -1,12 +1,13 @@
 import { createContext, useContext, useEffect, useState } from 'react';
 import { Song } from '../types';
-import { loadSongs, deleteSongById, addSong as storageAddSong } from '../utils/storage';
+import { loadSongs, deleteSongById, addSong as storageAddSong, getTopRatedSongs } from '../utils/storage';
 
 type SongsContextType = {
     songs: Song[];
     refreshSongs: () => Promise<void>;
     deleteSong: (id: string) => Promise<void>;
     addSong: (newSong: Song) => Promise<void>;
+    getTopRated?: () => Promise<Song[]>;
 };
 
 const SongsContext = createContext<SongsContextType | undefined>(undefined);
@@ -29,12 +30,19 @@ export const SongsProvider = ({ children }: { children: React.ReactNode }) => {
         await refreshSongs();
     };
 
+    const getTopRated = async () => {
+        await refreshSongs();
+        return await getTopRatedSongs();
+    };
+
     useEffect(() => {
         refreshSongs();
     }, []);
 
     return (
-        <SongsContext.Provider value={{ songs, refreshSongs, deleteSong, addSong }}>{children}</SongsContext.Provider>
+        <SongsContext.Provider value={{ songs, refreshSongs, deleteSong, addSong, getTopRated }}>
+            {children}
+        </SongsContext.Provider>
     );
 };
 
