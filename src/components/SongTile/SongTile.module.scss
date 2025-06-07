@@ -38,48 +38,20 @@
     @extend .liked;
 }
 
-.comments {
+.managementButtons {
+    display: none;
     position: absolute;
     bottom: 10px;
     left: 10px;
-    width: 30px;
-    height: 20px;
-    display: none;
-    border: 2px solid $black;
-    border-radius: 10px;
-}
-
-.comments:after, .comments:before {
-    content: "";
-    position: absolute;
-    width: 0;
-    height: 0;
-    bottom: -4.5px;
-    right: 10px;
-    border-top: 5px solid $block-color;
-    border-right: 1px solid $block-color;
-    border-left: 5px solid transparent;
-}
-
-.comments:before {
-    bottom: -7.5px;
-    right: 8px;
-    border-top: 7.5px solid $black;
-    border-right: 2px solid $black;
-    border-left: 7.5px solid transparent;
-}
-
-.comments:hover {
-    border-color: $primary-color;
-}
-
-.comments:hover:before {
-    border-top-color: $primary-color;
-    border-right-color: $primary-color;
+    gap: 10px;
+    .comments:hover, .modify:hover, .delete:hover {
+        cursor: pointer;
+        color: $primary-color;
+    }
 }
 
 .hoverItem {
-    display: block;
+    display: flex;
 }
 
 .songTop {
