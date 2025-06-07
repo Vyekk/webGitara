@@ -1,4 +1,4 @@
-import { useNavigate, useParams, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import Button from 'components/Button/Button';
 import Input from 'components/Input/Input';
 import TablatureEditor from 'components/TablatureEditor/TablatureEditor';
@@ -6,19 +6,17 @@ import Title from 'components/Title/Title';
 import styles from 'views/TablatureEditorView/TablatureEditorView.module.scss';
 import { ReactNode, useContext, useEffect, useState } from 'react';
 import { Song } from 'types';
-import { loadSongs } from 'utils/storage';
 import { Link } from 'react-router-dom';
 import GuitarChords from 'utils/guitarChords';
 import { ChordPosition } from 'types';
 import { TablatureActiveLineColumn } from 'types';
 import { convertFormDataToTablature } from 'utils/tablatureConverters';
-import { addSong } from 'utils/storage';
 import { ModalContext } from 'components/Modal/ModalContext';
 import { convertTablatureToFormData } from 'utils/tablatureConverters';
 import { v4 as uuidv4 } from 'uuid';
+import { useSongs } from 'context/SongsContext';
 
 const TablatureEditorView = () => {
-    const { id } = useParams();
     const [song, setSong] = useState<Song | null>(null);
     const [numberOfTablatureLines, setNumberOfTablatureLines] = useState(1);
     const [newSongTitle, setNewSongTitle] = useState('');
@@ -39,14 +37,8 @@ const TablatureEditorView = () => {
     const [formData, setFormData] = useState<Record<string, string>>({});
     const [formDataDuration, setFormDataDuration] = useState<Record<string, string>>({});
     const location = useLocation();
-
-    useEffect(() => {
-        songReset();
-        if (!id) {
-            return;
-        }
-        setupSong();
-    }, [location]);
+    const { songs } = useSongs();
+    const { addSong } = useSongs();
 
     useEffect(() => {
         if (!song) return;
@@ -77,20 +69,22 @@ const TablatureEditorView = () => {
         openModal();
     };
 
-    const setupSong = () => {
-        const fetchSong = async () => {
-            const songs = await loadSongs();
-            const song = songs.find((song: Song) => song.id === id);
-            if (!song) {
-                navigate(`/play/edit`);
-                return;
-            }
-            setSong(song);
-            setNewSongTitle(song.songTitle);
-            setNewSongBpm(song.bpm);
-        };
-        fetchSong();
-    };
+    useEffect(() => {
+        songReset();
+        if (!songs || songs.length === 0) {
+            return;
+        }
+        const songId = location.pathname.split('/').pop();
+        const foundSong = songs.find((s) => s.id === songId);
+        if (!foundSong) {
+            navigate(`/play/edit`);
+            return;
+        }
+
+        setSong(foundSong);
+        setNewSongBpm(foundSong.bpm);
+        setNewSongTitle(foundSong.songTitle);
+    }, [songs, location.pathname]);
 
     const songReset = () => {
         setSong(null);

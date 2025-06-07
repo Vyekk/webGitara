@@ -4,7 +4,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBook, faGear } from '@fortawesome/free-solid-svg-icons';
 import { ModalContext } from 'components/Modal/ModalContext';
 import { ReactNode, useContext, forwardRef } from 'react';
-import { MainMenu } from 'components/MainMenu/SongsLibrary';
+import SongsLibrary from 'components/SongsLibrary/SongsLibrary';
 import { Settings } from 'components/Settings/Settings';
 
 interface ToolbarProps {
@@ -24,7 +24,7 @@ const Toolbar = forwardRef<HTMLDivElement, ToolbarProps>(({ hasControls }, ref) 
     return (
         <div ref={ref} className={styles.wrapper}>
             {hasControls && <Button isDark>BPM</Button>}
-            <Button className={styles.libraryButton} onClick={() => handleOpenModal(<MainMenu />)} circle>
+            <Button className={styles.libraryButton} onClick={() => handleOpenModal(<SongsLibrary />)} circle>
                 <div className={styles.libraryIcon}>
                     <FontAwesomeIcon icon={faBook} />
                 </div>

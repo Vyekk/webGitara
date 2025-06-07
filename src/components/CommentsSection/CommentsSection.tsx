@@ -1,6 +1,6 @@
 import Button from 'components/Button/Button';
 import styles from 'components/CommentsSection/CommentsSection.module.scss';
-import { MainMenu } from 'components/MainMenu/SongsLibrary';
+import SongsLibrary from 'components/SongsLibrary/SongsLibrary';
 import { ModalContext } from 'components/Modal/ModalContext';
 import Title from 'components/Title/Title';
 import { useContext, useState } from 'react';
@@ -19,7 +19,7 @@ const CommentsSection = ({ song }: CommentsSectionProps) => {
     };
 
     const handleBackToLibrary = () => {
-        setModal(<MainMenu />);
+        setModal(<SongsLibrary />);
         openModal();
     };
 
@@ -47,7 +47,7 @@ const CommentsSection = ({ song }: CommentsSectionProps) => {
     };
 
     return (
-        <div>
+        <div className={styles.commentsSectionWrapper}>
             <div className={styles.commentsTopSectionWraper}>
                 <Button transparent onClick={handleBackToLibrary}>
                     Wróć do biblioteki
