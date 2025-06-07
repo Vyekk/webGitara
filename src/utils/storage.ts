@@ -62,3 +62,9 @@ export async function getTopRatedSongs(): Promise<Song[]> {
 
     return topSongs;
 }
+
+export async function deleteSongById(id: string): Promise<void> {
+    const songs = await loadSongs();
+    const updatedSongs = songs.filter((song: Song) => song.id !== id);
+    await saveSongs(updatedSongs);
+}
