@@ -302,26 +302,39 @@ for (let string = 1; string <= 6; string++) {
 }
 
 (() => {
-    const songsPlaces = [];
-    songs.forEach((song) => {
-        const songRatingAvg = song.rating.reduce((acc, curr) => acc + curr, 0) / song.rating.length;
-        songsPlaces.push({ ...song, songRatingAvg, ratingCount: song.rating.length });
+    if (!Array.isArray(songs) || songs.length === 0) return;
+
+    const totalRatings = songs.reduce((sum, song) => sum + song.rating.length, 0);
+    const totalScore = songs.reduce((sum, song) => sum + song.rating.reduce((s, r) => s + r, 0), 0);
+
+    const globalAverage = totalRatings > 0 ? totalScore / totalRatings : 0;
+    const m = totalRatings / songs.length || 1;
+
+    const songsWithWeighted = songs.map((song) => {
+        const v = song.rating.length;
+        const r = v > 0 ? song.rating.reduce((a, b) => a + b, 0) / v : 0;
+
+        const weightedScore = (v / (v + m)) * r + (m / (v + m)) * globalAverage;
+
+        return {
+            ...song,
+            weightedScore,
+            ratingCount: v,
+        };
     });
 
-    songsPlaces.sort((a, b) => {
-        if (b.ratingCount === a.ratingCount) {
-            if (b.songRatingAvg === a.songRatingAvg) {
-                return a.songTitle.localeCompare(b.songTitle);
-            }
-            return b.songRatingAvg - a.songRatingAvg;
+    songsWithWeighted.sort((a, b) => {
+        if (b.weightedScore === a.weightedScore) {
+            return a.songTitle.localeCompare(b.songTitle);
         }
-        return b.ratingCount - a.ratingCount;
+        return b.weightedScore - a.weightedScore;
     });
 
-    songsPlaces.forEach((song, index) => {
+    songsWithWeighted.forEach((song, index) => {
         song.place = index + 1;
     });
+
     if (!Array.isArray(existingSongs) || existingSongs.length === 0) {
-        saveSongs(songsPlaces);
+        saveSongs(songsWithWeighted);
     }
 })();
