@@ -3,7 +3,7 @@
 .commentsSectionWrapper {
     min-width: 780px;
     min-height: 500px;
-    padding: 40px;
+    padding: 40px 0;
     text-align: left;
 }
 
@@ -35,6 +35,22 @@
 .commentsWrapper {
     overflow-y: auto;
     height: 370px;
+    padding-right: 20px;
+    &::-webkit-scrollbar {
+        width: 20px;
+    }
+
+    &::-webkit-scrollbar-track {
+        background: #f1f1f1;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background:  #888;
+    }
+
+    &::-webkit-scrollbar-thumb:hover {
+        background: $primary-color;
+    }
 }
 
 .commentContainer {
