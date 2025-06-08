@@ -212,10 +212,10 @@ const TablatureEditorView = () => {
                             </Input>
                         </div>
                         <div className={styles.inputWrapper}>
-                            <label htmlFor="bpmn">Bpmn</label>
+                            <label htmlFor="bpm">Bpm</label>
                             <Input
-                                name="bpmn"
-                                id="bpmn"
+                                name="bpm"
+                                id="bpm"
                                 type="number"
                                 min={30}
                                 max={300}
