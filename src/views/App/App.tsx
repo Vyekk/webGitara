@@ -3,22 +3,28 @@ import WebsiteView from 'views/WebsiteView/WebsiteView';
 import LoginView from 'views/LoginView/LoginView';
 import PlayView from 'views/PlayView/PlayView';
 import ModalProvider from 'components/Modal/ModalProvider';
+import PrivateRoute from 'components/PrivateRoute/PrivateRoute';
+import { AuthProvider } from 'context/AuthContext';
 
 const App = () => {
     return (
         <BrowserRouter>
-            <Routes>
-                <Route path="/" element={<WebsiteView />}></Route>
-                <Route path="/login" element={<LoginView />}></Route>
-                <Route
-                    path="/play/*"
-                    element={
-                        <ModalProvider>
-                            <PlayView />
-                        </ModalProvider>
-                    }
-                ></Route>
-            </Routes>
+            <AuthProvider>
+                <Routes>
+                    <Route path="/" element={<WebsiteView />}></Route>
+                    <Route path="/login" element={<LoginView />}></Route>
+                    <Route element={<PrivateRoute />}>
+                        <Route
+                            path="/play/*"
+                            element={
+                                <ModalProvider>
+                                    <PlayView />
+                                </ModalProvider>
+                            }
+                        ></Route>
+                    </Route>
+                </Routes>
+            </AuthProvider>
         </BrowserRouter>
     );
 };
