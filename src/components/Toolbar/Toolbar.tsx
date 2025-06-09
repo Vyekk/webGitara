@@ -6,6 +6,8 @@ import { ModalContext } from 'components/Modal/ModalContext';
 import { ReactNode, useContext, forwardRef } from 'react';
 import SongsLibrary from 'components/SongsLibrary/SongsLibrary';
 import { Settings } from 'components/Settings/Settings';
+import { useAuth } from 'context/AuthContext';
+import { useNavigate } from 'react-router';
 
 interface ToolbarProps {
     hasControls?: boolean;
@@ -14,11 +16,18 @@ interface ToolbarProps {
 
 const Toolbar = forwardRef<HTMLDivElement, ToolbarProps>(({ hasControls }, ref) => {
     const { openModal, setModal } = useContext(ModalContext);
+    const { logout } = useAuth();
+    const navigate = useNavigate();
 
     const handleOpenModal = (content: ReactNode) => {
         const modalContent = content;
         setModal(modalContent);
         openModal();
+    };
+
+    const handleLogout = () => {
+        logout();
+        navigate('/login');
     };
 
     return (
@@ -35,7 +44,7 @@ const Toolbar = forwardRef<HTMLDivElement, ToolbarProps>(({ hasControls }, ref) 
             <Button className={styles.secondOption} onClick={() => handleOpenModal(<Settings />)} transparent>
                 <FontAwesomeIcon icon={faGear} className={styles.settingsIcon} />
             </Button>
-            <Button className={styles.secondOption} href="/login" transparent>
+            <Button className={styles.secondOption} onClick={handleLogout} transparent>
                 Wyloguj się
             </Button>
         </div>
