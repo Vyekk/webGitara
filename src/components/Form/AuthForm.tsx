@@ -11,24 +11,39 @@ const types = {
 };
 
 interface AuthFormProps {
-    submitFn: (e: React.FormEvent<HTMLFormElement>, user: { username: string; password: string }) => void;
+    loginFn: (user: { username: string; password: string }) => void;
+    registerFn: (user: { username: string; password: string; email: string }) => void;
 }
 
-const AuthForm = ({ submitFn }: AuthFormProps) => {
+const AuthForm = ({ loginFn, registerFn }: AuthFormProps) => {
     const [activeOption, setActiveOption] = useState(types.login);
     const [isRegistered, setIsRegistered] = useState(false);
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
+    const [email, setEmail] = useState('');
+    const [repeatPassword, setRepeatPassword] = useState('');
 
-    const handleRegister = () => {
-        // Tutaj powinna być logika rejestracji
+    const handleRegister = (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+
+        if (password !== repeatPassword) {
+            alert('Hasła nie są takie same');
+            return;
+        }
+
+        if (!username || !password || !email) {
+            alert('Wypełnij wszystkie pola');
+            return;
+        }
+        const newUser = { username, password, email };
+        registerFn(newUser);
         setIsRegistered(true);
     };
 
-    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    const handleLogin = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         const user = { username, password };
-        submitFn(e, user);
+        loginFn(user);
     };
 
     return (
@@ -36,7 +51,7 @@ const AuthForm = ({ submitFn }: AuthFormProps) => {
             {isRegistered ? (
                 <>
                     <p className={styles.info}>
-                        Konto założone <br /> pomyślnie
+                        Konto założone <br /> pomyślnie, <br /> sprawdź swoją skrzynkę e-mail, aby aktywować konto.
                     </p>
                     <Button
                         onClick={() => {
@@ -51,10 +66,7 @@ const AuthForm = ({ submitFn }: AuthFormProps) => {
                 <>
                     {activeOption === types.login ? <Title>Zaloguj się</Title> : <Title>Zarejestruj się</Title>}
                     {activeOption === types.login ? <p>i kontynuuj praktykę</p> : <p>i wkrocz do świata muzyki</p>}
-                    <form
-                        className={styles.form}
-                        onSubmit={activeOption == types.login ? handleSubmit : handleRegister}
-                    >
+                    <form className={styles.form} onSubmit={activeOption == types.login ? handleLogin : handleRegister}>
                         <div className={styles.radioWrapper}>
                             <Radio
                                 name="formType"
@@ -79,10 +91,14 @@ const AuthForm = ({ submitFn }: AuthFormProps) => {
                                 </Input>
                                 {activeOption !== types.login ? (
                                     <>
-                                        <Input id="rePassword" type="password">
+                                        <Input
+                                            id="rePassword"
+                                            type="password"
+                                            onChange={(e) => setRepeatPassword(e.target.value)}
+                                        >
                                             Powtórz hasło
                                         </Input>
-                                        <Input id="email" type="email">
+                                        <Input id="email" type="email" onChange={(e) => setEmail(e.target.value)}>
                                             E-mail
                                         </Input>
                                     </>
