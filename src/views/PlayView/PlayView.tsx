@@ -9,7 +9,7 @@ import Modal from 'components/Modal/Modal';
 import { ModalContext } from 'components/Modal/ModalContext';
 import Toolbar from 'components/Toolbar/Toolbar';
 import React from 'react';
-import { loadIsFretboardReversed } from 'utils/storage';
+import storage from 'utils/storage';
 import { SongsProvider } from 'context/SongsContext';
 interface ContextType {
     isFretboardReversed: boolean;
@@ -33,7 +33,7 @@ const PlayView: React.FC = () => {
     const [songBpm, setSongBpm] = useState(120);
 
     useEffect(() => {
-        const isFretboardReversedUser = loadIsFretboardReversed();
+        const isFretboardReversedUser = storage.loadIsFretboardReversed();
         if (isFretboardReversedUser) {
             setIsFretboardReversed(isFretboardReversedUser);
         }

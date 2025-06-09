@@ -1,6 +1,6 @@
-import { saveSongs, loadSongs } from 'utils/storage';
+import storage from 'utils/storage';
 
-const existingSongs = loadSongs();
+const existingSongs = storage.loadSongs();
 
 const songs = [
     {
@@ -335,6 +335,6 @@ for (let string = 1; string <= 6; string++) {
     });
 
     if (!Array.isArray(existingSongs) || existingSongs.length === 0) {
-        saveSongs(songsWithWeighted);
+        storage.saveSongs(songsWithWeighted);
     }
 })();

@@ -1,6 +1,6 @@
 import { createContext, useContext, useEffect, useState } from 'react';
 import { Song } from '../types';
-import { loadSongs, deleteSongById, addSong as storageAddSong, getTopRatedSongs } from '../utils/storage';
+import storage from '../utils/storage';
 
 type SongsContextType = {
     songs: Song[];
@@ -16,23 +16,23 @@ export const SongsProvider = ({ children }: { children: React.ReactNode }) => {
     const [songs, setSongs] = useState<Song[]>([]);
 
     const refreshSongs = async () => {
-        const allSongs = await loadSongs();
+        const allSongs = await storage.loadSongs();
         setSongs(allSongs);
     };
 
     const deleteSong = async (id: string) => {
-        await deleteSongById(id);
+        await storage.deleteSongById(id);
         await refreshSongs();
     };
 
     const addSong = async (newSong: Song) => {
-        await storageAddSong(newSong);
+        await storage.addSong(newSong);
         await refreshSongs();
     };
 
     const getTopRated = async () => {
         await refreshSongs();
-        return await getTopRatedSongs();
+        return await storage.getTopRatedSongs();
     };
 
     useEffect(() => {
