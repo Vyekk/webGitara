@@ -23,7 +23,7 @@ const SongsLibrary = () => {
         setSearchTerm(event.target.value);
     };
 
-    const handleShowFavorites = () => {
+    const handleShowFavourites = () => {
         setIsShowingFavourites((prev) => !prev);
         if (!isShowingFavourites) {
             let newFilteredSongs: Song[] = [];
@@ -64,9 +64,9 @@ const SongsLibrary = () => {
                     </Input>
                     <div
                         className={`${
-                            isShowingFavourites ? styles.favourtiesIsShowing : styles.favourtiesIsNotShowing
+                            isShowingFavourites ? styles.favouritesIsShowing : styles.favouritesIsNotShowing
                         } ${styles.favouriteWrapper}`}
-                        onClick={handleShowFavorites}
+                        onClick={handleShowFavourites}
                     >
                         <FontAwesomeIcon icon={faHeart} />
                     </div>
