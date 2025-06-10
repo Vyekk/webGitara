@@ -1,4 +1,5 @@
 import storage from 'utils/storage';
+import { v4 as uuidv4 } from 'uuid';
 
 const existingSongs = storage.loadSongs();
 
@@ -9,8 +10,8 @@ const songs = [
         author: 'Leonard Cohen',
         rating: [5, 5, 5, 5, 5],
         comments: [
-            { content: 'So moving!', author: 'Ella' },
-            { content: 'One of the best songs ever!', author: 'Ethan' },
+            { content: 'Idealne do headbangingu 💀', author: { idUser: 'u012', username: 'Sara' } },
+            { content: 'Dobrze się tego słucha wieczorem.', author: { idUser: 'u013', username: 'Leo' } },
         ],
         bpm: 56,
         tablature: [
@@ -46,8 +47,8 @@ const songs = [
         author: 'Deep Purple',
         rating: [5, 5, 4, 5, 4],
         comments: [
-            { content: 'Ikoniczny riff!', author: 'Tom' },
-            { content: 'Każdy od tego zaczyna!', author: 'Anna' },
+            { content: 'Ciężki riff, klasyka!', author: { idUser: 'u001', username: 'Mike' } },
+            { content: 'Uwielbiam to intro', author: { idUser: 'u002', username: 'Sophie' } },
         ],
         bpm: 112,
         tablature: [
@@ -73,8 +74,8 @@ const songs = [
         author: 'The White Stripes',
         rating: [5, 4, 4, 5, 4],
         comments: [
-            { content: 'Mega groove!', author: 'Kate' },
-            { content: 'Prosty i mocny riff!', author: 'John' },
+            { content: 'Trochę za głośny gain, ale fajne.', author: { idUser: 'u011', username: 'Max' } },
+            { content: 'Idealne do headbangingu 💀', author: { idUser: 'u012', username: 'Sara' } },
         ],
         bpm: 120,
         tablature: [
@@ -93,8 +94,8 @@ const songs = [
         author: 'Black Sabbath',
         rating: [4, 4, 4, 4, 5],
         comments: [
-            { content: 'Ciężki riff, klasyka!', author: 'Mike' },
-            { content: 'Uwielbiam to intro', author: 'Sophie' },
+            { content: 'Uwielbiam ten motyw przewodni!', author: { idUser: 'u009', username: 'Kevin' } },
+            { content: 'Świetna robota, graj więcej!', author: { idUser: 'u010', username: 'Julia' } },
         ],
         bpm: 96,
         tablature: [
@@ -117,8 +118,8 @@ const songs = [
         author: 'The Rolling Stones',
         rating: [4, 5, 4, 5, 4],
         comments: [
-            { content: 'Ikoniczny riff z lat 60.', author: 'Jack' },
-            { content: 'Zawsze wpada w ucho!', author: 'Maya' },
+            { content: 'Intro przypomina stare Iron Maiden.', author: { idUser: 'u014', username: 'Emma' } },
+            { content: 'Zrobiłem z tego swój dzwonek 😂', author: { idUser: 'u015', username: 'Daniel' } },
         ],
         bpm: 136,
         tablature: [
@@ -182,8 +183,8 @@ const songs = [
         author: 'Traditional',
         rating: [4, 4, 4, 5, 5],
         comments: [
-            { content: 'Great for beginners!', author: 'Anna' },
-            { content: 'I played this as a kid!', author: 'Tom' },
+            { content: 'Great for beginners!', author: { idUser: 1, username: 'Anna' } },
+            { content: 'I played this as a kid!', author: { idUser: 2, username: 'Tom' } },
         ],
         bpm: 90,
         tablature: [
@@ -210,8 +211,8 @@ const songs = [
         author: 'Ludwig van Beethoven',
         rating: [5, 5, 5, 4, 4],
         comments: [
-            { content: 'Beethoven for beginners!', author: 'Clara' },
-            { content: 'Sounds elegant even simple.', author: 'Liam' },
+            { content: 'Beethoven for beginners!', author: { idUser: 3, username: 'Clara' } },
+            { content: 'Sounds elegant even simple.', author: { idUser: 4, username: 'Liam' } },
         ],
         bpm: 92,
         tablature: [
@@ -240,8 +241,8 @@ const songs = [
         author: 'Traditional',
         rating: [4, 5, 4, 5, 4],
         comments: [
-            { content: 'Fun and easy to learn!', author: 'Nina' },
-            { content: 'My kids love it!', author: 'Jack' },
+            { content: 'Fun and easy to learn!', author: { idUser: 3, username: 'Clara' } },
+            { content: 'My kids love it!', author: { idUser: 1, username: 'Anna' } },
         ],
         bpm: 160,
         tablature: [
@@ -303,6 +304,11 @@ for (let string = 1; string <= 6; string++) {
 
 (() => {
     if (!Array.isArray(songs) || songs.length === 0) return;
+    songs.forEach((song) => {
+        song.comments.forEach((comment) => {
+            comment.idComment = uuidv4();
+        });
+    });
 
     const totalRatings = songs.reduce((sum, song) => sum + song.rating.length, 0);
     const totalScore = songs.reduce((sum, song) => sum + song.rating.reduce((s, r) => s + r, 0), 0);
