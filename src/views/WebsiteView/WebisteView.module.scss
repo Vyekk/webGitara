@@ -64,6 +64,10 @@
     @media screen and (max-width: $desktop) {
         flex-flow: column;
     }
+    ul {
+        padding: 0 15px;
+        margin: 0;
+    }
 }
 .profits {
     display: flex;
