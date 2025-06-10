@@ -9,6 +9,8 @@ type AuthContextType = {
     logout: () => void;
     isLoggedIn: boolean;
     isAuthLoaded: boolean;
+    toggleFavourite: (songId: string) => void;
+    isFavourite: (songId: string) => boolean;
 };
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -17,12 +19,14 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     const [user, setUser] = useState<User | null>(null);
     const [token, setToken] = useState<string | null>(null);
     const [isAuthLoaded, setIsAuthLoaded] = useState(false);
+    const [favourites, setFavourites] = useState<string[]>([]);
 
     useEffect(() => {
         const auth = storage.loadAuth();
         if (auth) {
             setUser(auth.user);
             setToken(auth.token);
+            setFavourites(auth.favourites ?? []);
         }
         setIsAuthLoaded(true);
     }, []);
@@ -42,6 +46,18 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         setToken(null);
     };
 
+    const toggleFavourite = (songId: string) => {
+        if (!user) return;
+        if (!token) throw new Error('Brak tokena');
+        const updatedFavourites = favourites.includes(songId)
+            ? favourites.filter((id) => id !== songId)
+            : [...favourites, songId];
+        setFavourites(updatedFavourites);
+        storage.saveAuth({ user, token, favourites: updatedFavourites });
+    };
+
+    const isFavourite = (songId: string) => favourites.includes(songId);
+
     return (
         <AuthContext.Provider
             value={{
@@ -51,6 +67,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
                 login,
                 logout,
                 isLoggedIn: !!user,
+                toggleFavourite,
+                isFavourite,
             }}
         >
             {children}
