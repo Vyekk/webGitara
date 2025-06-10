@@ -5,16 +5,16 @@ import TablatureEditor from 'components/TablatureEditor/TablatureEditor';
 import Title from 'components/Title/Title';
 import styles from 'views/TablatureEditorView/TablatureEditorView.module.scss';
 import { ReactNode, useContext, useEffect, useState } from 'react';
-import { Song } from 'types';
+import { Song, TablatureActiveLineColumn, InfoMessage } from 'types';
 import { Link } from 'react-router-dom';
 import GuitarChords from 'utils/guitarChords';
 import { ChordPosition } from 'types';
-import { TablatureActiveLineColumn } from 'types';
 import { convertFormDataToTablature } from 'utils/tablatureConverters';
 import { ModalContext } from 'components/Modal/ModalContext';
 import { convertTablatureToFormData } from 'utils/tablatureConverters';
 import { v4 as uuidv4 } from 'uuid';
 import { useSongs } from 'context/SongsContext';
+import useRequiredUser from 'utils/useRequiredUser';
 
 const TablatureEditorView = () => {
     const [song, setSong] = useState<Song | null>(null);
@@ -28,8 +28,8 @@ const TablatureEditorView = () => {
     const [insertColumnDuration, setInsertColumnDuration] = useState<{ value: string }>({
         value: '♩',
     });
-    const [errorMessage, setErrorMessage] = useState<string | null>(null);
-    const [infoMessage, setInfoMessage] = useState<string | null>(null);
+    const [errorMessage, setErrorMessage] = useState<InfoMessage>({ message: null });
+    const [infoMessage, setInfoMessage] = useState<InfoMessage>({ message: null });
     const [fullFormData, setFullFormData] = useState<Record<string, string>>({});
     const [fullFormDataDuration, setFullFormDataDuration] = useState<Record<string, string>>({});
     const navigate = useNavigate();
@@ -39,6 +39,7 @@ const TablatureEditorView = () => {
     const location = useLocation();
     const { songs } = useSongs();
     const { addSong } = useSongs();
+    const user = useRequiredUser();
 
     useEffect(() => {
         if (!song) return;
@@ -52,14 +53,14 @@ const TablatureEditorView = () => {
     }, [song]);
 
     useEffect(() => {
-        if (errorMessage) {
-            handleOpenModal(<div className={styles.errorMessage}>{errorMessage}</div>);
+        if (errorMessage.message) {
+            handleOpenModal(<div className={styles.errorMessage}>{errorMessage.message}</div>);
         }
     }, [errorMessage]);
 
     useEffect(() => {
-        if (infoMessage) {
-            handleOpenModal(<div className={styles.infoMessage}>{infoMessage}</div>);
+        if (infoMessage.message) {
+            handleOpenModal(<div className={styles.infoMessage}>{infoMessage.message}</div>);
         }
     }, [infoMessage]);
 
@@ -78,6 +79,11 @@ const TablatureEditorView = () => {
         const foundSong = songs.find((s) => s.id === songId);
         if (!foundSong) {
             navigate(`/play/edit`);
+            return;
+        }
+        if (foundSong.idUser !== user.idUser) {
+            setErrorMessage({ message: 'Nie masz uprawnień do edycji tego utworu' });
+            navigate('/play/edit');
             return;
         }
 
@@ -135,10 +141,10 @@ const TablatureEditorView = () => {
 
     const handleSaveSong = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        setErrorMessage(null);
+        setErrorMessage({ message: null });
         if (!newSongTitle.trim()) {
             setTimeout(() => {
-                setErrorMessage('Proszę podać nazwę utworu');
+                setErrorMessage({ message: 'Proszę podać nazwę utworu' });
             }, 0);
             return;
         }
@@ -147,7 +153,7 @@ const TablatureEditorView = () => {
         const hasNotes = tablature.some((step) => step.length > 0);
         if (!hasNotes || tablature.length < 5) {
             setTimeout(() => {
-                setErrorMessage('Tablatura nie może być pusta lub zawierać mniej niż 5 dźwięków');
+                setErrorMessage({ message: 'Tablatura nie może być pusta lub zawierać mniej niż 5 dźwięków' });
             }, 0);
             return;
         }
@@ -155,7 +161,8 @@ const TablatureEditorView = () => {
         const newSong: Song = {
             id: song ? song.id : uuidv4(),
             songTitle: newSongTitle,
-            author: 'Autor',
+            author: user.username,
+            idUser: user.idUser,
             bpm: newSongBpm,
             tablature,
             rating: song ? song.rating : [],
@@ -163,7 +170,7 @@ const TablatureEditorView = () => {
         };
         await addSong(newSong);
         setTimeout(() => {
-            setInfoMessage(`Pomyślnie ${song ? 'zmodyfikowano' : 'stworzono'} utwór`);
+            setInfoMessage({ message: `Pomyślnie ${song ? 'zmodyfikowano' : 'stworzono'} utwór` });
         }, 0);
     };
 
@@ -208,7 +215,7 @@ const TablatureEditorView = () => {
                         <div className={styles.inputWrapper}>
                             <label htmlFor="authorName">Autor</label>
                             <Input name="authorName" id="authorName" readOnly>
-                                {song ? song.author : 'Autor'}
+                                {song ? song.author : user?.username || 'Anonim'}
                             </Input>
                         </div>
                         <div className={styles.inputWrapper}>
