@@ -30,7 +30,7 @@
 
 .liked {
     color: red;
-    display: none
+    display: none;
 }
 
 .unliked {
@@ -44,9 +44,18 @@
     bottom: 10px;
     left: 10px;
     gap: 10px;
-    .comments:hover, .modify:hover, .delete:hover {
+    .comments:hover,
+    .modify:hover,
+    .delete:hover {
         cursor: pointer;
         color: $primary-color;
+    }
+    .songManageButtonsWrapper {
+        gap: 10px;
+        display: none;
+    }
+    .show {
+        display: flex;
     }
 }
 
@@ -86,6 +95,10 @@
     height: 8em;
 }
 
+.hidden {
+    display: none;
+}
+
 .textWrapper {
     display: flex;
     flex-direction: column;
@@ -102,7 +115,6 @@
 }
 
 @media screen and (max-width: $mobile) {
-
     .isLarge {
         width: 17.5em;
         height: 10em;
