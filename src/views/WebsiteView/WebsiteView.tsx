@@ -47,7 +47,7 @@ const WebsiteView = () => {
                 <Title orange tag="h2">
                     Wystarczy jedno kliknęcie
                 </Title>
-                <Button className={styles.startButton} href="/login">
+                <Button className={styles.startButton} href="/play/dashboard">
                     Zacznij grać &gt;
                 </Button>
             </Section>
@@ -63,25 +63,31 @@ const WebsiteView = () => {
                 </p>
                 <div className={styles.cardsWrapper}>
                     <Card title="Edukacja">
-                        <li>Użytkownicy mogą nauczyć się gry na gitarze</li>
-                        <li>
-                            Możliwość udostępniania i oceniania utworów innych użytkowników pozwala na wymianę
-                            doświadczeń i inspirację
-                        </li>
+                        <ul>
+                            <li>Użytkownicy mogą nauczyć się gry na gitarze</li>
+                            <li>
+                                Możliwość udostępniania i oceniania utworów innych użytkowników pozwala na wymianę
+                                doświadczeń i inspirację
+                            </li>
+                        </ul>
                     </Card>
                     <Card title="Kreatywność">
-                        <li>
-                            Możliwość tworzenia własnych utworów muzycznych pozwala na rozwijanie kreatywności i
-                            ekspresji
-                        </li>
-                        <li>Możliwość czerpania inspiracja z szerokiej biblioteki gotowych utworów</li>
+                        <ul>
+                            <li>
+                                Możliwość tworzenia własnych utworów muzycznych pozwala na rozwijanie kreatywności i
+                                ekspresji
+                            </li>
+                            <li>Możliwość czerpania inspiracja z szerokiej biblioteki gotowych utworów</li>
+                        </ul>
                     </Card>
                     <Card title="Zabawa">
-                        <li>
-                            Gra na wirtualnej gitarze pozwala na czerpanie przyjemności z gry bez potrzeby posiadania
-                            instrumentu
-                        </li>
-                        <li>Nie męcz swoich oczu ucząc się z tabulatury, tylko ciesz się z grania</li>
+                        <ul>
+                            <li>
+                                Gra na wirtualnej gitarze pozwala na czerpanie przyjemności z gry bez potrzeby
+                                posiadania instrumentu
+                            </li>
+                            <li>Nie męcz swoich oczu ucząc się z tabulatury, tylko ciesz się z grania</li>
+                        </ul>
                     </Card>
                 </div>
             </Section>
@@ -161,7 +167,7 @@ const WebsiteView = () => {
                     </div>
                     <div className={styles.promoWrapper}>
                         <Title>Dołącz do nas klikając przycisk poniżej!</Title>
-                        <Button className={styles.startButton} href="/login">
+                        <Button className={styles.startButton} href="/play/dashboard">
                             Zacznij grać &gt;
                         </Button>
                     </div>
