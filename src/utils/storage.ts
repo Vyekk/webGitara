@@ -1,4 +1,4 @@
-import { Song, User } from 'types';
+import { Song, User, Comment } from 'types';
 import bcrypt from 'bcryptjs';
 
 const STORAGE_KEYS = {
@@ -13,6 +13,7 @@ type SongWithAverage = Song & { averageRating: number };
 export type AuthData = {
     token: string;
     user: User;
+    favourites?: string[];
 };
 
 export interface IStorage {
@@ -22,6 +23,8 @@ export interface IStorage {
     addSong(newSong: Song): Promise<void>;
     getTopRatedSongs(): Promise<Song[]>;
     deleteSongById(id: string): Promise<void>;
+    addCommentToSong(songId: string, comment: Comment): Promise<void>;
+    deleteCommentFromSong(songId: string, commentId: string): Promise<void>;
     // Fretboard related methods
     loadIsFretboardReversed(): boolean;
     saveIsFretboardReversed(value: boolean): void;
@@ -39,6 +42,31 @@ export class LocalStorageImpl implements IStorage {
 
     async saveSongs(songs: Song[]): Promise<void> {
         localStorage.setItem(STORAGE_KEYS.SONGS, JSON.stringify(songs));
+    }
+
+    async addCommentToSong(songId: string, comment: Comment): Promise<void> {
+        const songs = await this.loadSongs();
+        const updatedSongs = songs.map((song) =>
+            song.id === songId
+                ? {
+                      ...song,
+                      comments: song.comments ? [...song.comments, comment] : [comment],
+                  }
+                : song,
+        );
+        await this.saveSongs(updatedSongs);
+    }
+
+    async deleteCommentFromSong(songId: string, commentId: string): Promise<void> {
+        const songs = await this.loadSongs();
+        const updatedSongs = songs.map((song) => {
+            if (song.id === songId) {
+                const updatedComments = song.comments?.filter((c) => c.idComment !== commentId) || [];
+                return { ...song, comments: updatedComments };
+            }
+            return song;
+        });
+        await this.saveSongs(updatedSongs);
     }
 
     async addSong(newSong: Song): Promise<void> {
@@ -123,6 +151,25 @@ export class LocalStorageImpl implements IStorage {
 
     async saveUsers(users: User[]): Promise<void> {
         localStorage.setItem(STORAGE_KEYS.USERS_KEY, JSON.stringify(users));
+    }
+
+    async updateUserPassword(userId: string, oldPassword: string, newPassword: string): Promise<void> {
+        const users = this.loadUsers();
+        const user = users.find((u) => u.idUser === userId);
+
+        if (!user) {
+            throw new Error('Nie znaleziono użytkownika.');
+        }
+
+        const isMatch = await bcrypt.compare(oldPassword, user.password);
+        if (!isMatch) {
+            throw new Error('Stare hasło jest nieprawidłowe.');
+        }
+
+        const hashedNewPassword = await bcrypt.hash(newPassword, 10);
+        user.password = hashedNewPassword;
+
+        await this.saveUsers(users);
     }
 
     addUser = async (user: User) => {
