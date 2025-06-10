@@ -4,14 +4,19 @@ import Title from 'components/Title/Title';
 import { useContext, useEffect, useRef, useState } from 'react';
 import { Context } from 'views/PlayView/PlayView';
 import storage from 'utils/storage';
+import useRequiredUser from 'utils/useRequiredUser';
+import ChangePasswordForm from 'components/ChangePasswordForm/ChangePasswordForm';
 
 const Settings = () => {
     const [settingsScreen, setSettingsScreen] = useState('myAccount');
     const reverseGuitarRef = useRef<HTMLInputElement>(null);
     const setIsFretboardReversed = useContext(Context)?.setIsFretboardReversed;
+    const [message, setMessage] = useState('');
+    const user = useRequiredUser();
 
     const handeChangeInterface = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
+        setMessage('Ustawienia zostały zapisane.');
         storage.saveIsFretboardReversed(e.currentTarget.reverseGuitar.checked);
     };
 
@@ -21,6 +26,7 @@ const Settings = () => {
             setIsFretboardReversed(isChecked);
         }
     };
+
     useEffect(() => {
         if (settingsScreen === 'playgroundSettings') {
             const isFretboardReversedUser = storage.loadIsFretboardReversed();
@@ -38,39 +44,34 @@ const Settings = () => {
                 <Title tag="h4">Informacje o koncie</Title>
                 <ul>
                     <li>
-                        Nazwa: <span className={styles.lead}>Nazwa użytkownika</span>
+                        Nazwa: <span className={styles.lead}>{user.username}</span>
                     </li>
                     <li>
-                        Email: <span className={styles.lead}>adres@email.com</span>
+                        Email: <span className={styles.lead}>{user.email}</span>
                     </li>
                     <li>
-                        Data załozenia konta: <span className={styles.lead}>19.11.2023</span>
+                        Data założenia konta:{' '}
+                        <span className={styles.lead}>
+                            {new Date(user.created_at).toLocaleString('pl-PL', {
+                                day: '2-digit',
+                                month: '2-digit',
+                                year: 'numeric',
+                            })}
+                        </span>
                     </li>
                     <li>
-                        Średnia ocena twoich utworów: <span className={styles.lead}>4.33</span>
+                        Średnia ocena twoich utworów:{' '}
+                        <span className={styles.lead}>{user.average_published_song_rating}</span>
                     </li>
                     <li>
-                        Liczba ocen twoich utworów: <span className={styles.lead}>233</span>
+                        Liczba ocen twoich utworów:{' '}
+                        <span className={styles.lead}>{user.number_of_ratings_received}</span>
                     </li>
                 </ul>
             </div>
             <div className={styles.settingsContentRight}>
                 <Title tag="h4">Zmień dane</Title>
-                <form>
-                    <div className={styles.formGroup}>
-                        <label htmlFor="oldPassword">Stare hasło</label>
-                        <input className={styles.accountSettingsInput} type="password" id="oldPassword" />
-                    </div>
-                    <div className={styles.formGroup}>
-                        <label htmlFor="newPassword">Nowe hasło</label>
-                        <input className={styles.accountSettingsInput} type="password" id="newPassword" />
-                    </div>
-                    <div className={styles.formGroup}>
-                        <label htmlFor="repeatNewPassword">Powtórz nowe hasło</label>
-                        <input className={styles.accountSettingsInput} type="password" id="repeatNewPassword" />
-                    </div>
-                    <Button>Zmień hasło</Button>
-                </form>
+                <ChangePasswordForm />
             </div>
         </div>
     );
@@ -97,7 +98,8 @@ const Settings = () => {
                             <label htmlFor="reverseTab">Odwróć tabulaturę</label>
                         </div>
                     </div>
-                    <Button>Zapisz zmiany</Button>
+                    <Button type="submit">Zapisz zmiany</Button>
+                    {message && <p>{message}</p>}
                 </form>
             </div>
         </div>
