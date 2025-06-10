@@ -5,6 +5,9 @@ import { ModalContext } from 'components/Modal/ModalContext';
 import Title from 'components/Title/Title';
 import { useContext, useState } from 'react';
 import { Song } from 'types';
+import useRequiredUser from 'utils/useRequiredUser';
+import { useSongs } from 'context/SongsContext';
+import { v4 as uuidv4 } from 'uuid';
 
 type CommentsSectionProps = {
     song: Song;
@@ -14,6 +17,9 @@ const CommentsSection = ({ song }: CommentsSectionProps) => {
     const [commentedSong, setCommentedSong] = useState<Song>(song);
     const [isCommenting, setIsCommenting] = useState(false);
     const { openModal, setModal } = useContext(ModalContext);
+    const { addCommentToSong, deleteCommentFromSong } = useSongs();
+    const user = useRequiredUser();
+
     const handleAddComment = () => {
         setIsCommenting(true);
     };
@@ -23,13 +29,20 @@ const CommentsSection = ({ song }: CommentsSectionProps) => {
         openModal();
     };
 
-    const handleSendComment = (e: React.FormEvent<HTMLFormElement>) => {
+    const handleSendComment = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         const target = e.target as HTMLFormElement;
+
         const newComment = {
+            idComment: uuidv4(),
             content: target.commentContent.value,
-            author: 'Autor',
+            author: {
+                idUser: user.idUser,
+                username: user.username,
+            },
         };
+
+        await addCommentToSong(song.id, newComment);
 
         setCommentedSong((prev: Song) => ({
             ...prev,
@@ -39,13 +52,14 @@ const CommentsSection = ({ song }: CommentsSectionProps) => {
         setIsCommenting(false);
     };
 
-    const handleDeleteComment = (index: number) => {
+    const handleDeleteComment = async (commentId: string) => {
+        await deleteCommentFromSong(song.id, commentId);
+
         setCommentedSong((prev: Song) => ({
             ...prev,
-            comments: prev.comments?.filter((_, i) => i !== index),
+            comments: prev.comments?.filter((c) => c.idComment !== commentId),
         }));
     };
-
     return (
         <div className={styles.commentsSectionWrapper}>
             <div className={styles.commentsTopSectionWraper}>
@@ -89,8 +103,13 @@ const CommentsSection = ({ song }: CommentsSectionProps) => {
                     <div className={styles.commentContainer} key={index}>
                         <div className={styles.comment}>
                             <div className={styles.commentContent}>{comment.content}</div>
-                            <div className={styles.commentAuthor}>{comment.author}</div>
-                            <div className={styles.deleteCommentButton} onClick={() => handleDeleteComment(index)}>
+                            <div className={styles.commentAuthor}>{comment.author.username}</div>
+                            <div
+                                className={`${styles.deleteCommentButton} ${
+                                    user.idUser === comment.author.idUser ? styles.show : ''
+                                }`}
+                                onClick={() => handleDeleteComment(comment.idComment)}
+                            >
                                 X
                             </div>
                         </div>
