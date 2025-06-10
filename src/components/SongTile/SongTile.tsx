@@ -4,11 +4,13 @@ import { ModalContext } from 'components/Modal/ModalContext';
 import { Rating } from 'components/Rating/Rating';
 import styles from 'components/SongTile/SongTile.module.scss';
 import Title from 'components/Title/Title';
-import { useContext, useRef, useState } from 'react';
+import { ReactNode, useContext, useEffect, useRef, useState } from 'react';
 import { Song } from 'types';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faComment, faHeart, faPenToSquare, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { useSongs } from 'context/SongsContext';
+import { useAuth } from 'context/AuthContext';
+import useRequiredUser from 'utils/useRequiredUser';
 
 type SongTileProps = {
     song: Song;
@@ -16,8 +18,8 @@ type SongTileProps = {
 };
 
 const SongTile = ({ song, isLarge }: SongTileProps) => {
-    const [songLiked, setSongLiked] = useState(song.liked);
     const [isHover, setIsHover] = useState(false);
+    const [errorMessage, setErrorMessage] = useState<{ message: string }>({ message: '' });
     const { openModal, setModal } = useContext(ModalContext);
     const likedRef = useRef<HTMLDivElement>(null);
     const managementButtonsRef = useRef<HTMLDivElement>(null);
@@ -28,6 +30,9 @@ const SongTile = ({ song, isLarge }: SongTileProps) => {
         setIsHover(true);
     };
     const { deleteSong } = useSongs();
+    const user = useRequiredUser();
+    const { toggleFavourite, isFavourite } = useAuth();
+    const liked = isFavourite(song.id);
 
     const handleMouseOut = () => {
         likedRef.current?.classList.remove(styles.hoverItem);
@@ -37,7 +42,7 @@ const SongTile = ({ song, isLarge }: SongTileProps) => {
 
     const handleLikeClick = (event: React.MouseEvent) => {
         event.stopPropagation();
-        setSongLiked((prevState) => !prevState);
+        toggleFavourite(song.id);
     };
     const handleCommentsClick = (event: React.MouseEvent) => {
         event.stopPropagation();
@@ -56,8 +61,27 @@ const SongTile = ({ song, isLarge }: SongTileProps) => {
 
     const handleDeleteClick = (event: React.MouseEvent) => {
         event.stopPropagation();
+        const canDelete = user.isAdmin || user.isModerator || user.idUser === song.idUser;
+
+        if (!canDelete) {
+            setErrorMessage({ message: 'Nie masz uprawnień do usunięcia tego utworu.' });
+            return;
+        }
+
         deleteSong(song.id);
     };
+
+    const handleOpenModal = (content: ReactNode) => {
+        const modalContent = content;
+        setModal(modalContent);
+        openModal();
+    };
+
+    useEffect(() => {
+        if (errorMessage.message) {
+            handleOpenModal(<div className={styles.errorMessage}>{errorMessage.message}</div>);
+        }
+    }, [errorMessage]);
 
     return (
         <div
@@ -67,7 +91,7 @@ const SongTile = ({ song, isLarge }: SongTileProps) => {
             onClick={() => handleSongTileClick()}
         >
             <div
-                className={`${songLiked ? styles.liked : styles.unliked} ${styles.favouriteWrapper}`}
+                className={`${liked ? styles.liked : styles.unliked} ${styles.favouriteWrapper}`}
                 ref={likedRef}
                 onClick={handleLikeClick}
             >
@@ -77,11 +101,17 @@ const SongTile = ({ song, isLarge }: SongTileProps) => {
                 <div className={styles.comments} onClick={handleCommentsClick}>
                     <FontAwesomeIcon icon={faComment} />
                 </div>
-                <div className={styles.modify} onClick={handleModifyClick}>
-                    <FontAwesomeIcon icon={faPenToSquare} />
-                </div>
-                <div className={styles.delete} onClick={handleDeleteClick}>
-                    <FontAwesomeIcon icon={faTrash} />
+                <div
+                    className={`${styles.songManageButtonsWrapper} ${
+                        user.isAdmin || user.isModerator || user.idUser == song.idUser ? styles.show : ''
+                    }`}
+                >
+                    <div className={styles.modify} onClick={handleModifyClick}>
+                        <FontAwesomeIcon icon={faPenToSquare} />
+                    </div>
+                    <div className={styles.delete} onClick={handleDeleteClick}>
+                        <FontAwesomeIcon icon={faTrash} />
+                    </div>
                 </div>
             </div>
             <Rating rating={song.rating} isHover={isHover} />
