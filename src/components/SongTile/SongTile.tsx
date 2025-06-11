@@ -7,7 +7,7 @@ import Title from 'components/Title/Title';
 import { ReactNode, useContext, useEffect, useRef, useState } from 'react';
 import { Song } from 'types';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faComment, faHeart, faPenToSquare, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { faComment, faHeart, faPenToSquare, faTrash, faTrashCanArrowUp } from '@fortawesome/free-solid-svg-icons';
 import { useSongs } from 'context/SongsContext';
 import { useAuth } from 'context/AuthContext';
 import useRequiredUser from 'utils/useRequiredUser';
@@ -29,7 +29,7 @@ const SongTile = ({ song, isLarge }: SongTileProps) => {
         managementButtonsRef.current?.classList.add(styles.hoverItem);
         setIsHover(true);
     };
-    const { deleteSong } = useSongs();
+    const { deleteSong, restoreSong } = useSongs();
     const user = useRequiredUser();
     const { toggleFavourite, isFavourite } = useAuth();
     const liked = isFavourite(song.id);
@@ -98,13 +98,18 @@ const SongTile = ({ song, isLarge }: SongTileProps) => {
                 <FontAwesomeIcon icon={faHeart} />
             </div>
             <div className={styles.managementButtons} ref={managementButtonsRef}>
-                <div className={styles.comments} onClick={handleCommentsClick}>
+                <div
+                    className={`${!song.deleted_by_idUser ? styles.comments : styles.hidden}`}
+                    onClick={handleCommentsClick}
+                >
                     <FontAwesomeIcon icon={faComment} />
                 </div>
                 <div
-                    className={`${styles.songManageButtonsWrapper} ${
-                        user.isAdmin || user.isModerator || user.idUser == song.idUser ? styles.show : ''
-                    }`}
+                    className={`${
+                        (user.isAdmin || user.isModerator || user.idUser == song.idUser) && !song.deleted_by_idUser
+                            ? styles.show
+                            : ''
+                    } ${!song.deleted_by_idUser ? styles.songManageButtonsWrapper : styles.hidden} `}
                 >
                     <div className={styles.modify} onClick={handleModifyClick}>
                         <FontAwesomeIcon icon={faPenToSquare} />
@@ -113,6 +118,11 @@ const SongTile = ({ song, isLarge }: SongTileProps) => {
                         <FontAwesomeIcon icon={faTrash} />
                     </div>
                 </div>
+                {(user.isAdmin || user.isModerator) && song.deleted_by_idUser && (
+                    <div className={styles.delete} onClick={() => restoreSong(song.id)}>
+                        <FontAwesomeIcon icon={faTrashCanArrowUp} />
+                    </div>
+                )}
             </div>
             <Rating rating={song.rating} isHover={isHover} />
             <div className={styles.textWrapper}>
