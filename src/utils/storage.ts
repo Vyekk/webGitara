@@ -149,6 +149,11 @@ export class LocalStorageImpl implements IStorage {
         return users ? JSON.parse(users) : [];
     };
 
+    getUserById(idUser: string): User | undefined {
+        const users = this.loadUsers();
+        return users.find((user) => user.idUser === idUser);
+    }
+
     async saveUsers(users: User[]): Promise<void> {
         localStorage.setItem(STORAGE_KEYS.USERS_KEY, JSON.stringify(users));
     }
