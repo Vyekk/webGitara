@@ -1,13 +1,15 @@
 import Button from 'components/Button/Button';
 import styles from 'components/Toolbar/Toolbar.module.scss';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faBook, faGear } from '@fortawesome/free-solid-svg-icons';
+import { faBook, faGear, faTrash, faUsers } from '@fortawesome/free-solid-svg-icons';
 import { ModalContext } from 'components/Modal/ModalContext';
 import { ReactNode, useContext, forwardRef } from 'react';
 import SongsLibrary from 'components/SongsLibrary/SongsLibrary';
 import { Settings } from 'components/Settings/Settings';
 import { useAuth } from 'context/AuthContext';
 import { useNavigate } from 'react-router';
+import Users from 'components/Users/Users';
+import useRequiredUser from 'utils/useRequiredUser';
 
 interface ToolbarProps {
     hasControls?: boolean;
@@ -18,6 +20,7 @@ const Toolbar = forwardRef<HTMLDivElement, ToolbarProps>(({ hasControls }, ref) 
     const { openModal, setModal } = useContext(ModalContext);
     const { logout } = useAuth();
     const navigate = useNavigate();
+    const user = useRequiredUser();
 
     const handleOpenModal = (content: ReactNode) => {
         const modalContent = content;
@@ -40,6 +43,20 @@ const Toolbar = forwardRef<HTMLDivElement, ToolbarProps>(({ hasControls }, ref) 
             </Button>
             <Button className={styles.secondOption} href="/play/edit" transparent>
                 Nowy utwór
+            </Button>
+            <Button
+                className={`${user.isAdmin ? styles.secondOption : styles.hidden}`}
+                onClick={() => handleOpenModal(<Users />)}
+                transparent
+            >
+                <FontAwesomeIcon icon={faUsers} className={styles.settingsIcon} />
+            </Button>
+            <Button
+                className={`${user.isAdmin || user.isModerator ? styles.secondOption : styles.hidden}`}
+                onClick={() => handleOpenModal(<SongsLibrary isShowingDeletedSongs />)}
+                transparent
+            >
+                <FontAwesomeIcon icon={faTrash} className={styles.settingsIcon} />
             </Button>
             <Button className={styles.secondOption} onClick={() => handleOpenModal(<Settings />)} transparent>
                 <FontAwesomeIcon icon={faGear} className={styles.settingsIcon} />
