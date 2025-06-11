@@ -23,6 +23,7 @@ export type Song = {
     rating: number[];
     place: number;
     comments?: Comment[];
+    deleted_by_idUser?: string | null;
     tablature: Tablature;
     bpm: number;
 };
