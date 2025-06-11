@@ -7,21 +7,25 @@ type SongsContextType = {
     songs: Song[];
     refreshSongs: () => Promise<void>;
     deleteSong: (id: string) => Promise<void>;
+    getDeletedSongs: () => Song[];
     addSong: (newSong: Song) => Promise<void>;
     getTopRated?: () => Promise<Song[]>;
     addCommentToSong: (songId: string, comment: Comment) => Promise<void>;
     deleteCommentFromSong: (songId: string, commentId: string) => Promise<void>;
+    restoreSong: (id: string) => Promise<void>;
 };
 
 const SongsContext = createContext<SongsContextType | undefined>(undefined);
 
 export const SongsProvider = ({ children }: { children: React.ReactNode }) => {
     const [songs, setSongs] = useState<Song[]>([]);
+    const [deletedSongs, setDeletedSongs] = useState<Song[]>([]);
     const user = useRequiredUser();
 
     const refreshSongs = async () => {
         const allSongs = await storage.loadSongs();
-        setSongs(allSongs);
+        setSongs(allSongs.filter((s) => !s.deleted_by_idUser));
+        setDeletedSongs(allSongs.filter((s) => !!s.deleted_by_idUser));
     };
 
     const deleteSong = async (id: string) => {
@@ -31,13 +35,38 @@ export const SongsProvider = ({ children }: { children: React.ReactNode }) => {
         const song = songs.find((s) => s.id === id);
         if (!song) throw new Error('Nie znaleziono utworu.');
 
-        if (song.idUser !== user.idUser) {
+        if (!user.isAdmin && !user.isModerator && song.idUser !== user.idUser) {
             throw new Error('Nie możesz usunąć cudzego utworu.');
         }
 
-        await storage.deleteSongById(id);
+        const updatedSongs = songs.map((s) => (s.id === id ? { ...s, deleted_by_idUser: user.idUser } : s));
+
+        await storage.saveSongs(updatedSongs);
         await refreshSongs();
     };
+
+    const restoreSong = async (id: string) => {
+        if (!user) throw new Error('Użytkownik niezalogowany.');
+
+        if (!user.isAdmin && !user.isModerator) {
+            throw new Error('Nie masz uprawnień do przywracania utworów.');
+        }
+
+        const songs = await storage.loadSongs();
+        const song = songs.find((s) => s.id === id);
+
+        if (!song) throw new Error('Nie znaleziono utworu.');
+        if (!song.deleted_by_idUser) {
+            throw new Error('Utwór nie jest oznaczony jako usunięty.');
+        }
+
+        const updatedSongs = songs.map((s) => (s.id === id ? { ...s, deleted_by_idUser: undefined } : s));
+
+        await storage.saveSongs(updatedSongs);
+        await refreshSongs();
+    };
+
+    const getDeletedSongs = () => deletedSongs;
 
     const addSong = async (newSong: Song) => {
         if (!user) throw new Error('Użytkownik niezalogowany.');
@@ -106,6 +135,8 @@ export const SongsProvider = ({ children }: { children: React.ReactNode }) => {
                 getTopRated,
                 addCommentToSong,
                 deleteCommentFromSong,
+                getDeletedSongs,
+                restoreSong,
             }}
         >
             {children}
