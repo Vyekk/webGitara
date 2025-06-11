@@ -51,11 +51,16 @@ const useAdminUsers = () => {
         storage.saveUsers(updatedUsers);
     };
 
+    const getUserById = (idUser: string): User | undefined => {
+        return storage.getUserById(idUser);
+    };
+
     return {
         users,
         error,
         changeUserRole,
         deleteUser,
+        getUserById,
     };
 };
 
