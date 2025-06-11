@@ -1,20 +1,15 @@
 import { useState } from 'react';
 import styles from './UsersList.module.scss';
 import { User } from 'types';
-import useAdminUsers from 'utils/admin';
-
 interface UsersListProps {
+    users: User[];
     searchingTerm?: string;
     setSelectedUser: React.Dispatch<React.SetStateAction<User | null>>;
 }
 
-const UsersList = ({ searchingTerm = '', setSelectedUser }: UsersListProps) => {
-    const { users, error } = useAdminUsers();
+const UsersList = ({ users, searchingTerm = '', setSelectedUser }: UsersListProps) => {
     const [activeUser, setActiveUser] = useState<User | null>(null);
-
     const filteredUsers = users.filter((u) => u.username.toLowerCase().includes(searchingTerm.toLowerCase()));
-
-    if (error) return <div>{error}</div>;
 
     const handleUserClick = (user: User) => {
         setActiveUser(user);

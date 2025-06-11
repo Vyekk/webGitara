@@ -13,7 +13,7 @@ const Users = () => {
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedUser, setSelectedUser] = useState<User | null>(null);
     const [accountType, setAccountType] = useState<AccountRole>('user');
-    const { changeUserRole, deleteUser } = useAdminUsers();
+    const { changeUserRole, deleteUser, users } = useAdminUsers();
 
     const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
         setSearchTerm(event.target.value);
@@ -42,14 +42,19 @@ const Users = () => {
         if (!selectedUser) return;
 
         changeUserRole(selectedUser.idUser, accountType);
+
+        const updatedUser = users.find((u) => u.idUser === selectedUser.idUser);
+        if (updatedUser) {
+            setSelectedUser(updatedUser);
+        }
+
+        alert('Zmieniono typ konta!');
     };
 
     const handleDeleteUser = () => {
         if (!selectedUser) return;
 
         if (window.confirm(`Czy na pewno chcesz usunąć konto użytkownika ${selectedUser.username}?`)) {
-            console.log('Usuwam konto użytkownika:', selectedUser.username);
-
             deleteUser(selectedUser.idUser);
             alert('Konto zostało usunięte!');
             setSelectedUser(null);
@@ -67,7 +72,7 @@ const Users = () => {
                             Wyszukaj użytkownika
                         </Input>
                     </label>
-                    <UsersList searchingTerm={searchTerm} setSelectedUser={setSelectedUser} />
+                    <UsersList users={users} searchingTerm={searchTerm} setSelectedUser={setSelectedUser} />
                 </div>
                 <div className={styles.userInfo}>
                     <Title tag="h3">Informacje o użytkowniku</Title>
