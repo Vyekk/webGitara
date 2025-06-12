@@ -124,7 +124,7 @@ const SongTile = ({ song, isLarge }: SongTileProps) => {
                     </div>
                 )}
             </div>
-            <Rating rating={song.rating} isHover={isHover} />
+            <Rating song={song} isHover={isHover} />
             <div className={styles.textWrapper}>
                 <Title tag="h3">{song.songTitle}</Title>
                 <div className={styles.songAuthor}>{song.author}</div>
