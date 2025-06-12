@@ -1,5 +1,5 @@
 import { createContext, useContext, useEffect, useState } from 'react';
-import { User } from '../types';
+import { Song, User } from '../types';
 import storage, { AuthData } from '../utils/storage';
 
 type AuthContextType = {
@@ -12,6 +12,8 @@ type AuthContextType = {
     toggleFavourite: (songId: string) => void;
     isFavourite: (songId: string) => boolean;
     refreshUser: () => void;
+    saveLastPlayedSong: (songId: string) => void;
+    getLastPlayedSongs: () => Promise<Song[]>;
 };
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -68,6 +70,16 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
     const isFavourite = (songId: string) => favourites.includes(songId);
 
+    const saveLastPlayedSong = (songId: string) => {
+        if (!user) return;
+        storage.saveLastPlayedSong(user.idUser, songId);
+    };
+
+    const getLastPlayedSongs = async () => {
+        if (!user) return [];
+        return await storage.getLastPlayedSongs(user.idUser);
+    };
+
     return (
         <AuthContext.Provider
             value={{
@@ -80,6 +92,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
                 toggleFavourite,
                 isFavourite,
                 refreshUser,
+                saveLastPlayedSong,
+                getLastPlayedSongs,
             }}
         >
             {children}

@@ -1,4 +1,4 @@
-import { Song, User, Comment } from 'types';
+import { Song, User, Comment, LastPlayedEntry } from 'types';
 import bcrypt from 'bcryptjs';
 
 const STORAGE_KEYS = {
@@ -6,6 +6,7 @@ const STORAGE_KEYS = {
     IS_FRETBOARD_REVERSED: 'isFretboardReversed',
     AUTH: 'auth',
     USERS_KEY: 'users',
+    LAST_PLAYED_SONGS: 'lastPlayedSongs',
 };
 
 type SongWithAverage = Song & { averageRating: number };
@@ -116,6 +117,41 @@ export class LocalStorageImpl implements IStorage {
         const topSongs: Song[] = sorted.map(({ averageRating, ...song }) => song);
 
         return topSongs;
+    }
+
+    async saveLastPlayedSong(idUser: string, idSong: string): Promise<void> {
+        const raw = localStorage.getItem(STORAGE_KEYS.LAST_PLAYED_SONGS);
+        let history: LastPlayedEntry[] = raw ? JSON.parse(raw) : [];
+
+        history = history.filter((entry) => !(entry.idUser === idUser && entry.idSong === idSong));
+
+        history.unshift({
+            idUser,
+            idSong,
+            lastPlayed: new Date().toISOString(),
+        });
+
+        const filtered = history.filter((entry) => entry.idUser === idUser).slice(0, 10);
+        const others = history.filter((entry) => entry.idUser !== idUser);
+        const updated = [...filtered, ...others];
+
+        localStorage.setItem(STORAGE_KEYS.LAST_PLAYED_SONGS, JSON.stringify(updated));
+    }
+
+    async getLastPlayedSongs(idUser: string): Promise<Song[]> {
+        const raw = localStorage.getItem(STORAGE_KEYS.LAST_PLAYED_SONGS);
+        const history: LastPlayedEntry[] = raw ? JSON.parse(raw) : [];
+
+        const lastPlayedIds = history
+            .filter((entry) => entry.idUser === idUser)
+            .sort((a, b) => new Date(b.lastPlayed).getTime() - new Date(a.lastPlayed).getTime())
+            .slice(0, 3)
+            .map((entry) => entry.idSong);
+
+        const allSongs = await this.loadSongs();
+        return lastPlayedIds
+            .map((id) => allSongs.find((song) => song.id === id))
+            .filter((song): song is Song => !!song);
     }
 
     async updateUserSongStats(): Promise<void> {
