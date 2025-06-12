@@ -20,7 +20,7 @@ export type Song = {
     songTitle: string;
     author: string;
     idUser?: string;
-    rating: number[];
+    rating: { userId: string; value: number }[];
     place: number;
     comments?: Comment[];
     deleted_by_idUser?: string | null;
