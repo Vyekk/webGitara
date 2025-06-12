@@ -407,6 +407,6 @@ for (let string = 1; string <= 6; string++) {
     });
 
     if (!Array.isArray(existingSongs) || existingSongs.length === 0) {
-        storage.saveSongs(songsWithWeighted);
+        // storage.saveSongs(songsWithWeighted);
     }
 })();
