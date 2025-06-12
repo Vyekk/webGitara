@@ -63,3 +63,9 @@ export type Comment = {
         username: string;
     };
 };
+
+export type LastPlayedEntry = {
+    idUser: string;
+    idSong: string;
+    lastPlayed: string;
+};
