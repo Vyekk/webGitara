@@ -38,6 +38,13 @@ const Settings = () => {
         }
     }, [settingsScreen]);
 
+    useEffect(() => {
+        const updateStats = async () => {
+            await storage.updateUserStats(user.idUser);
+        };
+        updateStats();
+    }, []);
+
     const myAccountContent = (
         <div className={styles.accountSettingsWrapper}>
             <div className={styles.settingsContentLeft}>
@@ -61,7 +68,7 @@ const Settings = () => {
                     </li>
                     <li>
                         Średnia ocena twoich utworów:{' '}
-                        <span className={styles.lead}>{user.average_published_song_rating}</span>
+                        <span className={styles.lead}>{user.average_published_song_rating.toFixed(2)}</span>
                     </li>
                     <li>
                         Liczba ocen twoich utworów:{' '}
