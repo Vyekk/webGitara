@@ -33,6 +33,7 @@ const SongTile = ({ song, isLarge }: SongTileProps) => {
     const user = useRequiredUser();
     const { toggleFavourite, isFavourite } = useAuth();
     const liked = isFavourite(song.id);
+    const { saveLastPlayedSong } = useAuth();
 
     const handleMouseOut = () => {
         likedRef.current?.classList.remove(styles.hoverItem);
@@ -52,6 +53,7 @@ const SongTile = ({ song, isLarge }: SongTileProps) => {
 
     const handleSongTileClick = () => {
         navigate(`/play/guitar/${song.id}`);
+        saveLastPlayedSong(song.id);
     };
 
     const handleModifyClick = (event: React.MouseEvent) => {
