@@ -142,7 +142,7 @@ const songs = [
         author: 'The Rolling Stones',
         rating: [
             { userId: 1, value: 1 },
-            { userId: 2, value: 0 },
+            { userId: 2, value: 1 },
             { userId: 3, value: 1 },
             { userId: 4, value: 1 },
             { userId: 5, value: 1 },
@@ -344,10 +344,10 @@ const songs = [
         songTitle: 'Frets test',
         author: 'Admin',
         rating: [
-            { userId: 1, value: 1 },
-            { userId: 2, value: 0 },
-            { userId: 3, value: 1 },
-            { userId: 4, value: 1 },
+            { userId: 1, value: 5 },
+            { userId: 2, value: 5 },
+            { userId: 3, value: 4 },
+            { userId: 4, value: 3 },
             { userId: 5, value: 1 },
         ],
         comments: [],
@@ -407,6 +407,6 @@ for (let string = 1; string <= 6; string++) {
     });
 
     if (!Array.isArray(existingSongs) || existingSongs.length === 0) {
-        // storage.saveSongs(songsWithWeighted);
+        storage.saveSongs(songsWithWeighted);
     }
 })();
