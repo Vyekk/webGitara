@@ -131,10 +131,10 @@ export class LocalStorageImpl implements IStorage {
             lastPlayed: new Date().toISOString(),
         });
 
-        const filtered = history.filter((entry) => entry.idUser === idUser).slice(0, 10);
-        const others = history.filter((entry) => entry.idUser !== idUser);
-        const updated = [...filtered, ...others];
+        const userEntries = history.filter((entry) => entry.idUser === idUser).slice(0, 3);
+        const otherEntries = history.filter((entry) => entry.idUser !== idUser);
 
+        const updated = [...userEntries, ...otherEntries];
         localStorage.setItem(STORAGE_KEYS.LAST_PLAYED_SONGS, JSON.stringify(updated));
     }
 
