@@ -9,8 +9,6 @@ const STORAGE_KEYS = {
     LAST_PLAYED_SONGS: 'lastPlayedSongs',
 };
 
-type SongWithAverage = Song & { averageRating: number };
-
 export type AuthData = {
     token: string;
     user: User;
@@ -96,7 +94,7 @@ export class LocalStorageImpl implements IStorage {
         const globalAverage = totalRatings > 0 ? totalAverage / totalRatings : 0;
         const m = totalRatings / songs.length;
 
-        const songsWithWeighted: SongWithAverage[] = songs.map((song) => {
+        const songsWithWeighted: (Song & { averageRating: number })[] = songs.map((song) => {
             const r =
                 song.rating.length > 0
                     ? song.rating.reduce((sum, rate) => sum + rate.value, 0) / song.rating.length
@@ -112,11 +110,16 @@ export class LocalStorageImpl implements IStorage {
             };
         });
 
-        const sorted = songsWithWeighted.sort((a, b) => b.averageRating - a.averageRating).slice(0, 3);
+        const sorted = songsWithWeighted.sort((a, b) => b.averageRating - a.averageRating);
 
-        const topSongs: Song[] = sorted.map(({ averageRating, ...song }) => song);
+        const updatedSongs: Song[] = sorted.map((song, index) => ({
+            ...song,
+            place: index < 3 ? index + 1 : 0,
+        }));
 
-        return topSongs;
+        await this.saveSongs(updatedSongs);
+
+        return updatedSongs.filter((song) => song.place > 0);
     }
 
     async saveLastPlayedSong(idUser: string, idSong: string): Promise<void> {
