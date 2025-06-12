@@ -13,6 +13,7 @@ type SongsContextType = {
     addCommentToSong: (songId: string, comment: Comment) => Promise<void>;
     deleteCommentFromSong: (songId: string, commentId: string) => Promise<void>;
     restoreSong: (id: string) => Promise<void>;
+    rateSong: (songId: string, value: number) => Promise<void>;
 };
 
 const SongsContext = createContext<SongsContextType | undefined>(undefined);
@@ -93,6 +94,24 @@ export const SongsProvider = ({ children }: { children: React.ReactNode }) => {
         await refreshSongs();
     };
 
+    const rateSong = async (songId: string, value: number) => {
+        if (!user) throw new Error('Użytkownik niezalogowany.');
+
+        const songs = await storage.loadSongs();
+        const song = songs.find((s) => s.id === songId);
+        if (!song) throw new Error('Nie znaleziono utworu.');
+
+        const newRating = { userId: user.idUser, value };
+        const updatedRatings = song.rating.some((r) => r.userId === user.idUser)
+            ? song.rating.map((r) => (r.userId === user.idUser ? newRating : r))
+            : [...song.rating, newRating];
+
+        const updatedSong = { ...song, rating: updatedRatings };
+        await storage.addSong(updatedSong);
+        await storage.updateUserSongStats?.();
+        await refreshSongs();
+    };
+
     const deleteCommentFromSong = async (songId: string, commentId: string) => {
         if (!user) throw new Error('Użytkownik niezalogowany.');
 
@@ -137,6 +156,7 @@ export const SongsProvider = ({ children }: { children: React.ReactNode }) => {
                 deleteCommentFromSong,
                 getDeletedSongs,
                 restoreSong,
+                rateSong,
             }}
         >
             {children}
