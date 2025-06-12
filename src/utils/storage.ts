@@ -225,19 +225,24 @@ export class LocalStorageImpl implements IStorage {
 
     async updateUserStats(userId: string): Promise<void> {
         const users = this.loadUsers();
-        const songs = await this.loadSongs();
-
         const user = users.find((u) => u.idUser === userId);
         if (!user) return;
 
+        const songs = await this.loadSongs();
         const userSongs = songs.filter((song) => song.idUser === userId);
-        const allRatings = userSongs.flatMap((song) => song.rating ?? []);
 
-        const totalRatings = allRatings.length;
-        const avgRating = totalRatings > 0 ? allRatings.reduce((sum, r) => sum + r.value, 0) / totalRatings : 0;
+        let total = 0;
+        let count = 0;
 
-        user.number_of_ratings_received = totalRatings;
-        user.average_published_song_rating = parseFloat(avgRating.toFixed(2));
+        for (const song of userSongs) {
+            if (!song.rating || song.rating.length === 0) continue;
+            const avg = song.rating.reduce((a, b) => a + b.value, 0) / song.rating.length;
+            total += avg;
+            count += 1;
+        }
+
+        user.average_published_song_rating = count > 0 ? total / count : 0;
+        user.number_of_ratings_received = count;
 
         await this.saveUsers(users);
     }
