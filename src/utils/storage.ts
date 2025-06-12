@@ -89,7 +89,7 @@ export class LocalStorageImpl implements IStorage {
 
         const totalRatings = songs.reduce((sum, song) => sum + song.rating.length, 0);
         const totalAverage = songs.reduce((sum, song) => {
-            return sum + song.rating.reduce((s, r) => s + r, 0);
+            return sum + song.rating.reduce((s, r) => s + r.value, 0);
         }, 0);
 
         const globalAverage = totalRatings > 0 ? totalAverage / totalRatings : 0;
@@ -97,7 +97,9 @@ export class LocalStorageImpl implements IStorage {
 
         const songsWithWeighted: SongWithAverage[] = songs.map((song) => {
             const r =
-                song.rating.length > 0 ? song.rating.reduce((sum, rate) => sum + rate, 0) / song.rating.length : 0;
+                song.rating.length > 0
+                    ? song.rating.reduce((sum, rate) => sum + rate.value, 0) / song.rating.length
+                    : 0;
 
             const v = song.rating.length;
 
@@ -114,6 +116,34 @@ export class LocalStorageImpl implements IStorage {
         const topSongs: Song[] = sorted.map(({ averageRating, ...song }) => song);
 
         return topSongs;
+    }
+
+    async updateUserSongStats(): Promise<void> {
+        const users = this.loadUsers();
+        const songs = await this.loadSongs();
+
+        const userMap: Record<string, { total: number; count: number }> = {};
+
+        for (const song of songs) {
+            if (!song.rating || song.rating.length === 0) continue;
+            const avg = song.rating.reduce((a, b) => a + b.value, 0) / song.rating.length;
+            if (song.idUser !== undefined) {
+                if (!userMap[song.idUser]) userMap[song.idUser] = { total: 0, count: 0 };
+                userMap[song.idUser].total += avg;
+                userMap[song.idUser].count += 1;
+            }
+        }
+
+        const updatedUsers = users.map((user) => {
+            const stats = userMap[user.idUser];
+            return {
+                ...user,
+                average_published_song_rating: stats ? stats.total / stats.count : 0,
+                number_of_ratings_received: stats ? stats.count : 0,
+            };
+        });
+
+        await this.saveUsers(updatedUsers);
     }
 
     async deleteSongById(id: string): Promise<void> {
@@ -192,6 +222,25 @@ export class LocalStorageImpl implements IStorage {
         const passwordMatch = await bcrypt.compare(password, user.password);
         return passwordMatch ? user : null;
     };
+
+    async updateUserStats(userId: string): Promise<void> {
+        const users = this.loadUsers();
+        const songs = await this.loadSongs();
+
+        const user = users.find((u) => u.idUser === userId);
+        if (!user) return;
+
+        const userSongs = songs.filter((song) => song.idUser === userId);
+        const allRatings = userSongs.flatMap((song) => song.rating ?? []);
+
+        const totalRatings = allRatings.length;
+        const avgRating = totalRatings > 0 ? allRatings.reduce((sum, r) => sum + r.value, 0) / totalRatings : 0;
+
+        user.number_of_ratings_received = totalRatings;
+        user.average_published_song_rating = parseFloat(avgRating.toFixed(2));
+
+        await this.saveUsers(users);
+    }
 }
 
 const storage = new LocalStorageImpl();
