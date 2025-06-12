@@ -88,7 +88,9 @@ const Users = () => {
                                   })
                                 : 'brak'}
                         </li>
-                        <li>Średnia ocena utworów: {selectedUser?.average_published_song_rating || 'brak'}</li>
+                        <li>
+                            Średnia ocena utworów: {selectedUser?.average_published_song_rating.toFixed(2) || 'brak'}
+                        </li>
                         <li>Liczba ocen utworów: {selectedUser?.number_of_ratings_received || 'brak'}</li>
                     </ul>
                     <form onSubmit={handleSaveChanges}>
