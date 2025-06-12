@@ -11,6 +11,7 @@ type AuthContextType = {
     isAuthLoaded: boolean;
     toggleFavourite: (songId: string) => void;
     isFavourite: (songId: string) => boolean;
+    refreshUser: () => void;
 };
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -46,6 +47,15 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         setToken(null);
     };
 
+    const refreshUser = () => {
+        if (!user) return;
+        const updatedUser = storage.getUserById(user.idUser);
+        if (updatedUser) {
+            setUser(updatedUser);
+            storage.saveAuth({ user: updatedUser, token: token!, favourites });
+        }
+    };
+
     const toggleFavourite = (songId: string) => {
         if (!user) return;
         if (!token) throw new Error('Brak tokena');
@@ -69,6 +79,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
                 isLoggedIn: !!user,
                 toggleFavourite,
                 isFavourite,
+                refreshUser,
             }}
         >
             {children}
