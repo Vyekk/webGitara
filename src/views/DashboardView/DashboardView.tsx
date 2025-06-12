@@ -7,11 +7,14 @@ import { Song } from 'types';
 import styles from 'views/DashboardView/Dashboard.module.scss';
 import { useSongs } from 'context/SongsContext';
 import { useLocation } from 'react-router';
+import { useAuth } from 'context/AuthContext';
 
 const DashboardView = () => {
     const [bestSongsList, setBestSongsList] = useState<Song[]>([]);
     const { getTopRated } = useSongs();
     const location = useLocation();
+    const { getLastPlayedSongs } = useAuth();
+    const [lastPlayedSongsList, setLastPlayedSongsList] = useState<Song[]>([]);
 
     const fetchSongsUserStorge = async () => {
         if (getTopRated) {
@@ -22,7 +25,12 @@ const DashboardView = () => {
     };
 
     useEffect(() => {
-        fetchSongsUserStorge();
+        const fetchData = async () => {
+            await fetchSongsUserStorge();
+            const lastPlayedSongsList = getLastPlayedSongs();
+            setLastPlayedSongsList((await lastPlayedSongsList) || []);
+        };
+        fetchData();
     }, [location]);
 
     return (
@@ -36,7 +44,7 @@ const DashboardView = () => {
                     </div>
                     <div className={styles.dashboardList}>
                         <Title tag="h2">Ostatnio grane</Title>
-                        <SongsList isVertical songs={bestSongsList} />
+                        <SongsList isVertical songs={lastPlayedSongsList} />
                     </div>
                     <div className={styles.dashboardList}>
                         <Title tag="h2">Instrukcja</Title>
