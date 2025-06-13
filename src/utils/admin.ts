@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { User } from 'types';
-import storage from './storage';
 import useRequiredUser from './useRequiredUser';
+import { UsersService } from 'services/UsersService';
 
 type AccountRole = 'admin' | 'moderator' | 'user';
 
@@ -9,6 +9,7 @@ const useAdminUsers = () => {
     const currentUser = useRequiredUser();
     const [users, setUsers] = useState<User[]>([]);
     const [error, setError] = useState<string | null>(null);
+    const usersService = new UsersService();
 
     useEffect(() => {
         if (!currentUser.isAdmin) {
@@ -16,7 +17,7 @@ const useAdminUsers = () => {
             return;
         }
 
-        const loadedUsers = storage.loadUsers();
+        const loadedUsers = usersService.loadUsers();
         setUsers(loadedUsers);
     }, [currentUser]);
 
@@ -37,7 +38,7 @@ const useAdminUsers = () => {
         );
 
         setUsers(updatedUsers);
-        storage.saveUsers(updatedUsers);
+        usersService.saveUsers(updatedUsers);
     };
 
     const deleteUser = (targetUserId: string) => {
@@ -48,11 +49,11 @@ const useAdminUsers = () => {
 
         const updatedUsers = users.filter((u) => u.idUser !== targetUserId);
         setUsers(updatedUsers);
-        storage.saveUsers(updatedUsers);
+        usersService.saveUsers(updatedUsers);
     };
 
     const getUserById = (idUser: string): User | undefined => {
-        return storage.getUserById(idUser);
+        return usersService.getUserById(idUser);
     };
 
     return {

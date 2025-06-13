@@ -3,7 +3,9 @@ import styles from 'components/Settings/Settings.module.scss';
 import Title from 'components/Title/Title';
 import { useContext, useEffect, useRef, useState } from 'react';
 import { Context } from 'views/PlayView/PlayView';
-import storage from 'utils/storage';
+import { SettingsService } from 'services/SettingsService';
+import { UsersService } from 'services/UsersService';
+import { useAuth } from 'context/AuthContext';
 import useRequiredUser from 'utils/useRequiredUser';
 import ChangePasswordForm from 'components/ChangePasswordForm/ChangePasswordForm';
 
@@ -13,11 +15,14 @@ const Settings = () => {
     const setIsFretboardReversed = useContext(Context)?.setIsFretboardReversed;
     const [message, setMessage] = useState('');
     const user = useRequiredUser();
+    const fretboardService = new SettingsService();
+    const usersService = new UsersService();
+    const { refreshUser } = useAuth();
 
     const handeChangeInterface = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         setMessage('Ustawienia zostały zapisane.');
-        storage.saveIsFretboardReversed(e.currentTarget.reverseGuitar.checked);
+        fretboardService.saveIsFretboardReversed(e.currentTarget.reverseGuitar.checked);
     };
 
     const handleCheckReverseGuitar = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -29,7 +34,7 @@ const Settings = () => {
 
     useEffect(() => {
         if (settingsScreen === 'playgroundSettings') {
-            const isFretboardReversedUser = storage.loadIsFretboardReversed();
+            const isFretboardReversedUser = fretboardService.loadIsFretboardReversed();
             if (isFretboardReversedUser) {
                 if (reverseGuitarRef.current) {
                     reverseGuitarRef.current.checked = isFretboardReversedUser;
@@ -40,9 +45,10 @@ const Settings = () => {
 
     useEffect(() => {
         const updateStats = async () => {
-            await storage.updateUserStats(user.idUser);
+            await usersService.updateUserStats(user.idUser);
         };
         updateStats();
+        refreshUser();
     }, []);
 
     const myAccountContent = (

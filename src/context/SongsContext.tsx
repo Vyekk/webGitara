@@ -1,6 +1,7 @@
 import { createContext, useContext, useEffect, useState } from 'react';
 import { Song, Comment } from '../types';
-import storage from '../utils/storage';
+import { SongsService } from 'services/SongsService';
+import { UsersService } from 'services/UsersService';
 import useRequiredUser from 'utils/useRequiredUser';
 
 type SongsContextType = {
@@ -22,9 +23,11 @@ export const SongsProvider = ({ children }: { children: React.ReactNode }) => {
     const [songs, setSongs] = useState<Song[]>([]);
     const [deletedSongs, setDeletedSongs] = useState<Song[]>([]);
     const user = useRequiredUser();
+    const songsService = new SongsService();
+    const userService = new UsersService();
 
     const refreshSongs = async () => {
-        const allSongs = await storage.loadSongs();
+        const allSongs = await songsService.loadSongs();
         setSongs(allSongs.filter((s) => !s.deleted_by_idUser));
         setDeletedSongs(allSongs.filter((s) => !!s.deleted_by_idUser));
     };
@@ -32,7 +35,7 @@ export const SongsProvider = ({ children }: { children: React.ReactNode }) => {
     const deleteSong = async (id: string) => {
         if (!user) throw new Error('Użytkownik niezalogowany.');
 
-        const songs = await storage.loadSongs();
+        const songs = await songsService.loadSongs();
         const song = songs.find((s) => s.id === id);
         if (!song) throw new Error('Nie znaleziono utworu.');
 
@@ -42,7 +45,7 @@ export const SongsProvider = ({ children }: { children: React.ReactNode }) => {
 
         const updatedSongs = songs.map((s) => (s.id === id ? { ...s, deleted_by_idUser: user.idUser } : s));
 
-        await storage.saveSongs(updatedSongs);
+        await songsService.saveSongs(updatedSongs);
         await refreshSongs();
     };
 
@@ -53,7 +56,7 @@ export const SongsProvider = ({ children }: { children: React.ReactNode }) => {
             throw new Error('Nie masz uprawnień do przywracania utworów.');
         }
 
-        const songs = await storage.loadSongs();
+        const songs = await songsService.loadSongs();
         const song = songs.find((s) => s.id === id);
 
         if (!song) throw new Error('Nie znaleziono utworu.');
@@ -63,7 +66,7 @@ export const SongsProvider = ({ children }: { children: React.ReactNode }) => {
 
         const updatedSongs = songs.map((s) => (s.id === id ? { ...s, deleted_by_idUser: undefined } : s));
 
-        await storage.saveSongs(updatedSongs);
+        await songsService.saveSongs(updatedSongs);
         await refreshSongs();
     };
 
@@ -75,13 +78,13 @@ export const SongsProvider = ({ children }: { children: React.ReactNode }) => {
             throw new Error('Nie możesz dodać utworu w imieniu innego użytkownika.');
         }
 
-        await storage.addSong(newSong);
+        await songsService.addSong(newSong);
         await refreshSongs();
     };
 
     const getTopRated = async () => {
         await refreshSongs();
-        return await storage.getTopRatedSongs();
+        return await songsService.getTopRatedSongs();
     };
 
     const addCommentToSong = async (songId: string, comment: Comment) => {
@@ -90,14 +93,14 @@ export const SongsProvider = ({ children }: { children: React.ReactNode }) => {
             throw new Error('Nie możesz dodać komentarza w imieniu innego użytkownika.');
         }
 
-        await storage.addCommentToSong(songId, comment);
+        await songsService.addCommentToSong(songId, comment);
         await refreshSongs();
     };
 
     const rateSong = async (songId: string, value: number) => {
         if (!user) throw new Error('Użytkownik niezalogowany.');
 
-        const songs = await storage.loadSongs();
+        const songs = await songsService.loadSongs();
         const song = songs.find((s) => s.id === songId);
         if (!song) throw new Error('Nie znaleziono utworu.');
 
@@ -107,15 +110,15 @@ export const SongsProvider = ({ children }: { children: React.ReactNode }) => {
             : [...song.rating, newRating];
 
         const updatedSong = { ...song, rating: updatedRatings };
-        await storage.addSong(updatedSong);
-        await storage.updateUserSongStats?.();
+        await songsService.addSong(updatedSong);
+        await userService.updateUserSongStats?.();
         await refreshSongs();
     };
 
     const deleteCommentFromSong = async (songId: string, commentId: string) => {
         if (!user) throw new Error('Użytkownik niezalogowany.');
 
-        const songs = await storage.loadSongs();
+        const songs = await songsService.loadSongs();
         const song = songs.find((s) => s.id === songId);
         if (!song) throw new Error('Nie znaleziono utworu.');
 
@@ -126,7 +129,7 @@ export const SongsProvider = ({ children }: { children: React.ReactNode }) => {
             throw new Error('Nie możesz usunąć cudzego komentarza.');
         }
 
-        await storage.deleteCommentFromSong(songId, commentId);
+        await songsService.deleteCommentFromSong(songId, commentId);
 
         setSongs((prevSongs) =>
             prevSongs.map((s) =>

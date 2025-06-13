@@ -1,6 +1,9 @@
 import { createContext, useContext, useEffect, useState } from 'react';
 import { Song, User } from '../types';
-import storage, { AuthData } from '../utils/storage';
+import { AuthData } from '../types';
+import { AuthService } from 'services/AuthService';
+import { SongsService } from 'services/SongsService';
+import { UsersService } from 'services/UsersService';
 
 type AuthContextType = {
     user: User | null;
@@ -23,9 +26,12 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     const [token, setToken] = useState<string | null>(null);
     const [isAuthLoaded, setIsAuthLoaded] = useState(false);
     const [favourites, setFavourites] = useState<string[]>([]);
+    const authService = new AuthService();
+    const songsService = new SongsService();
+    const usersService = new UsersService();
 
     useEffect(() => {
-        const auth = storage.loadAuth();
+        const auth = authService.loadAuth();
         if (auth) {
             setUser(auth.user);
             setToken(auth.token);
@@ -38,23 +44,23 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         if (!auth.user.isActivated) {
             throw new Error('Konto nie jest aktywne. Sprawdź e-mail, aby je aktywować.');
         }
-        storage.saveAuth(auth);
+        authService.saveAuth(auth);
         setUser(auth.user);
         setToken(auth.token);
     };
 
     const logout = () => {
-        storage.clearAuth();
+        authService.clearAuth();
         setUser(null);
         setToken(null);
     };
 
     const refreshUser = () => {
         if (!user) return;
-        const updatedUser = storage.getUserById(user.idUser);
-        if (updatedUser) {
+        const updatedUser = usersService.getUserById(user.idUser);
+        if (updatedUser && token) {
             setUser(updatedUser);
-            storage.saveAuth({ user: updatedUser, token: token!, favourites });
+            authService.saveAuth({ user: updatedUser, token, favourites });
         }
     };
 
@@ -65,19 +71,19 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
             ? favourites.filter((id) => id !== songId)
             : [...favourites, songId];
         setFavourites(updatedFavourites);
-        storage.saveAuth({ user, token, favourites: updatedFavourites });
+        authService.saveAuth({ user, token, favourites: updatedFavourites });
     };
 
     const isFavourite = (songId: string) => favourites.includes(songId);
 
     const saveLastPlayedSong = (songId: string) => {
         if (!user) return;
-        storage.saveLastPlayedSong(user.idUser, songId);
+        songsService.saveLastPlayedSong(user.idUser, songId);
     };
 
     const getLastPlayedSongs = async () => {
         if (!user) return [];
-        return await storage.getLastPlayedSongs(user.idUser);
+        return await songsService.getLastPlayedSongs(user.idUser);
     };
 
     return (

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import storage from 'utils/storage';
+import { UsersService } from 'services/UsersService';
 import styles from './ChangePasswordForm.module.scss';
 import useRequiredUser from 'utils/useRequiredUser';
 import Button from 'components/Button/Button';
@@ -10,6 +10,7 @@ const ChangePasswordForm = () => {
     const [newPassword, setNewPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
     const [message, setMessage] = useState('');
+    const usersService = new UsersService();
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -20,7 +21,7 @@ const ChangePasswordForm = () => {
         }
 
         try {
-            await storage.updateUserPassword(user.idUser, oldPassword, newPassword);
+            await usersService.updateUserPassword(user.idUser, oldPassword, newPassword);
             setMessage('Hasło zostało zmienione.');
             setOldPassword('');
             setNewPassword('');

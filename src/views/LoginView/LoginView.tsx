@@ -9,15 +9,16 @@ import Modal from 'components/Modal/Modal';
 import AuthForm from 'components/Form/AuthForm';
 import Button from 'components/Button/Button';
 import { useAuth } from 'context/AuthContext';
-import storage from 'utils/storage';
 import bcrypt from 'bcryptjs';
 import { v4 as uuidv4 } from 'uuid';
 import { User } from 'types';
+import { UsersService } from 'services/UsersService';
 
 const LoginView = () => {
     const [incorrectData, setIncorrectData] = useState(false);
     const { login } = useAuth();
     const navigate = useNavigate();
+    const usersService = new UsersService();
     const authError = (
         <div className={styles.authError}>
             <p>Nieprawidłowe dane logowania</p>
@@ -29,7 +30,7 @@ const LoginView = () => {
     );
 
     const handleLogin = async ({ username, password }: { username: string; password: string }) => {
-        const found = await storage.findUserByCredentials(username, password);
+        const found = await usersService.findUserByCredentials(username, password);
 
         if (!found) {
             alert('Nieprawidłowe dane logowania');
@@ -42,7 +43,7 @@ const LoginView = () => {
     };
 
     const handleRegister = async (user: { username: string; password: string; email: string }) => {
-        const users = await storage.loadUsers();
+        const users = await usersService.loadUsers();
 
         const exists = users.some((u) => u.username === user.username);
         if (exists) {
@@ -64,7 +65,7 @@ const LoginView = () => {
             number_of_ratings_received: 0,
         };
 
-        await storage.saveUsers([...users, newUser]);
+        await usersService.saveUsers([...users, newUser]);
     };
 
     return (
