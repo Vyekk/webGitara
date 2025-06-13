@@ -34,7 +34,7 @@ db.connect((err) => {
 
 // Typowanie zapytania GET
 app.get('/users', (req: Request, res: Response) => {
-    db.query('SELECT id, imie, nazwisko FROM uzytkownicy', (err, results) => {
+    db.query('SELECT * FROM users', (err, results) => {
         if (err) {
             res.status(500).json({ error: 'Błąd pobierania danych' });
             return;
