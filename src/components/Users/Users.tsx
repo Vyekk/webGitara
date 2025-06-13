@@ -77,7 +77,7 @@ const Users = () => {
                 <div className={styles.userInfo}>
                     <Title tag="h3">Informacje o użytkowniku</Title>
                     <ul>
-                        <li>E-mail: {selectedUser?.username || 'brak'}</li>
+                        <li>E-mail: {selectedUser?.email || 'brak'}</li>
                         <li>
                             Data założenia konta:{' '}
                             {selectedUser?.created_at
