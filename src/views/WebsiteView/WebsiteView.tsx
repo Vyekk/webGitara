@@ -94,8 +94,8 @@ const WebsiteView = () => {
             <Section id="demo">
                 <div className={styles.demo}>
                     <iframe
-                        src="https://www.youtube.com/embed/Xdc7u4MUYYo"
-                        title="John5 Solo"
+                        src="https://www.youtube.com/embed/s8dfh5wmutc"
+                        title="WebGitara - prezentacja"
                         frameBorder="0"
                         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                         referrerPolicy="strict-origin-when-cross-origin"
