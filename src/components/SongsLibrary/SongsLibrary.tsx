@@ -34,11 +34,11 @@ const SongsLibrary = ({ isShowingDeletedSongs }: SongsLibraryProps) => {
             let newFilteredSongs: Song[] = [];
             if (buttonType === 'mySongs' && user) {
                 newFilteredSongs = filteredSongs.filter((song) => {
-                    return isFavourite(song.id);
+                    return isFavourite(song.idSong);
                 });
             } else {
                 newFilteredSongs = songs.filter((song) => {
-                    return isFavourite(song.id);
+                    return isFavourite(song.idSong);
                 });
             }
             setFilteredSongs(newFilteredSongs);
