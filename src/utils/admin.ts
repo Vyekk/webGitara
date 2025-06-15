@@ -9,51 +9,67 @@ const useAdminUsers = () => {
     const currentUser = useRequiredUser();
     const [users, setUsers] = useState<User[]>([]);
     const [error, setError] = useState<string | null>(null);
+
     const usersService = new UsersService();
 
     useEffect(() => {
-        if (!currentUser.isAdmin) {
-            setError('Brak dostępu');
-            return;
-        }
+        const fetchUsers = async () => {
+            if (!currentUser.isAdmin) {
+                setError('Brak dostępu');
+                return;
+            }
 
-        const loadedUsers = usersService.loadUsers();
-        setUsers(loadedUsers);
+            try {
+                const loadedUsers = await usersService.loadUsers();
+                setUsers(loadedUsers);
+            } catch (err) {
+                setError('Błąd wczytywania użytkowników brak admina');
+            }
+        };
+
+        fetchUsers();
     }, [currentUser]);
 
-    const changeUserRole = (targetUserId: string, newRole: AccountRole) => {
+    const changeUserRole = async (targetUserId: string, newRole: AccountRole) => {
         if (!currentUser.isAdmin) {
             setError('Brak uprawnień do zmiany roli.');
             return;
         }
 
-        const updatedUsers = users.map((user) =>
-            user.idUser === targetUserId
-                ? {
-                      ...user,
-                      isAdmin: newRole === 'admin',
-                      isModerator: newRole === 'moderator',
-                  }
-                : user,
-        );
-
-        setUsers(updatedUsers);
-        usersService.saveUsers(updatedUsers);
+        try {
+            await usersService.updateUserRole(targetUserId, newRole);
+            setUsers((prev) =>
+                prev.map((user) =>
+                    user.idUser === targetUserId
+                        ? {
+                              ...user,
+                              isAdmin: newRole === 'admin',
+                              isModerator: newRole === 'moderator',
+                          }
+                        : user,
+                ),
+            );
+        } catch (err) {
+            setError('Nie udało się zmienić roli');
+        }
     };
 
-    const deleteUser = (targetUserId: string) => {
+    const deleteUser = async (targetUserId: string) => {
         if (!currentUser.isAdmin) {
             setError('Brak uprawnień do usuwania kont.');
             return;
         }
 
-        const updatedUsers = users.filter((u) => u.idUser !== targetUserId);
-        setUsers(updatedUsers);
-        usersService.saveUsers(updatedUsers);
+        try {
+            await usersService.deleteUser(targetUserId);
+            setUsers((prev) => prev.filter((u) => u.idUser !== targetUserId));
+        } catch (err) {
+            setError('Nie udało się usunąć użytkownika');
+        }
     };
 
-    const getUserById = (idUser: string): User | undefined => {
-        return usersService.getUserById(idUser);
+    const getUserById = async (idUser: string): Promise<User | null> => {
+        return await usersService.getUserById(idUser);
     };
 
     return {
