@@ -7,12 +7,16 @@ import { useSongs } from 'context/SongsContext';
 
 const Rating = ({ song, isHover }: { song: Song; isHover: boolean }) => {
     const user = useRequiredUser();
-    const { rateSong } = useSongs();
+    const { rateSong, refreshSongs } = useSongs();
     const userId = user.idUser;
 
-    const getUserRating = () => song.rating.find((r) => r.userId === userId)?.value || 0;
+    const getUserRating = () =>
+        Array.isArray(song.rating) ? song.rating.find((r) => r.userId === userId)?.value || 0 : 0;
 
-    const calculateAverage = () => song.rating.reduce((sum, r) => sum + r.value, 0) / (song.rating.length || 1);
+    const calculateAverage = () =>
+        Array.isArray(song.rating) && song.rating.length > 0
+            ? song.rating.reduce((sum, r) => sum + r.value, 0) / song.rating.length
+            : 0;
 
     const [userRating, setUserRating] = useState(getUserRating());
     const [average, setAverage] = useState(calculateAverage());
@@ -26,7 +30,8 @@ const Rating = ({ song, isHover }: { song: Song; isHover: boolean }) => {
         if (!userId) return;
 
         try {
-            await rateSong(song.id, rate);
+            await rateSong(song.idSong, rate);
+            await refreshSongs();
         } catch (error) {
             console.error('Błąd przy ocenianiu:', error);
         }
