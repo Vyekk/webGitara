@@ -74,7 +74,9 @@ const Settings = () => {
                     </li>
                     <li>
                         Średnia ocena twoich utworów:{' '}
-                        <span className={styles.lead}>{user.average_published_song_rating.toFixed(2)}</span>
+                        <span className={styles.lead}>
+                            {Number(user.average_published_song_rating ?? 0).toFixed(2)}
+                        </span>
                     </li>
                     <li>
                         Liczba ocen twoich utworów:{' '}
