@@ -4,12 +4,21 @@ import { SongsService } from 'services/SongsService';
 import { UsersService } from 'services/UsersService';
 import useRequiredUser from 'utils/useRequiredUser';
 
+type SongBackendDto = {
+    idSong?: string;
+    idUser: string;
+    title: string;
+    default_bpm: number;
+    tablature: any;
+};
+
 type SongsContextType = {
     songs: Song[];
     refreshSongs: () => Promise<void>;
     deleteSong: (id: string) => Promise<void>;
     getDeletedSongs: () => Song[];
-    addSong: (newSong: Song) => Promise<void>;
+    addSong: (newSong: SongBackendDto) => Promise<void>;
+    updateSong: (updatedSong: SongBackendDto) => Promise<void>;
     getTopRated?: () => Promise<Song[]>;
     addCommentToSong: (songId: string, comment: Comment) => Promise<void>;
     deleteCommentFromSong: (songId: string, commentId: string) => Promise<void>;
@@ -35,17 +44,14 @@ export const SongsProvider = ({ children }: { children: React.ReactNode }) => {
     const deleteSong = async (id: string) => {
         if (!user) throw new Error('Użytkownik niezalogowany.');
 
-        const songs = await songsService.loadSongs();
-        const song = songs.find((s) => s.id === id);
+        const song = songs.find((s) => s.idSong === id);
         if (!song) throw new Error('Nie znaleziono utworu.');
 
         if (!user.isAdmin && !user.isModerator && song.idUser !== user.idUser) {
             throw new Error('Nie możesz usunąć cudzego utworu.');
         }
 
-        const updatedSongs = songs.map((s) => (s.id === id ? { ...s, deleted_by_idUser: user.idUser } : s));
-
-        await songsService.saveSongs(updatedSongs);
+        await songsService.deleteSongById(id);
         await refreshSongs();
     };
 
@@ -56,23 +62,27 @@ export const SongsProvider = ({ children }: { children: React.ReactNode }) => {
             throw new Error('Nie masz uprawnień do przywracania utworów.');
         }
 
-        const songs = await songsService.loadSongs();
-        const song = songs.find((s) => s.id === id);
-
+        const song = deletedSongs.find((s) => s.idSong === id);
         if (!song) throw new Error('Nie znaleziono utworu.');
         if (!song.deleted_by_idUser) {
             throw new Error('Utwór nie jest oznaczony jako usunięty.');
         }
 
-        const updatedSongs = songs.map((s) => (s.id === id ? { ...s, deleted_by_idUser: undefined } : s));
-
-        await songsService.saveSongs(updatedSongs);
+        const updatedSong = {
+            idSong: song.idSong,
+            idUser: song.idUser,
+            title: song.songTitle,
+            default_bpm: song.bpm,
+            tablature: song.tablature,
+            deleted_by_idUser: null,
+        };
+        await songsService.updateSong(updatedSong);
         await refreshSongs();
     };
 
     const getDeletedSongs = () => deletedSongs;
 
-    const addSong = async (newSong: Song) => {
+    const addSong = async (newSong: SongBackendDto) => {
         if (!user) throw new Error('Użytkownik niezalogowany.');
         if (newSong.idUser !== user.idUser) {
             throw new Error('Nie możesz dodać utworu w imieniu innego użytkownika.');
@@ -82,8 +92,17 @@ export const SongsProvider = ({ children }: { children: React.ReactNode }) => {
         await refreshSongs();
     };
 
-    const getTopRated = async () => {
+    const updateSong = async (updatedSong: SongBackendDto) => {
+        if (!user) throw new Error('Użytkownik niezalogowany.');
+        if (updatedSong.idUser !== user.idUser) {
+            throw new Error('Nie możesz edytować utworu innego użytkownika.');
+        }
+
+        await songsService.updateSong(updatedSong);
         await refreshSongs();
+    };
+
+    const getTopRated = async () => {
         return await songsService.getTopRatedSongs();
     };
 
@@ -99,18 +118,7 @@ export const SongsProvider = ({ children }: { children: React.ReactNode }) => {
 
     const rateSong = async (songId: string, value: number) => {
         if (!user) throw new Error('Użytkownik niezalogowany.');
-
-        const songs = await songsService.loadSongs();
-        const song = songs.find((s) => s.id === songId);
-        if (!song) throw new Error('Nie znaleziono utworu.');
-
-        const newRating = { userId: user.idUser, value };
-        const updatedRatings = song.rating.some((r) => r.userId === user.idUser)
-            ? song.rating.map((r) => (r.userId === user.idUser ? newRating : r))
-            : [...song.rating, newRating];
-
-        const updatedSong = { ...song, rating: updatedRatings };
-        await songsService.addSong(updatedSong);
+        await songsService.rateSong(songId, value, user.idUser);
         await userService.updateUserSongStats?.();
         await refreshSongs();
     };
@@ -118,8 +126,7 @@ export const SongsProvider = ({ children }: { children: React.ReactNode }) => {
     const deleteCommentFromSong = async (songId: string, commentId: string) => {
         if (!user) throw new Error('Użytkownik niezalogowany.');
 
-        const songs = await songsService.loadSongs();
-        const song = songs.find((s) => s.id === songId);
+        const song = songs.find((s) => s.idSong === songId);
         if (!song) throw new Error('Nie znaleziono utworu.');
 
         const comment = song.comments?.find((c) => c.idComment === commentId);
@@ -130,17 +137,7 @@ export const SongsProvider = ({ children }: { children: React.ReactNode }) => {
         }
 
         await songsService.deleteCommentFromSong(songId, commentId);
-
-        setSongs((prevSongs) =>
-            prevSongs.map((s) =>
-                s.id === songId
-                    ? {
-                          ...s,
-                          comments: s.comments?.filter((c) => c.idComment !== commentId) || [],
-                      }
-                    : s,
-            ),
-        );
+        await refreshSongs();
     };
 
     useEffect(() => {
@@ -156,6 +153,7 @@ export const SongsProvider = ({ children }: { children: React.ReactNode }) => {
                 addSong,
                 getTopRated,
                 addCommentToSong,
+                updateSong,
                 deleteCommentFromSong,
                 getDeletedSongs,
                 restoreSong,

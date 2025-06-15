@@ -1,20 +1,19 @@
 import { createContext, useContext, useEffect, useState } from 'react';
 import { Song, User } from '../types';
-import { AuthData } from '../types';
-import { AuthService } from 'services/AuthService';
 import { SongsService } from 'services/SongsService';
 import { UsersService } from 'services/UsersService';
+import { AuthService } from 'services/AuthService';
 
 type AuthContextType = {
     user: User | null;
     token: string | null;
-    login: (auth: AuthData) => void;
+    login: (username: string, password: string) => Promise<void>;
     logout: () => void;
     isLoggedIn: boolean;
     isAuthLoaded: boolean;
-    toggleFavourite: (songId: string) => void;
+    toggleFavourite: (songId: string) => Promise<void>;
     isFavourite: (songId: string) => boolean;
-    refreshUser: () => void;
+    refreshUser: () => Promise<void>;
     saveLastPlayedSong: (songId: string) => void;
     getLastPlayedSongs: () => Promise<Song[]>;
 };
@@ -26,52 +25,62 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     const [token, setToken] = useState<string | null>(null);
     const [isAuthLoaded, setIsAuthLoaded] = useState(false);
     const [favourites, setFavourites] = useState<string[]>([]);
+
     const authService = new AuthService();
-    const songsService = new SongsService();
+
     const usersService = new UsersService();
+    const songsService = new SongsService();
 
     useEffect(() => {
-        const auth = authService.loadAuth();
-        if (auth) {
-            setUser(auth.user);
-            setToken(auth.token);
-            setFavourites(auth.favourites ?? []);
+        const authData = authService.loadAuth();
+        if (authData) {
+            setUser(authData.user);
+            setToken(authData.token);
+            setFavourites(authData.favourites ?? []);
         }
         setIsAuthLoaded(true);
     }, []);
 
-    const login = (auth: AuthData) => {
-        if (!auth.user.isActivated) {
-            throw new Error('Konto nie jest aktywne. Sprawdź e-mail, aby je aktywować.');
+    const login = async (username: string, password: string) => {
+        const authData = await authService.login({ username, password });
+        if (!authData.user.isActivated) {
+            throw new Error('Konto nieaktywne.');
         }
-        authService.saveAuth(auth);
-        setUser(auth.user);
-        setToken(auth.token);
+        const backendFavourites = await usersService.getUserFavourites(authData.user.idUser);
+        setUser(authData.user);
+        setToken(authData.token);
+        setFavourites(backendFavourites ?? []);
+        authService.saveAuth({ user: authData.user, token: authData.token, favourites: backendFavourites ?? [] });
     };
 
     const logout = () => {
         authService.clearAuth();
         setUser(null);
         setToken(null);
+        setFavourites([]);
     };
 
-    const refreshUser = () => {
+    const refreshUser = async () => {
         if (!user) return;
-        const updatedUser = usersService.getUserById(user.idUser);
-        if (updatedUser && token) {
+
+        const updatedUser = await usersService.getUserById(user.idUser);
+        if (updatedUser) {
             setUser(updatedUser);
-            authService.saveAuth({ user: updatedUser, token, favourites });
+            authService.saveAuth({ user: updatedUser, token: token ?? '', favourites });
         }
     };
 
-    const toggleFavourite = (songId: string) => {
+    const toggleFavourite = async (songId: string) => {
         if (!user) return;
-        if (!token) throw new Error('Brak tokena');
+
         const updatedFavourites = favourites.includes(songId)
             ? favourites.filter((id) => id !== songId)
             : [...favourites, songId];
+
         setFavourites(updatedFavourites);
-        authService.saveAuth({ user, token, favourites: updatedFavourites });
+        authService.saveAuth({ user, token: token ?? '', favourites: updatedFavourites });
+
+        await usersService.updateUserFavourites(user.idUser, updatedFavourites);
     };
 
     const isFavourite = (songId: string) => favourites.includes(songId);
@@ -91,10 +100,10 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
             value={{
                 user,
                 token,
+                isLoggedIn: !!user,
                 isAuthLoaded,
                 login,
                 logout,
-                isLoggedIn: !!user,
                 toggleFavourite,
                 isFavourite,
                 refreshUser,
