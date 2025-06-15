@@ -1,11 +1,9 @@
 import { useState } from 'react';
 import { UsersService } from 'services/UsersService';
 import styles from './ChangePasswordForm.module.scss';
-import useRequiredUser from 'utils/useRequiredUser';
 import Button from 'components/Button/Button';
 
 const ChangePasswordForm = () => {
-    const user = useRequiredUser();
     const [oldPassword, setOldPassword] = useState('');
     const [newPassword, setNewPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
@@ -21,7 +19,7 @@ const ChangePasswordForm = () => {
         }
 
         try {
-            await usersService.updateUserPassword(user.idUser, oldPassword, newPassword);
+            await usersService.updateUserPassword(oldPassword, newPassword);
             setMessage('Hasło zostało zmienione.');
             setOldPassword('');
             setNewPassword('');
