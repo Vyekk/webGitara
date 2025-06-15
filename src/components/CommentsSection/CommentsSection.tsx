@@ -42,7 +42,7 @@ const CommentsSection = ({ song }: CommentsSectionProps) => {
             },
         };
 
-        await addCommentToSong(song.id, newComment);
+        await addCommentToSong(song.idSong, newComment);
 
         setCommentedSong((prev: Song) => ({
             ...prev,
@@ -53,7 +53,7 @@ const CommentsSection = ({ song }: CommentsSectionProps) => {
     };
 
     const handleDeleteComment = async (commentId: string) => {
-        await deleteCommentFromSong(song.id, commentId);
+        await deleteCommentFromSong(song.idSong, commentId);
 
         setCommentedSong((prev: Song) => ({
             ...prev,
