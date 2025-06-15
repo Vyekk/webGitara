@@ -9,9 +9,6 @@ import Modal from 'components/Modal/Modal';
 import AuthForm from 'components/Form/AuthForm';
 import Button from 'components/Button/Button';
 import { useAuth } from 'context/AuthContext';
-import bcrypt from 'bcryptjs';
-import { v4 as uuidv4 } from 'uuid';
-import { User } from 'types';
 import { UsersService } from 'services/UsersService';
 
 const LoginView = () => {
@@ -30,42 +27,16 @@ const LoginView = () => {
     );
 
     const handleLogin = async ({ username, password }: { username: string; password: string }) => {
-        const found = await usersService.findUserByCredentials(username, password);
-
-        if (!found) {
-            alert('Nieprawidłowe dane logowania');
-            return;
+        try {
+            await login(username, password);
+            navigate('/play');
+        } catch (error: any) {
+            alert(error.error || 'Nieprawidłowe dane logowania');
         }
-
-        const token = crypto.randomUUID();
-        login({ token, user: found });
-        navigate('/play');
     };
 
     const handleRegister = async (user: { username: string; password: string; email: string }) => {
-        const users = await usersService.loadUsers();
-
-        const exists = users.some((u) => u.username === user.username);
-        if (exists) {
-            alert('Użytkownik o takim loginie już istnieje');
-            return;
-        }
-        const hashedPassword = await bcrypt.hash(user.password, 10);
-
-        const newUser: User = {
-            idUser: uuidv4(),
-            username: user.username,
-            password: hashedPassword,
-            email: user.email,
-            isAdmin: false,
-            isModerator: false,
-            isActivated: true,
-            created_at: new Date().toISOString(),
-            average_published_song_rating: 0,
-            number_of_ratings_received: 0,
-        };
-
-        await usersService.saveUsers([...users, newUser]);
+        await usersService.registerUser(user);
     };
 
     return (
