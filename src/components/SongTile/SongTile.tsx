@@ -32,7 +32,7 @@ const SongTile = ({ song, isLarge }: SongTileProps) => {
     const { deleteSong, restoreSong } = useSongs();
     const user = useRequiredUser();
     const { toggleFavourite, isFavourite } = useAuth();
-    const liked = isFavourite(song.id);
+    const liked = isFavourite(song.idSong);
     const { saveLastPlayedSong } = useAuth();
 
     const handleMouseOut = () => {
@@ -43,7 +43,7 @@ const SongTile = ({ song, isLarge }: SongTileProps) => {
 
     const handleLikeClick = (event: React.MouseEvent) => {
         event.stopPropagation();
-        toggleFavourite(song.id);
+        toggleFavourite(song.idSong);
     };
     const handleCommentsClick = (event: React.MouseEvent) => {
         event.stopPropagation();
@@ -52,13 +52,13 @@ const SongTile = ({ song, isLarge }: SongTileProps) => {
     };
 
     const handleSongTileClick = () => {
-        navigate(`/play/guitar/${song.id}`);
-        saveLastPlayedSong(song.id);
+        navigate(`/play/guitar/${song.idSong}`);
+        saveLastPlayedSong(song.idSong);
     };
 
     const handleModifyClick = (event: React.MouseEvent) => {
         event.stopPropagation();
-        navigate(`/play/edit/${song.id}`);
+        navigate(`/play/edit/${song.idSong}`);
     };
 
     const handleDeleteClick = (event: React.MouseEvent) => {
@@ -70,7 +70,7 @@ const SongTile = ({ song, isLarge }: SongTileProps) => {
             return;
         }
 
-        deleteSong(song.id);
+        deleteSong(song.idSong);
     };
 
     const handleOpenModal = (content: ReactNode) => {
@@ -121,7 +121,7 @@ const SongTile = ({ song, isLarge }: SongTileProps) => {
                     </div>
                 </div>
                 {(user.isAdmin || user.isModerator) && song.deleted_by_idUser && (
-                    <div className={styles.delete} onClick={() => restoreSong(song.id)}>
+                    <div className={styles.delete} onClick={() => restoreSong(song.idSong)}>
                         <FontAwesomeIcon icon={faTrashCanArrowUp} />
                     </div>
                 )}
