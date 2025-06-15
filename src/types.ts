@@ -16,7 +16,7 @@ export type Step = TabNote[];
 export type Tablature = Step[];
 
 export type Song = {
-    id: string;
+    idSong: string;
     songTitle: string;
     author: string;
     idUser?: string;
@@ -74,4 +74,9 @@ export type AuthData = {
     token: string;
     user: User;
     favourites?: string[];
+};
+
+export type Credentials = {
+    username: string;
+    password: string;
 };
