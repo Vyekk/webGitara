@@ -105,7 +105,7 @@ const GuitarView = () => {
             return;
         }
         const songId = location.pathname.split('/').pop();
-        const foundSong = songs.find((s) => s.id === songId);
+        const foundSong = songs.find((s) => s.idSong === songId);
         if (!foundSong) {
             navigate('/play/guitar/1');
             return;
