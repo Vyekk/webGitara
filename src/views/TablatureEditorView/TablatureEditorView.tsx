@@ -12,7 +12,6 @@ import { ChordPosition } from 'types';
 import { convertFormDataToTablature } from 'utils/tablatureConverters';
 import { ModalContext } from 'components/Modal/ModalContext';
 import { convertTablatureToFormData } from 'utils/tablatureConverters';
-import { v4 as uuidv4 } from 'uuid';
 import { useSongs } from 'context/SongsContext';
 import useRequiredUser from 'utils/useRequiredUser';
 
@@ -38,7 +37,7 @@ const TablatureEditorView = () => {
     const [formDataDuration, setFormDataDuration] = useState<Record<string, string>>({});
     const location = useLocation();
     const { songs } = useSongs();
-    const { addSong } = useSongs();
+    const { addSong, updateSong } = useSongs();
     const user = useRequiredUser();
 
     useEffect(() => {
@@ -76,7 +75,7 @@ const TablatureEditorView = () => {
             return;
         }
         const songId = location.pathname.split('/').pop();
-        const foundSong = songs.find((s) => s.id === songId);
+        const foundSong = songs.find((s) => s.idSong === songId);
         if (!foundSong) {
             navigate(`/play/edit`);
             return;
@@ -158,20 +157,35 @@ const TablatureEditorView = () => {
             return;
         }
 
-        const newSong: Song = {
-            id: song ? song.id : uuidv4(),
-            songTitle: newSongTitle,
-            author: user.username,
-            idUser: user.idUser,
-            bpm: newSongBpm,
-            tablature,
-            rating: song ? song.rating : [],
-            place: song ? song.place : 0,
-        };
-        await addSong(newSong);
-        setTimeout(() => {
-            setInfoMessage({ message: `Pomyślnie ${song ? 'zmodyfikowano' : 'stworzono'} utwór` });
-        }, 0);
+        let newSongBackend;
+        if (song) {
+            newSongBackend = {
+                idSong: song.idSong,
+                idUser: user.idUser,
+                title: newSongTitle,
+                default_bpm: newSongBpm,
+                tablature,
+            };
+        } else {
+            newSongBackend = {
+                idUser: user.idUser,
+                title: newSongTitle,
+                default_bpm: newSongBpm,
+                tablature,
+            };
+        }
+
+        try {
+            if (song) {
+                await updateSong(newSongBackend);
+                setInfoMessage({ message: 'Pomyślnie zmodyfikowano utwór' });
+            } else {
+                await addSong(newSongBackend);
+                setInfoMessage({ message: 'Pomyślnie stworzono utwór' });
+            }
+        } catch (error) {
+            setErrorMessage({ message: 'Coś poszło nie tak podczas zapisu utworu.' });
+        }
     };
 
     const handleTablatureDataChange = (lineData: Record<string, string>) => {
