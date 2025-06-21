@@ -1,7 +1,9 @@
-import { JwtPayload } from '../../middleware/authenticateToken';
+import { AuthUser } from '../types';
 
-declare module 'express-serve-static-core' {
-    interface Request {
-        user?: JwtPayload;
+declare global {
+    namespace Express {
+        interface Request {
+            user?: AuthUser;
+        }
     }
 }

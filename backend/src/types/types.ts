@@ -75,3 +75,10 @@ export type AuthData = {
     user: User;
     favourites?: string[];
 };
+
+export interface AuthUser {
+    idUser: string;
+    username: string;
+    isAdmin: boolean;
+    isModerator: boolean;
+}

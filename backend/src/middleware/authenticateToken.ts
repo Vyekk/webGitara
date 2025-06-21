@@ -1,11 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
-
-interface JwtPayload {
-    idUser: string;
-    username: string;
-    isAdmin: boolean;
-}
+import { AuthUser } from '../types/types';
 
 export function authenticateToken(req: Request, res: Response, next: NextFunction) {
     const authHeader = req.headers['authorization'];
@@ -22,7 +17,7 @@ export function authenticateToken(req: Request, res: Response, next: NextFunctio
             return;
         }
 
-        req.user = decoded as JwtPayload;
+        req.user = decoded as AuthUser;
 
         next();
     });
