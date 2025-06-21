@@ -37,8 +37,8 @@ export const SongsProvider = ({ children }: { children: React.ReactNode }) => {
 
     const refreshSongs = async () => {
         const allSongs = await songsService.loadSongs();
-        setSongs(allSongs.filter((s) => !s.deleted_by_idUser));
-        setDeletedSongs(allSongs.filter((s) => !!s.deleted_by_idUser));
+        setSongs(Array.isArray(allSongs) ? allSongs.filter((s) => !s.deleted_by_idUser) : []);
+        setDeletedSongs(Array.isArray(allSongs) ? allSongs.filter((s) => !!s.deleted_by_idUser) : []);
     };
 
     const deleteSong = async (id: string) => {

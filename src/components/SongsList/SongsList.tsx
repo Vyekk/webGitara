@@ -10,9 +10,9 @@ type SongsListProps = {
 };
 
 const SongsList = ({ isVertical, songs = [], searchTerm }: SongsListProps) => {
-    const filteredSongs = songs.filter((song) =>
-        searchTerm ? song.songTitle.toLowerCase().includes(searchTerm.toLowerCase()) : true,
-    );
+    const filteredSongs = Array.isArray(songs)
+        ? songs.filter((song) => (searchTerm ? song.songTitle.toLowerCase().includes(searchTerm.toLowerCase()) : true))
+        : [];
 
     return (
         <div className={isVertical ? styles.verticalList : styles.horizontalList}>
