@@ -1,6 +1,7 @@
 import { User } from 'types';
 import axios from 'axios';
 import { AuthService } from './AuthService';
+import API_URL from 'config';
 
 export class UsersService {
     private authService: AuthService;
@@ -14,7 +15,7 @@ export class UsersService {
 
     async loadUsers(): Promise<User[]> {
         try {
-            const response = await axios.get('http://localhost:5000/api/users', {
+            const response = await axios.get(`${API_URL}/api/users`, {
                 headers: this.getAuthHeaders(),
             });
             return response.data;
@@ -26,7 +27,7 @@ export class UsersService {
 
     async registerUser(user: { username: string; password: string; email: string }) {
         try {
-            await axios.post('http://localhost:5000/api/users/register', user);
+            await axios.post(`${API_URL}/api/users/register`, user);
             alert('Rejestracja zakończona sukcesem! Możesz się zalogować.');
         } catch (error: unknown) {
             if (
@@ -44,7 +45,7 @@ export class UsersService {
 
     async getUserById(id: string): Promise<User | null> {
         try {
-            const response = await axios.get(`http://localhost:5000/api/users/${id}`, {
+            const response = await axios.get(`${API_URL}/api/users/${id}`, {
                 headers: this.getAuthHeaders(),
             });
             return response.data;
@@ -57,7 +58,7 @@ export class UsersService {
     async updateUserPassword(oldPassword: string, newPassword: string): Promise<void> {
         try {
             await axios.put(
-                'http://localhost:5000/api/users/password',
+                `${API_URL}/api/users/password`,
                 { oldPassword, newPassword },
                 { headers: this.getAuthHeaders() },
             );
@@ -78,7 +79,7 @@ export class UsersService {
 
     async updateUserStats(userId: string): Promise<void> {
         try {
-            await axios.put(`http://localhost:5000/api/users/${userId}/stats`, null, {
+            await axios.put(`${API_URL}/api/users/${userId}/stats`, null, {
                 headers: this.getAuthHeaders(),
             });
         } catch (error: unknown) {
@@ -88,7 +89,7 @@ export class UsersService {
 
     async updateUserSongStats(): Promise<void> {
         try {
-            await axios.put('http://localhost:5000/api/users/stats/all', null, {
+            await axios.put(`${API_URL}/api/users/stats/all`, null, {
                 headers: this.getAuthHeaders(),
             });
         } catch (error: unknown) {
@@ -99,7 +100,7 @@ export class UsersService {
     async updateUserFavourites(userId: string, favourites: string[]): Promise<void> {
         try {
             await axios.put(
-                `http://localhost:5000/api/users/${userId}/favourites`,
+                `${API_URL}/api/users/${userId}/favourites`,
                 { favourites },
                 {
                     headers: this.getAuthHeaders(),
@@ -113,7 +114,7 @@ export class UsersService {
     async updateUserRole(userId: string, newRole: 'admin' | 'moderator' | 'user'): Promise<void> {
         try {
             await axios.put(
-                `http://localhost:5000/api/users/${userId}/role`,
+                `${API_URL}/api/users/${userId}/role`,
                 { role: newRole },
                 {
                     headers: this.getAuthHeaders(),
@@ -127,7 +128,7 @@ export class UsersService {
 
     async deleteUser(userId: string): Promise<void> {
         try {
-            await axios.delete(`http://localhost:5000/api/users/${userId}`, {
+            await axios.delete(`${API_URL}/api/users/${userId}`, {
                 headers: this.getAuthHeaders(),
             });
         } catch (error: unknown) {
@@ -138,7 +139,7 @@ export class UsersService {
 
     async getUserFavourites(userId: string): Promise<string[]> {
         try {
-            const response = await axios.get<string[]>(`http://localhost:5000/api/users/${userId}/favourites`, {
+            const response = await axios.get<string[]>(`${API_URL}/api/users/${userId}/favourites`, {
                 headers: this.getAuthHeaders(),
             });
             return response.data;

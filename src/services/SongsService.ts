@@ -1,6 +1,7 @@
 import { Song, Comment } from 'types';
 import axios from 'axios';
 import { AuthService } from './AuthService';
+import API_URL from 'config';
 
 export class SongsService {
     private authService: AuthService;
@@ -14,7 +15,7 @@ export class SongsService {
 
     async loadSongs(): Promise<Song[]> {
         try {
-            const response = await axios.get<Song[]>('http://localhost:5000/api/songs');
+            const response = await axios.get<Song[]>(`${API_URL}/api/songs`);
             return response.data;
         } catch (error) {
             console.error('Błąd podczas pobierania piosenek:', error);
@@ -25,9 +26,9 @@ export class SongsService {
     async addSong(newSong: any): Promise<void> {
         try {
             if (!newSong.idSong) {
-                await axios.post('http://localhost:5000/api/songs', newSong, { headers: this.getAuthHeaders() });
+                await axios.post(`${API_URL}/api/songs`, newSong, { headers: this.getAuthHeaders() });
             } else {
-                await axios.put(`http://localhost:5000/api/songs/${newSong.idSong}`, newSong, {
+                await axios.put(`${API_URL}/api/songs/${newSong.idSong}`, newSong, {
                     headers: this.getAuthHeaders(),
                 });
             }
@@ -39,7 +40,7 @@ export class SongsService {
 
     async updateSong(updatedSong: any): Promise<void> {
         try {
-            await axios.put(`http://localhost:5000/api/songs/${updatedSong.idSong}`, updatedSong, {
+            await axios.put(`${API_URL}/api/songs/${updatedSong.idSong}`, updatedSong, {
                 headers: this.getAuthHeaders(),
             });
         } catch (error) {
@@ -50,7 +51,7 @@ export class SongsService {
 
     async deleteSongById(id: string): Promise<void> {
         try {
-            await axios.delete(`http://localhost:5000/api/songs/${id}`, { headers: this.getAuthHeaders() });
+            await axios.delete(`${API_URL}/api/songs/${id}`, { headers: this.getAuthHeaders() });
         } catch (error) {
             console.error('Błąd podczas usuwania piosenki:', error);
             throw error;
@@ -60,7 +61,7 @@ export class SongsService {
     async addCommentToSong(songId: string, comment: Comment): Promise<void> {
         try {
             await axios.post(
-                `http://localhost:5000/api/songs/${songId}/comments`,
+                `${API_URL}/api/songs/${songId}/comments`,
                 {
                     idUser: comment.author.idUser,
                     content: comment.content,
@@ -77,7 +78,7 @@ export class SongsService {
 
     async deleteCommentFromSong(songId: string, commentId: string): Promise<void> {
         try {
-            await axios.delete(`http://localhost:5000/api/songs/${songId}/comments/${commentId}`, {
+            await axios.delete(`${API_URL}/api/songs/${songId}/comments/${commentId}`, {
                 headers: this.getAuthHeaders(),
             });
         } catch (error) {
@@ -88,7 +89,7 @@ export class SongsService {
 
     async getTopRatedSongs(): Promise<Song[]> {
         try {
-            const response = await axios.get<Song[]>('http://localhost:5000/api/songs/top-rated');
+            const response = await axios.get<Song[]>(`${API_URL}/api/songs/top-rated`);
             return response.data;
         } catch (error) {
             console.error('Błąd podczas pobierania top rated songs:', error);
@@ -99,7 +100,7 @@ export class SongsService {
     async saveLastPlayedSong(idUser: string, idSong: string): Promise<void> {
         try {
             await axios.post(
-                'http://localhost:5000/api/songs/lastplayedsongs',
+                `${API_URL}/api/songs/lastplayedsongs`,
                 { idUser, idSong },
                 { headers: this.getAuthHeaders() },
             );
@@ -111,7 +112,7 @@ export class SongsService {
 
     async getLastPlayedSongs(idUser: string): Promise<Song[]> {
         try {
-            const response = await axios.get<Song[]>(`http://localhost:5000/api/songs/lastplayedsongs/${idUser}`, {
+            const response = await axios.get<Song[]>(`${API_URL}/api/songs/lastplayedsongs/${idUser}`, {
                 headers: this.getAuthHeaders(),
             });
             return response.data;
@@ -124,7 +125,7 @@ export class SongsService {
     async rateSong(songId: string, rating: number, idUser: string): Promise<void> {
         try {
             await axios.post(
-                `http://localhost:5000/api/songs/${songId}/rating`,
+                `${API_URL}/api/songs/${songId}/rating`,
                 { idUser, rating },
                 { headers: this.getAuthHeaders() },
             );
