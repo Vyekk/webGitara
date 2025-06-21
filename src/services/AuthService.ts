@@ -1,10 +1,11 @@
 import { AuthData, Credentials } from 'types';
+import API_URL from 'config';
 
 export class AuthService {
     private STORAGE_KEY = 'auth';
 
     async login(credentials: Credentials): Promise<AuthData> {
-        const response = await fetch('/api/users/login', {
+        const response = await fetch(`${API_URL}/api/users/login`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(credentials),
