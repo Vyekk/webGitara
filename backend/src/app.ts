@@ -36,18 +36,18 @@ app.get('*', (_req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
-if (typeof PhusionPassenger !== 'undefined') {
-    app.listen('passenger');
-} else {
-    const port = process.env.PORT;
-    app.listen(port, () => {
-        console.log(`Server listening on port ${port}`);
-    });
-}
+// if (typeof PhusionPassenger !== 'undefined') {
+//     app.listen('passenger');
+// } else {
+//     const port = process.env.PORT;
+//     app.listen(port, () => {
+//         console.log(`Server listening on port ${port}`);
+//     });
+// }
 
-// const PORT = 5000;
+const PORT = 5000;
 
-// app.listen(PORT, () => {
-//     console.log(`Server is running on port ${PORT}`);
-// });
-export default app;
+app.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`);
+});
+// export default app;
