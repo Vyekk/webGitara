@@ -22,9 +22,16 @@ const AuthForm = ({ loginFn, registerFn }: AuthFormProps) => {
     const [password, setPassword] = useState('');
     const [email, setEmail] = useState('');
     const [repeatPassword, setRepeatPassword] = useState('');
+    const [statuteAccepted, setStatuteAccepted] = useState(false);
+    const [privacyPolicyAccepted, setPrivacyPolicyAccepted] = useState(false);
 
     const handleRegister = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
+
+        if (username.length < 4) {
+            alert('Nick jest za krótki, musi mieć co najmniej 4 litery');
+            return;
+        }
 
         if (password !== repeatPassword) {
             alert('Hasła nie są takie same');
@@ -35,6 +42,12 @@ const AuthForm = ({ loginFn, registerFn }: AuthFormProps) => {
             alert('Wypełnij wszystkie pola');
             return;
         }
+
+        if (!statuteAccepted || !privacyPolicyAccepted) {
+            alert('Musisz zaakceptować regulamin i politykę prywatności');
+            return;
+        }
+
         const newUser = { username, password, email };
         registerFn(newUser);
         setIsRegistered(true);
@@ -107,13 +120,23 @@ const AuthForm = ({ loginFn, registerFn }: AuthFormProps) => {
                             {activeOption !== types.login ? (
                                 <div className={styles.approvalWrapper}>
                                     <div className={styles.agreement}>
-                                        <input id="statute" type="checkbox" />
+                                        <input
+                                            id="statute"
+                                            type="checkbox"
+                                            checked={statuteAccepted}
+                                            onChange={(e) => setStatuteAccepted(e.target.checked)}
+                                        />
                                         <label htmlFor="statute">
                                             Akceptuję regulamin platformy i zobowiązuje się do jego przestrzegania
                                         </label>
                                     </div>
                                     <div className={styles.agreement}>
-                                        <input id="privacyPolicy" type="checkbox" />
+                                        <input
+                                            id="privacyPolicy"
+                                            type="checkbox"
+                                            checked={privacyPolicyAccepted}
+                                            onChange={(e) => setPrivacyPolicyAccepted(e.target.checked)}
+                                        />
                                         <label htmlFor="privacyPolicy">
                                             Akceptuję politykę prywatności platformy i wyrażam zgodę na przetwarzanie
                                             moich danych osobowych zgodnie z jej postanowieniami.
