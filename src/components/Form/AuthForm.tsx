@@ -4,18 +4,16 @@ import styles from 'components/Form/AuthForm.module.scss';
 import Input from 'components/Input/Input';
 import Button from 'components/Button/Button';
 import Radio from 'components/FormRadio/FormRadio';
+import { UsersService } from 'services/UsersService';
+import { useAuth } from 'context/AuthContext';
+import { useNavigate } from 'react-router-dom';
 
 const types = {
     login: 'logowanie',
     register: 'rejestracja',
 };
 
-interface AuthFormProps {
-    loginFn: (user: { username: string; password: string }) => void;
-    registerFn: (user: { username: string; password: string; email: string }) => void;
-}
-
-const AuthForm = ({ loginFn, registerFn }: AuthFormProps) => {
+const AuthForm = () => {
     const [activeOption, setActiveOption] = useState(types.login);
     const [isRegistered, setIsRegistered] = useState(false);
     const [username, setUsername] = useState('');
@@ -24,8 +22,11 @@ const AuthForm = ({ loginFn, registerFn }: AuthFormProps) => {
     const [repeatPassword, setRepeatPassword] = useState('');
     const [statuteAccepted, setStatuteAccepted] = useState(false);
     const [privacyPolicyAccepted, setPrivacyPolicyAccepted] = useState(false);
+    const usersService = new UsersService();
+    const { login } = useAuth();
+    const navigate = useNavigate();
 
-    const handleRegister = (e: React.FormEvent<HTMLFormElement>) => {
+    const handleRegister = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
         if (username.length < 4) {
@@ -49,14 +50,18 @@ const AuthForm = ({ loginFn, registerFn }: AuthFormProps) => {
         }
 
         const newUser = { username, password, email };
-        registerFn(newUser);
+        await usersService.registerUser(newUser);
         setIsRegistered(true);
     };
 
-    const handleLogin = (e: React.FormEvent<HTMLFormElement>) => {
+    const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        const user = { username, password };
-        loginFn(user);
+        try {
+            await login(username, password);
+            navigate('/play');
+        } catch (error: any) {
+            alert(error.error || 'Nieprawidłowe dane logowania');
+        }
     };
 
     return (
@@ -64,7 +69,7 @@ const AuthForm = ({ loginFn, registerFn }: AuthFormProps) => {
             {isRegistered ? (
                 <>
                     <p className={styles.info}>
-                        Konto założone <br /> pomyślnie, <br /> sprawdź swoją skrzynkę e-mail, aby aktywować konto.
+                        Konto założono pomyślnie, sprawdź swoją skrzynkę <br /> email, aby aktywować konto.
                     </p>
                     <Button
                         onClick={() => {
