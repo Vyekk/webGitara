@@ -120,11 +120,11 @@ const SongTile = ({ song, isLarge }: SongTileProps) => {
                         <FontAwesomeIcon icon={faTrash} />
                     </div>
                 </div>
-                {(user.isAdmin || user.isModerator) && song.deleted_by_idUser && (
+                {(user.isAdmin || user.isModerator) && !!song.deleted_by_idUser ? (
                     <div className={styles.delete} onClick={() => restoreSong(song.idSong)}>
                         <FontAwesomeIcon icon={faTrashCanArrowUp} />
                     </div>
-                )}
+                ) : null}
             </div>
             <Rating song={song} isHover={isHover} />
             <div className={styles.textWrapper}>
