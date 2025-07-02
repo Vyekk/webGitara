@@ -22,45 +22,47 @@ const AuthForm = () => {
     const [repeatPassword, setRepeatPassword] = useState('');
     const [statuteAccepted, setStatuteAccepted] = useState(false);
     const [privacyPolicyAccepted, setPrivacyPolicyAccepted] = useState(false);
+    const [error, setError] = useState<string | null>(null);
     const usersService = new UsersService();
     const { login } = useAuth();
     const navigate = useNavigate();
 
     const handleRegister = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-
+        setError(null);
         if (username.length < 4) {
-            alert('Nick jest za krótki, musi mieć co najmniej 4 litery');
+            setError('Nick jest za krótki, musi mieć co najmniej 4 litery');
             return;
         }
-
         if (password !== repeatPassword) {
-            alert('Hasła nie są takie same');
+            setError('Hasła nie są takie same');
             return;
         }
-
         if (!username || !password || !email) {
-            alert('Wypełnij wszystkie pola');
+            setError('Wypełnij wszystkie pola');
             return;
         }
-
         if (!statuteAccepted || !privacyPolicyAccepted) {
-            alert('Musisz zaakceptować regulamin i politykę prywatności');
+            setError('Musisz zaakceptować regulamin i politykę prywatności');
             return;
         }
-
-        const newUser = { username, password, email };
-        await usersService.registerUser(newUser);
-        setIsRegistered(true);
+        try {
+            const newUser = { username, password, email };
+            await usersService.registerUser(newUser);
+            setIsRegistered(true);
+        } catch (err: any) {
+            setError(err?.message || 'Błąd rejestracji');
+        }
     };
 
     const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
+        setError(null);
         try {
             await login(username, password);
             navigate('/play');
         } catch (error: any) {
-            alert(error.error || 'Nieprawidłowe dane logowania');
+            setError(error?.error || error?.message || 'Nieprawidłowe dane logowania');
         }
     };
 
@@ -151,6 +153,7 @@ const AuthForm = () => {
                             ) : null}
                         </div>
                         <Button type="submit">{activeOption === types.login ? 'Zaloguj' : 'Zarejestruj'}</Button>
+                        {error && <div className={styles.error}>{error}</div>}
                     </form>
                 </>
             )}

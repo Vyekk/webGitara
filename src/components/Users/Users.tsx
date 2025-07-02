@@ -13,6 +13,7 @@ const Users = () => {
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedUser, setSelectedUser] = useState<User | null>(null);
     const [accountType, setAccountType] = useState<AccountRole>('user');
+    const [message, setMessage] = useState<string | null>(null);
     const { changeUserRole, deleteUser, users } = useAdminUsers();
 
     const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -48,7 +49,7 @@ const Users = () => {
             setSelectedUser(updatedUser);
         }
 
-        alert('Zmieniono typ konta!');
+        setMessage('Zmieniono typ konta!');
     };
 
     const handleDeleteUser = () => {
@@ -56,7 +57,7 @@ const Users = () => {
 
         if (window.confirm(`Czy na pewno chcesz usunąć konto użytkownika ${selectedUser.username}?`)) {
             deleteUser(selectedUser.idUser);
-            alert('Konto zostało usunięte!');
+            setMessage('Konto zostało usunięte!');
             setSelectedUser(null);
         }
     };
@@ -135,6 +136,7 @@ const Users = () => {
                                 Usuń konto
                             </Button>
                         </div>
+                        {message && <div className={styles.message}>{message}</div>}
                     </form>
                 </div>
             </div>

@@ -12,7 +12,7 @@ export const registerUser = async (req: Request, res: Response): Promise<void> =
 
     const [existing] = await db.query('SELECT * FROM users WHERE username = ?', [username]);
     if ((existing as RowDataPacket[]).length > 0) {
-        res.status(400).json({ error: 'Username already exists' });
+        res.status(400).json({ error: 'Taki nick już istnieje' });
         return;
     }
 
@@ -86,7 +86,7 @@ export const updatePassword = async (req: Request, res: Response) => {
 
     const isMatch = await bcrypt.compare(oldPassword, user.password_hash);
     if (!isMatch) {
-        res.status(400).json({ error: 'Old password is incorrect' });
+        res.status(400).json({ error: 'Stare hasło jest nieprawidłowe' });
         return;
     }
 

@@ -28,7 +28,6 @@ export class UsersService {
     async registerUser(user: { username: string; password: string; email: string }) {
         try {
             await axios.post(`${API_URL}/api/users/register`, user);
-            alert('Rejestracja zakończona sukcesem! Możesz się zalogować.');
         } catch (error: unknown) {
             if (
                 typeof error === 'object' &&
@@ -36,9 +35,9 @@ export class UsersService {
                 'response' in error &&
                 (error as any).response?.data?.error
             ) {
-                alert('Błąd: ' + (error as any).response.data.error);
+                throw new Error((error as any).response.data.error);
             } else {
-                alert('Coś poszło nie tak, spróbuj ponownie.');
+                throw new Error('Coś poszło nie tak, spróbuj ponownie.');
             }
         }
     }
@@ -62,7 +61,6 @@ export class UsersService {
                 { oldPassword, newPassword },
                 { headers: this.getAuthHeaders() },
             );
-            alert('Hasło zostało zaktualizowane pomyślnie.');
         } catch (error: unknown) {
             if (
                 typeof error === 'object' &&

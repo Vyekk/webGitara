@@ -49,7 +49,7 @@ const ChangePasswordForm = () => {
                 />
             </label>
             <Button type="submit">Zmień hasło</Button>
-            {message && <p>{message}</p>}
+            {message && <p className={styles.message}>{message}</p>}
         </form>
     );
 };
