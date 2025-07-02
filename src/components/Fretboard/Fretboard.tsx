@@ -107,10 +107,11 @@ const Fretboard: React.FC<FretboardProps> = ({ numberOfStrings, numberOfFrets, n
             {Array.from({ length: numberOfStrings }, (_, i) => i)
                 .map((i) => (isReversed ? i : numberOfStrings - 1 - i))
                 .map((stringIndex) => (
-                    <div key={stringIndex} className={styles.string} data-string={stringIndex + 1}>
+                    <div key={stringIndex} data-testid="string" className={styles.string} data-string={stringIndex + 1}>
                         {Array.from({ length: numberOfFrets + 1 }, (_, fretIndex) => (
                             <div
                                 key={fretIndex}
+                                data-testid="noteFret"
                                 className={styles.noteFret}
                                 data-string={stringIndex + 1}
                                 data-fret={fretIndex}
