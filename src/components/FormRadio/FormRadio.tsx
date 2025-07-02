@@ -19,7 +19,7 @@ const Radio = ({ name, value, checked, ...props }: IRadioProps) => (
             value={value}
             name={name}
         />
-        <label className={styles.radioLabel} htmlFor={name}>
+        <label className={styles.radioLabel} htmlFor={value}>
             {value}
         </label>
     </div>
