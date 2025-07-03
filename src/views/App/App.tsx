@@ -5,6 +5,7 @@ import PlayView from 'views/PlayView/PlayView';
 import ModalProvider from 'components/Modal/ModalProvider';
 import PrivateRoute from 'components/PrivateRoute/PrivateRoute';
 import { AuthProvider } from 'context/AuthContext';
+import ActivateAccount from 'components/ActivateAccount/ActivateAccount';
 
 const App = () => {
     return (
@@ -13,6 +14,7 @@ const App = () => {
                 <Routes>
                     <Route path="/" element={<WebsiteView />}></Route>
                     <Route path="/login" element={<LoginView />}></Route>
+                    <Route path="activate" element={<ActivateAccount />} />
                     <Route element={<PrivateRoute />}>
                         <Route
                             path="/play/*"
