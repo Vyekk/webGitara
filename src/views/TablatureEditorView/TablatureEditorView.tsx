@@ -49,7 +49,6 @@ const TablatureEditorView = () => {
         setNumberOfTablatureLines(numberOfLines);
         setFormData(convertedFormData);
         setFormDataDuration(convertedFormDataDuration);
-        console.log('Converted form data:', convertedFormData);
     }, [song]);
 
     useEffect(() => {
@@ -105,7 +104,6 @@ const TablatureEditorView = () => {
     };
 
     const handleRemoveLine = () => {
-        console.log('full form data before remove:', fullFormData);
         if (numberOfTablatureLines > 1) {
             setNumberOfTablatureLines((prev) => prev - 1);
             const lineToRemove = numberOfTablatureLines;
