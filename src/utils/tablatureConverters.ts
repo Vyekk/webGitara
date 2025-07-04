@@ -77,7 +77,7 @@ export const convertTablatureToFormData = (
         step.forEach((note) => {
             if (columnIndex > 50) {
                 lineNumber++;
-                columnIndex = 0;
+                columnIndex = 1;
             }
             const col = `column-${columnIndex}`;
             const line = `line-${lineNumber}`;
