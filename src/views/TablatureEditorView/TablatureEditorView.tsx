@@ -49,6 +49,7 @@ const TablatureEditorView = () => {
         setNumberOfTablatureLines(numberOfLines);
         setFormData(convertedFormData);
         setFormDataDuration(convertedFormDataDuration);
+        console.log('Converted form data:', convertedFormData);
     }, [song]);
 
     useEffect(() => {
@@ -104,8 +105,37 @@ const TablatureEditorView = () => {
     };
 
     const handleRemoveLine = () => {
+        console.log('full form data before remove:', fullFormData);
         if (numberOfTablatureLines > 1) {
             setNumberOfTablatureLines((prev) => prev - 1);
+            const lineToRemove = numberOfTablatureLines;
+            setFullFormData((prev) => {
+                const updatedFormData = { ...prev };
+                Object.keys(updatedFormData).forEach((key) => {
+                    if (key.includes(`line-${lineToRemove}`)) {
+                        delete updatedFormData[key];
+                    }
+                });
+                return updatedFormData;
+            });
+            setFormData((prev) => {
+                const updatedFormData = { ...prev };
+                Object.keys(updatedFormData).forEach((key) => {
+                    if (key.includes(`line-${lineToRemove}`)) {
+                        delete updatedFormData[key];
+                    }
+                });
+                return updatedFormData;
+            });
+            setFormDataDuration((prev) => {
+                const updatedFormDataDuration = { ...prev };
+                Object.keys(updatedFormDataDuration).forEach((key) => {
+                    if (key.startsWith(`duration-${lineToRemove}-`)) {
+                        delete updatedFormDataDuration[key];
+                    }
+                });
+                return updatedFormDataDuration;
+            });
         }
     };
 
