@@ -12,6 +12,7 @@ import {
     deleteUser,
     updateUserRole,
     getUserFavourites,
+    activateUser,
 } from '../controllers/usersController';
 
 const router = Router();
@@ -27,5 +28,6 @@ router.put('/:userId/favourites', authenticateToken, updateUserFavourites);
 router.get('/:userId/favourites', authenticateToken, getUserFavourites);
 router.put('/:id/role', authenticateToken, updateUserRole);
 router.delete('/:id', authenticateToken, deleteUser);
+router.post('/activate', activateUser);
 
 export default router;
