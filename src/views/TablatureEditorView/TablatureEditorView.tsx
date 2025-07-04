@@ -96,7 +96,9 @@ const TablatureEditorView = () => {
         setNewSongTitle('');
         setNewSongBpm(120);
         setFormData({});
+        setFullFormData({});
         setFormDataDuration({});
+        setFullFormDataDuration({});
     };
 
     const handleAddLine = () => {
@@ -207,6 +209,7 @@ const TablatureEditorView = () => {
             if (song) {
                 await updateSong(newSongBackend);
                 setInfoMessage({ message: 'Pomyślnie zmodyfikowano utwór' });
+                songReset();
             } else {
                 await addSong(newSongBackend);
                 setInfoMessage({ message: 'Pomyślnie stworzono utwór' });
