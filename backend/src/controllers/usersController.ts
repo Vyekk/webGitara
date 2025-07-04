@@ -6,6 +6,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { db } from '../db';
 import { RowDataPacket } from 'mysql2';
 import jwt from 'jsonwebtoken';
+import { getTransporter } from '../utils/mailer';
 
 export const registerUser = async (req: Request, res: Response): Promise<void> => {
     const { username, password, email } = req.body;
@@ -18,16 +19,53 @@ export const registerUser = async (req: Request, res: Response): Promise<void> =
 
     const hashedPassword = await bcrypt.hash(password, 10);
     const idUser = uuidv4();
+    const activationToken = uuidv4();
 
     await db.query(
         `INSERT INTO users (
-            idUser, username, password_hash, email, isAdmin, isModerator, isActivated,
+            idUser, username, password_hash, email, isAdmin, isModerator, isActivated, activationToken,
             average_published_song_rating, number_of_ratings_received
-        ) VALUES (?, ?, ?, ?, 0, 0, 1, 0, 0)`,
-        [idUser, username, hashedPassword, email],
+        ) VALUES (?, ?, ?, ?, 0, 0, 0, ?, 0, 0)`,
+        [idUser, username, hashedPassword, email, activationToken],
     );
 
-    res.status(201).json({ message: 'User registered successfully', idUser });
+    // Wyślij maila aktywacyjnego
+    try {
+        const transporter = getTransporter();
+        const activationUrl = `https://konradkoluch.usermd.net/activate?token=${activationToken}`;
+        await transporter.sendMail({
+            from: 'support@konradkoluch.usermd.net',
+            to: email,
+            subject: 'Aktywacja konta w WebGitara',
+            html: `
+                <div style="max-width:500px;margin:40px auto;padding:32px 24px;background:#fff;border:1px solid #ddd;border-radius:12px;box-shadow:0 4px 20px rgba(0,0,0,0.2);font-family:sans-serif;">
+                <h2 style="color:#2d3748;text-align:center;margin-bottom:24px;">Witaj w WebGitara!</h2>
+                <p style="font-size:16px;color:#333;text-align:center;">Dziękujemy za rejestrację.<br>Aktywuj swoje konto, klikając poniższy przycisk:</p>
+                <div style="text-align:center;margin:32px 0;">
+                    <a href="${activationUrl}" style="display:inline-block;padding:14px 32px;background:#f5513b;color:#fff;font-size:18px;border-radius:6px;text-decoration:none;font-weight:bold;box-shadow:0 2px 8px rgba(0,0,0,0.2);">Aktywuj konto</a>
+                </div>
+                <p style="font-size:14px;color:#666;text-align:center;">Jeśli nie rejestrowałeś się w serwisie WebGitara, zignoruj tę wiadomość.</p>
+                <hr style="margin:32px 0;border:none;border-top:1px solid #eee;">
+                <div style="font-size:12px;color:#aaa;text-align:center;">&copy; ${new Date().getFullYear()} webGitara</div>
+                </div>
+            `,
+        });
+    } catch (err) {
+        console.error('Błąd wysyłki maila:', err);
+    }
+
+    res.status(201).json({ message: 'Rejestracja udana. Sprawdź email i aktywuj konto.', idUser });
+};
+
+export const activateUser = async (req: Request, res: Response) => {
+    const { token } = req.body;
+    const [rows] = await db.query('SELECT * FROM users WHERE activationToken = ?', [token]);
+    const user = (rows as any[])[0];
+    if (!user) {
+        return res.status(400).json({ error: 'Nieprawidłowy token aktywacyjny' });
+    }
+    await db.query('UPDATE users SET isActivated = 1, activationToken = NULL WHERE idUser = ?', [user.idUser]);
+    res.json({ message: 'Konto zostało aktywowane!' });
 };
 
 export const loginUser = async (req: Request, res: Response): Promise<void> => {
@@ -39,6 +77,11 @@ export const loginUser = async (req: Request, res: Response): Promise<void> => {
 
         if (!user) {
             res.status(400).json({ error: 'Invalid credentials' });
+            return;
+        }
+
+        if (!user.isActivated) {
+            res.status(403).json({ error: 'Konto nieaktywne, sprawdź email.' });
             return;
         }
 
