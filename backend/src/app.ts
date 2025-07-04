@@ -3,6 +3,7 @@ import cors from 'cors';
 import path from 'path';
 import 'dotenv/config';
 import { db } from './db';
+import cron from 'node-cron';
 
 declare const PhusionPassenger: any;
 
@@ -32,6 +33,16 @@ app.use(express.static(path.join(__dirname, 'public')));
         console.error('❌ Błąd połączenia z bazą danych:', err);
     }
 })();
+
+cron.schedule('0 */2 * * *', async () => {
+    try {
+        console.log('Usuwanie usuniętych utworów z kosza...');
+        await db.query('DELETE FROM songs WHERE deleted_by_idUser IS NOT NULL');
+        console.log('Usunięte utwory zostały usunięte.');
+    } catch (err) {
+        console.error('Błąd podczas usuwania utworów z kosza:', err);
+    }
+});
 
 app.get('*', (_req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'index.html'));
