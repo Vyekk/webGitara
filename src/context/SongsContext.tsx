@@ -47,7 +47,9 @@ export const SongsProvider = ({ children }: { children: React.ReactNode }) => {
         const song = songs.find((s) => s.idSong === id);
         if (!song) throw new Error('Nie znaleziono utworu.');
 
-        if (!user.isAdmin && !user.isModerator && song.idUser !== user.idUser) {
+        const isAdminOrModerator =
+            Array.isArray(user.roles) && (user.roles.includes('admin') || user.roles.includes('moderator'));
+        if (!isAdminOrModerator && song.idUser !== user.idUser) {
             throw new Error('Nie możesz usunąć cudzego utworu.');
         }
 
@@ -58,7 +60,9 @@ export const SongsProvider = ({ children }: { children: React.ReactNode }) => {
     const restoreSong = async (id: string) => {
         if (!user) throw new Error('Użytkownik niezalogowany.');
 
-        if (!user.isAdmin && !user.isModerator) {
+        const isAdminOrModerator =
+            Array.isArray(user.roles) && (user.roles.includes('admin') || user.roles.includes('moderator'));
+        if (!isAdminOrModerator) {
             throw new Error('Nie masz uprawnień do przywracania utworów.');
         }
 

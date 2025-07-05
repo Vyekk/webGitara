@@ -80,7 +80,10 @@ const TablatureEditorView = () => {
             navigate(`/play/edit`);
             return;
         }
-        if (foundSong.idUser !== user.idUser && !user.isAdmin && !user.isModerator) {
+        if (
+            foundSong.idUser !== user.idUser &&
+            !(Array.isArray(user.roles) && (user.roles.includes('admin') || user.roles.includes('moderator')))
+        ) {
             setErrorMessage({ message: 'Nie masz uprawnień do edycji tego utworu' });
             navigate('/play/edit');
             return;

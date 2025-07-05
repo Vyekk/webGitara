@@ -45,14 +45,18 @@ const Toolbar = forwardRef<HTMLDivElement, ToolbarProps>(({ hasControls }, ref) 
                 Nowy utwór
             </Button>
             <Button
-                className={`${user.isAdmin ? styles.secondOption : styles.hidden}`}
+                className={`${user.roles.includes('admin') ? styles.secondOption : styles.hidden}`}
                 onClick={() => handleOpenModal(<Users />)}
                 transparent
             >
                 <FontAwesomeIcon icon={faUsers} className={styles.settingsIcon} />
             </Button>
             <Button
-                className={`${user.isAdmin || user.isModerator ? styles.secondOption : styles.hidden}`}
+                className={`${
+                    user.roles.includes('admin') || user.roles.includes('moderator')
+                        ? styles.secondOption
+                        : styles.hidden
+                }`}
                 onClick={() => handleOpenModal(<SongsLibrary isShowingDeletedSongs />)}
                 transparent
             >

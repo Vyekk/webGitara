@@ -14,7 +14,7 @@ const useAdminUsers = () => {
 
     useEffect(() => {
         const fetchUsers = async () => {
-            if (!currentUser.isAdmin) {
+            if (!Array.isArray(currentUser.roles) || !currentUser.roles.includes('admin')) {
                 setError('Brak dostępu');
                 return;
             }
@@ -31,7 +31,7 @@ const useAdminUsers = () => {
     }, [currentUser]);
 
     const changeUserRole = async (targetUserId: string, newRole: AccountRole) => {
-        if (!currentUser.isAdmin) {
+        if (!Array.isArray(currentUser.roles) || !currentUser.roles.includes('admin')) {
             setError('Brak uprawnień do zmiany roli.');
             return;
         }
@@ -43,8 +43,7 @@ const useAdminUsers = () => {
                     user.idUser === targetUserId
                         ? {
                               ...user,
-                              isAdmin: newRole === 'admin',
-                              isModerator: newRole === 'moderator',
+                              roles: [newRole],
                           }
                         : user,
                 ),
@@ -55,7 +54,7 @@ const useAdminUsers = () => {
     };
 
     const deleteUser = async (targetUserId: string) => {
-        if (!currentUser.isAdmin) {
+        if (!Array.isArray(currentUser.roles) || !currentUser.roles.includes('admin')) {
             setError('Brak uprawnień do usuwania kont.');
             return;
         }

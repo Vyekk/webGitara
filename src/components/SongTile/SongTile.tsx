@@ -63,7 +63,9 @@ const SongTile = ({ song, isLarge }: SongTileProps) => {
 
     const handleDeleteClick = (event: React.MouseEvent) => {
         event.stopPropagation();
-        const canDelete = user.isAdmin || user.isModerator || user.idUser === song.idUser;
+        const canDelete =
+            (Array.isArray(user.roles) && (user.roles.includes('admin') || user.roles.includes('moderator'))) ||
+            user.idUser === song.idUser;
 
         if (!canDelete) {
             setErrorMessage({ message: 'Nie masz uprawnień do usunięcia tego utworu.' });
@@ -108,7 +110,10 @@ const SongTile = ({ song, isLarge }: SongTileProps) => {
                 </div>
                 <div
                     className={`${
-                        (user.isAdmin || user.isModerator || user.idUser == song.idUser) && !song.deleted_by_idUser
+                        ((Array.isArray(user.roles) &&
+                            (user.roles.includes('admin') || user.roles.includes('moderator'))) ||
+                            user.idUser == song.idUser) &&
+                        !song.deleted_by_idUser
                             ? styles.show
                             : ''
                     } ${!song.deleted_by_idUser ? styles.songManageButtonsWrapper : styles.hidden} `}
@@ -120,7 +125,9 @@ const SongTile = ({ song, isLarge }: SongTileProps) => {
                         <FontAwesomeIcon icon={faTrash} />
                     </div>
                 </div>
-                {(user.isAdmin || user.isModerator) && !!song.deleted_by_idUser ? (
+                {Array.isArray(user.roles) &&
+                (user.roles.includes('admin') || user.roles.includes('moderator')) &&
+                !!song.deleted_by_idUser ? (
                     <div className={styles.delete} onClick={() => restoreSong(song.idSong)}>
                         <FontAwesomeIcon icon={faTrashCanArrowUp} />
                     </div>

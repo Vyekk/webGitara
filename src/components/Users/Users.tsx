@@ -25,10 +25,15 @@ const Users = () => {
             setAccountType('user');
             return;
         }
-        if (selectedUser.isAdmin) {
-            setAccountType('admin');
-        } else if (selectedUser.isModerator) {
-            setAccountType('moderator');
+        // Ustal typ konta na podstawie ról
+        if (Array.isArray(selectedUser.roles)) {
+            if (selectedUser.roles.includes('admin')) {
+                setAccountType('admin');
+            } else if (selectedUser.roles.includes('moderator')) {
+                setAccountType('moderator');
+            } else {
+                setAccountType('user');
+            }
         } else {
             setAccountType('user');
         }
