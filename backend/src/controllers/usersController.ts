@@ -4,6 +4,16 @@ import { Request, Response } from 'express';
 import bcrypt from 'bcryptjs';
 import { v4 as uuidv4 } from 'uuid';
 import { db } from '../db';
+// Helper do pobierania ról użytkownika
+export const getUserRoles = async (idUser: string): Promise<string[]> => {
+    const [rows] = await db.query(
+        `SELECT r.name FROM users_roles ur
+         JOIN roles r ON ur.idRole = r.idRole
+         WHERE ur.idUser = ?`,
+        [idUser],
+    );
+    return (rows as { name: string }[]).map((r) => r.name);
+};
 import { RowDataPacket } from 'mysql2';
 import jwt from 'jsonwebtoken';
 
@@ -21,11 +31,21 @@ export const registerUser = async (req: Request, res: Response): Promise<void> =
 
     await db.query(
         `INSERT INTO users (
-            idUser, username, password_hash, email, isAdmin, isModerator, isActivated,
+            idUser, username, password_hash, email, isActivated,
             average_published_song_rating, number_of_ratings_received
-        ) VALUES (?, ?, ?, ?, 0, 0, 1, 0, 0)`,
+        ) VALUES (?, ?, ?, ?, 1, 0, 0)`,
         [idUser, username, hashedPassword, email],
     );
+
+    // Przypisz domyślną rolę 'user'
+    const [roleRows] = await db.query('SELECT idRole FROM roles WHERE name = ?', ['user']);
+    const roleRow = (roleRows as any[])[0];
+    if (roleRow) {
+        await db.query(
+            'INSERT INTO users_roles (idUser_role, idUser, idRole, assigned_at, assigned_by) VALUES (?, ?, ?, NOW(), ?)', // assigned_by = idUser (sam sobie nadaje przy rejestracji)
+            [uuidv4(), idUser, roleRow.idRole, idUser],
+        );
+    }
 
     res.status(201).json({ message: 'User registered successfully', idUser });
 };
@@ -50,18 +70,20 @@ export const loginUser = async (req: Request, res: Response): Promise<void> => {
             return;
         }
 
+        // Pobierz role użytkownika
+        const roles = await getUserRoles(user.idUser);
+
         const token = jwt.sign(
             {
                 idUser: user.idUser,
                 username: user.username,
-                isAdmin: user.isAdmin,
-                isModerator: user.isModerator,
+                roles,
             },
             process.env.JWT_SECRET!,
             { expiresIn: '24h' },
         );
 
-        res.json({ message: 'Login successful', user, token });
+        res.json({ message: 'Login successful', user: { ...user, roles }, token });
     } catch (error) {
         res.status(500).json({ error: 'Internal server error' });
     }
@@ -104,7 +126,27 @@ export const getAllUsers = async (req: Request, res: Response) => {
     }
 
     const [rows] = await db.query('SELECT * FROM users');
-    res.json(rows);
+    const users = rows as any[];
+
+    // Pobierz role dla wszystkich użytkowników
+    const [rolesRows] = await db.query(`
+        SELECT ur.idUser, r.name as roleName
+        FROM users_roles ur
+        JOIN roles r ON ur.idRole = r.idRole
+    `);
+    const rolesMap: Record<string, string[]> = {};
+    (rolesRows as { idUser: string; roleName: string }[]).forEach(({ idUser, roleName }) => {
+        if (!rolesMap[idUser]) rolesMap[idUser] = [];
+        rolesMap[idUser].push(roleName);
+    });
+
+    // Dodaj pole roles do każdego użytkownika
+    const usersWithRoles = users.map((u) => ({
+        ...u,
+        roles: rolesMap[u.idUser] || [],
+    }));
+
+    res.json(usersWithRoles);
 };
 
 export const getUserById = async (req: Request, res: Response) => {
@@ -237,26 +279,24 @@ export const updateUserRole = async (req: Request, res: Response) => {
     const { id } = req.params;
     const { role } = req.body; // role: 'admin' | 'moderator' | 'user'
 
-    let isAdmin = 0;
-    let isModerator = 0;
-    if (role === 'admin') isAdmin = 1;
-    else if (role === 'moderator') isModerator = 1;
-
-    try {
-        const [result]: any = await db.query('UPDATE users SET isAdmin = ?, isModerator = ? WHERE idUser = ?', [
-            isAdmin,
-            isModerator,
-            id,
-        ]);
-        if (result.affectedRows === 0) {
-            res.status(404).json({ error: 'User not found' });
-            return;
-        }
-        res.json({ message: 'User role updated successfully' });
-    } catch (err) {
-        console.error('Błąd podczas zmiany roli użytkownika:', err);
-        res.status(500).json({ error: 'Błąd serwera' });
+    // Znajdź idRole
+    const [roleRows] = await db.query('SELECT idRole FROM roles WHERE name = ?', [role]);
+    const roleRow = (roleRows as any[])[0];
+    if (!roleRow) {
+        return res.status(400).json({ error: 'Nieprawidłowa rola' });
     }
+
+    // Usuń starą rolę użytkownika (jeśli istnieje)
+    await db.query('DELETE FROM users_roles WHERE idUser = ?', [id]);
+
+    // assigned_by = osoba nadająca uprawnienie (req.user.idUser)
+    const assignedBy = req.user?.idUser || null;
+    await db.query(
+        'INSERT INTO users_roles (idUser_role, idUser, idRole, assigned_at, assigned_by) VALUES (?, ?, ?, NOW(), ?)',
+        [uuidv4(), id, roleRow.idRole, assignedBy],
+    );
+
+    res.json({ message: 'User role updated successfully' });
 };
 
 export const getUserFavourites = async (req: Request, res: Response) => {
