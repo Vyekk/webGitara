@@ -164,7 +164,12 @@ export const getUserById = async (req: Request, res: Response) => {
         return;
     }
 
-    res.json(user);
+    const [rolesRows] = await db.query(
+        `SELECT r.name FROM users_roles ur JOIN roles r ON ur.idRole = r.idRole WHERE ur.idUser = ?`,
+        [id],
+    );
+    const roles = (rolesRows as { name: string }[]).map((r) => r.name);
+    res.json({ ...user, roles });
 };
 
 export const updateUserStats = async (req: Request, res: Response) => {
