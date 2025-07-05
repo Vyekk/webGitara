@@ -41,10 +41,7 @@ export type TablatureActiveLineColumn = {
 export type User = {
     idUser: string;
     username: string;
-    password: string;
     email: string;
-    isAdmin: boolean;
-    isModerator: boolean;
     isActivated: boolean;
     created_at: string;
     average_published_song_rating: number;
