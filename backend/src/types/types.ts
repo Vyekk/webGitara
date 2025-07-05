@@ -43,12 +43,11 @@ export type User = {
     username: string;
     password: string;
     email: string;
-    isAdmin: boolean;
-    isModerator: boolean;
     isActivated: boolean;
     created_at: string;
     average_published_song_rating: number;
     number_of_ratings_received: number;
+    roles: string[];
 };
 
 export type InfoMessage = {
@@ -79,6 +78,5 @@ export type AuthData = {
 export interface AuthUser {
     idUser: string;
     username: string;
-    isAdmin: boolean;
-    isModerator: boolean;
+    roles: string[];
 }
