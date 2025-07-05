@@ -45,7 +45,9 @@ const Toolbar = forwardRef<HTMLDivElement, ToolbarProps>(({ hasControls }, ref) 
                 Nowy utwór
             </Button>
             <Button
-                className={`${user.roles.includes('admin') ? styles.secondOption : styles.hidden}`}
+                className={`${
+                    Array.isArray(user.roles) && user.roles.includes('admin') ? styles.secondOption : styles.hidden
+                }`}
                 onClick={() => handleOpenModal(<Users />)}
                 transparent
             >
@@ -53,7 +55,7 @@ const Toolbar = forwardRef<HTMLDivElement, ToolbarProps>(({ hasControls }, ref) 
             </Button>
             <Button
                 className={`${
-                    user.roles.includes('admin') || user.roles.includes('moderator')
+                    Array.isArray(user.roles) && (user.roles.includes('admin') || user.roles.includes('moderator'))
                         ? styles.secondOption
                         : styles.hidden
                 }`}
