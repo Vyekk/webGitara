@@ -49,6 +49,7 @@ export type User = {
     created_at: string;
     average_published_song_rating: number;
     number_of_ratings_received: number;
+    roles: string[];
 };
 
 export type InfoMessage = {
