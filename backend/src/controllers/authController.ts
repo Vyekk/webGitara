@@ -27,13 +27,20 @@ export const loginUser = async (req: Request, res: Response): Promise<void> => {
         const [favRows] = await db.query('SELECT idSong FROM favourites WHERE idUser = ?', [user.idUser]);
         const favourites = (favRows as RowDataPacket[]).map((row) => row.idSong);
 
+        const [roleRows] = await db.query(
+            'SELECT r.name FROM roles r JOIN users_roles ur ON r.idRole = ur.idRole WHERE ur.idUser = ?',
+            [user.idUser],
+        );
+        const roles = (roleRows as RowDataPacket[]).map((row) => row.name);
+
         const { password_hash, ...userWithoutPassword } = user;
+        const userWithRoles = { ...userWithoutPassword, roles };
 
         const token = jwt.sign(
             {
                 idUser: user.idUser,
                 username: user.username,
-                isAdmin: user.isAdmin,
+                roles,
             },
             process.env.JWT_SECRET!,
             { expiresIn: '1h' },
@@ -41,7 +48,7 @@ export const loginUser = async (req: Request, res: Response): Promise<void> => {
 
         res.json({
             token,
-            user: userWithoutPassword,
+            user: userWithRoles,
             favourites,
         });
     } catch (error) {
