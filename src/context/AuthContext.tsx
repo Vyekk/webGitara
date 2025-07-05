@@ -65,8 +65,12 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
         const updatedUser = await usersService.getUserById(user.idUser);
         if (updatedUser) {
-            setUser(updatedUser);
-            authService.saveAuth({ user: updatedUser, token: token ?? '', favourites });
+            const mappedUser = {
+                ...updatedUser,
+                roles: updatedUser.roles ?? [],
+            };
+            setUser(mappedUser);
+            authService.saveAuth({ user: mappedUser, token: token ?? '', favourites });
         }
     };
 
