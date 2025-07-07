@@ -6,7 +6,7 @@ import Button from 'components/Button/Button';
 import Radio from 'components/FormRadio/FormRadio';
 import { UsersService } from 'services/UsersService';
 import { useAuth } from 'context/AuthContext';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 const types = {
     login: 'logowanie',
@@ -134,7 +134,8 @@ const AuthForm = () => {
                                             onChange={(e) => setStatuteAccepted(e.target.checked)}
                                         />
                                         <label htmlFor="statute">
-                                            Akceptuję regulamin platformy i zobowiązuje się do jego przestrzegania
+                                            Akceptuję <Link to="../termsandprivacyview">regulamin platformy</Link> i
+                                            zobowiązuje się do jego przestrzegania
                                         </label>
                                     </div>
                                     <div className={styles.agreement}>
@@ -145,8 +146,9 @@ const AuthForm = () => {
                                             onChange={(e) => setPrivacyPolicyAccepted(e.target.checked)}
                                         />
                                         <label htmlFor="privacyPolicy">
-                                            Akceptuję politykę prywatności platformy i wyrażam zgodę na przetwarzanie
-                                            moich danych osobowych zgodnie z jej postanowieniami.
+                                            Akceptuję <Link to="../termsandprivacyview">politykę prywatności</Link>{' '}
+                                            platformy i wyrażam zgodę na przetwarzanie moich danych osobowych zgodnie z
+                                            jej postanowieniami.
                                         </label>
                                     </div>
                                 </div>
