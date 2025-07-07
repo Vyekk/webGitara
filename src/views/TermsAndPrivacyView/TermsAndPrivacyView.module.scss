@@ -1,0 +1,17 @@
+@use 'variables' as *;
+
+.TermsOfUseViewWrapper {
+    line-height: 1.6;
+
+    font-size: $font-size-web;
+    background-color: $play-background;
+    @media screen and (max-width: $desktop) {
+        font-size: $mobile-font-size-web;
+    }
+    h1 {
+        line-height: 1.2;
+    }
+    .termsOfUseContent {
+        padding: 2rem;
+    }
+}
