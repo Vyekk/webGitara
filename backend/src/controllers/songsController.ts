@@ -142,8 +142,30 @@ export const updateSong = async (req: Request, res: Response): Promise<void> => 
         res.status(400).json({ error: 'Missing required fields' });
         return;
     }
-
     try {
+        // 1. Pobierz aktualny rekord utworu
+        const [currentRows]: any = await db.query('SELECT * FROM songs WHERE idSong = ?', [id]);
+        if (!currentRows.length) {
+            res.status(404).json({ error: 'Song not found' });
+            return;
+        }
+        const currentSong = currentRows[0];
+
+        // 2. Pobierz aktualny numer wersji historii
+        const [historyRows]: any = await db.query(
+            'SELECT MAX(version_number) as maxVersion FROM songs_history WHERE idSong = ?',
+            [id],
+        );
+        const newVersion = (historyRows[0]?.maxVersion || 0) + 1;
+
+        // 3. Zapisz starą wersję do historii
+        const idHistory = uuidv4();
+        await db.query(
+            'INSERT INTO songs_history (idHistory, idSong, version_number, tablature, edited_by_idUser, edited_at) VALUES (?, ?, ?, ?, ?, NOW())',
+            [idHistory, id, newVersion, currentSong.tablature, req.user?.idUser || null],
+        );
+
+        // 4. Zaktualizuj rekord w songs
         let query = 'UPDATE songs SET title = ?, default_bpm = ?, tablature = ?, updated_at = CURRENT_TIMESTAMP';
         const params: any[] = [title, default_bpm, JSON.stringify(tablature)];
         if (typeof deleted_by_idUser !== 'undefined') {
@@ -154,11 +176,6 @@ export const updateSong = async (req: Request, res: Response): Promise<void> => 
         params.push(id);
 
         const [result]: any = await db.query(query, params);
-
-        if (result.affectedRows === 0) {
-            res.status(404).json({ error: 'Song not found' });
-            return;
-        }
 
         res.json({ message: 'Song updated successfully' });
     } catch (err) {
@@ -439,5 +456,55 @@ export const rateSong = async (req: Request, res: Response): Promise<void> => {
     } catch (err) {
         console.error('Błąd przy ocenianiu utworu:', err);
         res.status(500).json({ error: 'Błąd serwera' });
+    }
+};
+
+export const getSongHistoryVersion = async (req: Request, res: Response): Promise<void> => {
+    const { id, version } = req.params;
+    try {
+        const [rows]: any = await db.query('SELECT * FROM songs_history WHERE idSong = ? AND version_number = ?', [
+            id,
+            version,
+        ]);
+        if (!rows.length) {
+            res.status(404).json({ error: 'History version not found' });
+            return;
+        }
+        const historyVersion = rows[0];
+        res.json({
+            idHistory: historyVersion.idHistory,
+            idSong: historyVersion.idSong,
+            version_number: historyVersion.version_number,
+            tablature: JSON.parse(historyVersion.tablature),
+            edited_by_idUser: historyVersion.edited_by_idUser,
+            edited_at: historyVersion.edited_at,
+        });
+    } catch (err) {
+        console.error('Error fetching song history version:', err);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+};
+
+export const getSongHistoryVersions = async (req: Request, res: Response): Promise<void> => {
+    const { id } = req.params;
+    try {
+        const [rows]: any = await db.query(
+            'SELECT version_number, edited_at FROM songs_history WHERE idSong = ? ORDER BY version_number ASC',
+            [id],
+        );
+        console.log(id);
+        if (!rows.length) {
+            res.json([]);
+            return;
+        }
+        // Zwróć listę wersji z numerem i datą edycji
+        const versions = rows.map((row: any) => ({
+            version_number: row.version_number,
+            edited_at: row.edited_at,
+        }));
+        res.json(versions);
+    } catch (err) {
+        console.error('Error fetching song history versions:', err);
+        res.status(500).json({ error: 'Internal server error' });
     }
 };
