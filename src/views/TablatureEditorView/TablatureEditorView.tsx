@@ -31,13 +31,14 @@ const TablatureEditorView = () => {
     const [infoMessage, setInfoMessage] = useState<InfoMessage>({ message: null });
     const [fullFormData, setFullFormData] = useState<Record<string, string>>({});
     const [fullFormDataDuration, setFullFormDataDuration] = useState<Record<string, string>>({});
+    const [selectedVersion, setSelectedVersion] = useState('');
+    const [versionList, setVersionList] = useState<{ version_number: number; edited_at: string }[]>([]);
     const navigate = useNavigate();
     const { openModal, setModal } = useContext(ModalContext);
     const [formData, setFormData] = useState<Record<string, string>>({});
     const [formDataDuration, setFormDataDuration] = useState<Record<string, string>>({});
     const location = useLocation();
-    const { songs } = useSongs();
-    const { addSong, updateSong } = useSongs();
+    const { songs, addSong, updateSong, getSongHistoryVersions, getSongHistoryVersion } = useSongs();
     const user = useRequiredUser();
 
     useEffect(() => {
@@ -93,6 +94,23 @@ const TablatureEditorView = () => {
         setNewSongBpm(foundSong.bpm);
         setNewSongTitle(foundSong.songTitle);
     }, [songs, location.pathname]);
+
+    useEffect(() => {
+        const fetchVersions = async () => {
+            if (!song || !song.idSong) return;
+            try {
+                const versions = await getSongHistoryVersions(song.idSong);
+                setVersionList(versions);
+            } catch (error) {
+                setVersionList([]);
+            }
+        };
+        fetchVersions();
+    }, [song, getSongHistoryVersions]);
+
+    useEffect(() => {
+        setSelectedVersion(''); // resetuj wersję po zmianie piosenki
+    }, [song]);
 
     const songReset = () => {
         setSong(null);
@@ -236,6 +254,39 @@ const TablatureEditorView = () => {
         }));
     };
 
+    const handleVersionChange = async (e: React.ChangeEvent<HTMLSelectElement>) => {
+        const version = e.target.value;
+        setSelectedVersion(version);
+    };
+
+    useEffect(() => {
+        const fetchVersion = async () => {
+            if (selectedVersion && song) {
+                try {
+                    const history = await getSongHistoryVersion(song.idSong, selectedVersion);
+                    const historyTablature = history.tablature;
+                    const { formData: convertedFormData, formDataDuration: convertedFormDataDuration } =
+                        convertTablatureToFormData(historyTablature);
+                    setFormData(convertedFormData);
+                    setFormDataDuration(convertedFormDataDuration);
+                    setFullFormData(convertedFormData);
+                    setFullFormDataDuration(convertedFormDataDuration);
+                } catch (error) {
+                    setErrorMessage({ message: 'Nie udało się pobrać wybranej wersji.' });
+                }
+            } else if (song) {
+                // Przywróć aktualną wersję z song
+                const { formData: convertedFormData, formDataDuration: convertedFormDataDuration } =
+                    convertTablatureToFormData(song.tablature);
+                setFormData(convertedFormData);
+                setFormDataDuration(convertedFormDataDuration);
+                setFullFormData(convertedFormData);
+                setFullFormDataDuration(convertedFormDataDuration);
+            }
+        };
+        fetchVersion();
+    }, [selectedVersion, song, getSongHistoryVersion]);
+
     return (
         <div className={styles.tablatureEditorViewWrapper}>
             <div className={styles.textContentWrapper}>
@@ -277,6 +328,22 @@ const TablatureEditorView = () => {
                                 value={newSongBpm}
                                 onChange={handleBpmChange}
                             />
+                        </div>
+                        <div className={styles.inputWrapper}>
+                            <label htmlFor="version">Wersja</label>
+                            <select
+                                id="version"
+                                value={selectedVersion}
+                                onChange={handleVersionChange}
+                                disabled={!song}
+                            >
+                                <option value="">Aktualna</option>
+                                {versionList.map((v) => (
+                                    <option key={v.version_number} value={v.version_number}>
+                                        {`Wersja ${v.version_number} (${new Date(v.edited_at).toLocaleString()})`}
+                                    </option>
+                                ))}
+                            </select>
                         </div>
                     </div>
                     {Array.from({ length: numberOfTablatureLines }, (_, i) => (
