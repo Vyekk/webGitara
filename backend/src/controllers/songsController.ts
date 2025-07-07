@@ -492,7 +492,6 @@ export const getSongHistoryVersions = async (req: Request, res: Response): Promi
             'SELECT version_number, edited_at FROM songs_history WHERE idSong = ? ORDER BY version_number ASC',
             [id],
         );
-        console.log(id);
         if (!rows.length) {
             res.json([]);
             return;
