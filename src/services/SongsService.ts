@@ -134,4 +134,34 @@ export class SongsService {
             throw error;
         }
     }
+
+    async getSongHistoryVersions(idSong: string): Promise<{ version_number: number; edited_at: string }[]> {
+        try {
+            const response = await axios.get<{ version_number: number; edited_at: string }[]>(
+                `${API_URL}/api/songs/${idSong}/history`,
+                {
+                    headers: this.getAuthHeaders(),
+                },
+            );
+            return response.data;
+        } catch (error) {
+            console.error('Błąd podczas pobierania wersji historii utworu:', error);
+            return [];
+        }
+    }
+
+    async getSongHistoryVersion(idSong: string, version: string): Promise<{ tablature: any; [key: string]: any }> {
+        try {
+            const response = await axios.get<{ tablature: any; [key: string]: any }>(
+                `${API_URL}/api/songs/${idSong}/history/${version}`,
+                {
+                    headers: this.getAuthHeaders(),
+                },
+            );
+            return response.data;
+        } catch (error) {
+            console.error('Błąd podczas pobierania konkretnej wersji historii utworu:', error);
+            throw error;
+        }
+    }
 }

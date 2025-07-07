@@ -12,6 +12,8 @@ type SongBackendDto = {
     tablature: any;
 };
 
+type SongHistoryVersion = { version_number: number; edited_at: string };
+
 type SongsContextType = {
     songs: Song[];
     refreshSongs: () => Promise<void>;
@@ -24,6 +26,8 @@ type SongsContextType = {
     deleteCommentFromSong: (songId: string, commentId: string) => Promise<void>;
     restoreSong: (id: string) => Promise<void>;
     rateSong: (songId: string, value: number) => Promise<void>;
+    getSongHistoryVersions: (idSong: string) => Promise<SongHistoryVersion[]>;
+    getSongHistoryVersion: (idSong: string, version: string) => Promise<any>;
 };
 
 const SongsContext = createContext<SongsContextType | undefined>(undefined);
@@ -144,6 +148,14 @@ export const SongsProvider = ({ children }: { children: React.ReactNode }) => {
         await refreshSongs();
     };
 
+    const getSongHistoryVersions = async (idSong: string): Promise<SongHistoryVersion[]> => {
+        return await songsService.getSongHistoryVersions(idSong);
+    };
+
+    const getSongHistoryVersion = async (idSong: string, version: string): Promise<any> => {
+        return await songsService.getSongHistoryVersion(idSong, version);
+    };
+
     useEffect(() => {
         refreshSongs();
     }, []);
@@ -162,6 +174,8 @@ export const SongsProvider = ({ children }: { children: React.ReactNode }) => {
                 getDeletedSongs,
                 restoreSong,
                 rateSong,
+                getSongHistoryVersions,
+                getSongHistoryVersion,
             }}
         >
             {children}
