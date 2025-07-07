@@ -12,6 +12,8 @@ import {
     saveLastPlayedSong,
     getTopRatedSongs,
     getLastPlayedSongs,
+    getSongHistoryVersions,
+    getSongHistoryVersion,
 } from '../controllers/songsController';
 
 const router = express.Router();
@@ -21,6 +23,8 @@ router.get('/top-rated', getTopRatedSongs);
 router.post('/lastplayedsongs', authenticateToken, saveLastPlayedSong);
 router.get('/lastplayedsongs/:idUser', authenticateToken, getLastPlayedSongs);
 router.get('/:id', getSongById);
+router.get('/:id/history', getSongHistoryVersions);
+router.get('/:id/history/:version', getSongHistoryVersion);
 router.post('/', authenticateToken, createSong);
 router.put('/:id', authenticateToken, updateSong);
 router.delete('/:id', authenticateToken, deleteSong);
