@@ -1,3 +1,4 @@
+import { Response as ExpressResponse } from 'express';
 import { Request, Response } from 'express';
 import { v4 as uuidv4 } from 'uuid';
 import { db } from '../db';
@@ -5,6 +6,25 @@ import { Song, Comment, Tablature } from '../types/types';
 
 type DbQueryResult<T> = [T[], any];
 
+export const downloadTablature = async (req: Request, res: ExpressResponse): Promise<void> => {
+    const { id } = req.params;
+    try {
+        const [rows]: DbQueryResult<any> = await db.query('SELECT title, tablature FROM songs WHERE idSong = ?', [id]);
+        if (!rows.length) {
+            res.status(404).json({ error: 'Song not found' });
+            return;
+        }
+        const song = rows[0];
+        const tablature = JSON.parse(song.tablature);
+        const filename = `${song.title || 'tablature'}.json`;
+        res.setHeader('Content-Disposition', `attachment; filename="${filename}"`);
+        res.setHeader('Content-Type', 'application/json');
+        res.status(200).send(JSON.stringify(tablature, null, 2));
+    } catch (err) {
+        console.error('Error downloading tablature:', err);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+};
 export const getSongById = async (req: Request, res: Response): Promise<void> => {
     try {
         const [rows]: DbQueryResult<any> = await db.query('SELECT * FROM songs WHERE idSong = ?', [req.params.id]);
