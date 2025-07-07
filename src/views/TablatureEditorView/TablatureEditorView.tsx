@@ -345,6 +345,39 @@ const TablatureEditorView = () => {
                                 ))}
                             </select>
                         </div>
+                        <div className={styles.inputWrapper}>
+                            <label htmlFor="importTablature">Importuj tabulaturę (JSON)</label>
+                            <div>
+                                <Input
+                                    type="file"
+                                    id="importTablature"
+                                    accept="application/json"
+                                    onChange={async (e) => {
+                                        const file = e.target.files?.[0];
+                                        if (!file) return;
+                                        try {
+                                            const text = await file.text();
+                                            const importedTablature = JSON.parse(text);
+                                            const {
+                                                formData: convertedFormData,
+                                                formDataDuration: convertedFormDataDuration,
+                                            } = convertTablatureToFormData(importedTablature);
+                                            setFormData(convertedFormData);
+                                            setFormDataDuration(convertedFormDataDuration);
+                                            setFullFormData(convertedFormData);
+                                            setFullFormDataDuration(convertedFormDataDuration);
+                                            setNumberOfTablatureLines(Math.ceil(importedTablature.length / 50));
+                                            setInfoMessage({ message: 'Tablatura została zaimportowana.' });
+                                        } catch (err) {
+                                            setErrorMessage({
+                                                message:
+                                                    'Błąd importu tabulatury. Upewnij się, że plik jest poprawnym JSON.',
+                                            });
+                                        }
+                                    }}
+                                />
+                            </div>
+                        </div>
                     </div>
                     {Array.from({ length: numberOfTablatureLines }, (_, i) => (
                         <TablatureEditor
