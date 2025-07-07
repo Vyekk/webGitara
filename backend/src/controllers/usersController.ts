@@ -26,18 +26,36 @@ export const registerUser = async (req: Request, res: Response): Promise<void> =
         res.status(400).json({ error: 'Taki nick już istnieje' });
         return;
     }
+    const [existingEmail] = await db.query('SELECT * FROM users WHERE email = ?', [email]);
+    if ((existingEmail as RowDataPacket[]).length > 0) {
+        res.status(400).json({ error: 'Konto z tym adresem email już istnieje' });
+        return;
+    }
 
     const hashedPassword = await bcrypt.hash(password, 10);
     const idUser = uuidv4();
     const activationToken = uuidv4();
 
-    await db.query(
-        `INSERT INTO users (
-            idUser, username, password_hash, email, isActivated, activationToken,
-            average_published_song_rating, number_of_ratings_received
-        ) VALUES (?, ?, ?, ?, 0, ?, 0, 0)`,
-        [idUser, username, hashedPassword, email, activationToken],
-    );
+    try {
+        await db.query(
+            `INSERT INTO users (
+                idUser, username, password_hash, email, isActivated, activationToken,
+                average_published_song_rating, number_of_ratings_received
+            ) VALUES (?, ?, ?, ?, 0, ?, 0, 0)`,
+            [idUser, username, hashedPassword, email, activationToken],
+        );
+    } catch (err: any) {
+        if (err.code === 'ER_DUP_ENTRY' && err.message.includes('unique_email')) {
+            res.status(400).json({ error: 'Konto z tym adresem email już istnieje' });
+            return;
+        }
+        if (err.code === 'ER_DUP_ENTRY' && err.message.includes('username')) {
+            res.status(400).json({ error: 'Taki nick już istnieje' });
+            return;
+        }
+        res.status(500).json({ error: 'Błąd serwera przy rejestracji użytkownika.' });
+        return;
+    }
 
     const [roleRows] = await db.query('SELECT idRole FROM roles WHERE name = ?', ['user']);
     const userRole = (roleRows as any[])[0];
