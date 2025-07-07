@@ -34,6 +34,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     useEffect(() => {
         const authData = authService.loadAuth();
         if (authData) {
+            if (!Array.isArray(authData.user.roles)) authData.user.roles = [];
             setUser(authData.user);
             setToken(authData.token);
             setFavourites(authData.favourites ?? []);
@@ -47,6 +48,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
             throw new Error('Konto nieaktywne.');
         }
         const backendFavourites = await usersService.getUserFavourites(authData.user.idUser);
+        if (!Array.isArray(authData.user.roles)) authData.user.roles = [];
         setUser(authData.user);
         setToken(authData.token);
         setFavourites(backendFavourites ?? []);
@@ -65,12 +67,10 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
         const updatedUser = await usersService.getUserById(user.idUser);
         if (updatedUser) {
-            const mappedUser = {
-                ...updatedUser,
-                roles: updatedUser.roles ?? [],
-            };
-            setUser(mappedUser);
-            authService.saveAuth({ user: mappedUser, token: token ?? '', favourites });
+            // Wymuś obecność roles jako tablicy
+            if (!Array.isArray(updatedUser.roles)) updatedUser.roles = [];
+            setUser(updatedUser);
+            authService.saveAuth({ user: updatedUser, token: token ?? '', favourites });
         }
     };
 
