@@ -236,9 +236,19 @@ const GuitarView = () => {
                 <Link to="/play/dashboard"> &lt; powrót do dashboard</Link>
             </div>
             <div className={styles.wrapper}>
-                <Title>{`${song?.songTitle ? song?.songTitle + ' - ' : 'Brak danego utworu'} ${
-                    song?.author || ''
-                }`}</Title>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                    <Title>
+                        {`${song?.songTitle ? song?.songTitle + ' - ' : 'Brak danego utworu'} ${song?.author || ''}`}
+                    </Title>
+                    {song && (
+                        <a
+                            href={`/api/songs/${song.idSong}/tablature/download`}
+                            download={`${song.songTitle || 'tablature'}.json`}
+                        >
+                            Pobierz tabulaturę
+                        </a>
+                    )}
+                </div>
             </div>
             <Fretboard
                 numberOfStrings={6}
