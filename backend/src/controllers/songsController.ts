@@ -452,6 +452,11 @@ export const rateSong = async (req: Request, res: Response): Promise<void> => {
                 rating,
             ]);
         }
+        // Przelicz średnią ocen i zaktualizuj pole average_rating w songs
+        const [avgRows]: any = await db.query('SELECT AVG(rating) as avg FROM ratings WHERE idSong = ?', [id]);
+        const avg = avgRows[0]?.avg || 0;
+        await db.query('UPDATE songs SET average_rating = ? WHERE idSong = ?', [avg, id]);
+
         res.status(200).json({ message: 'Ocena zapisana' });
     } catch (err) {
         console.error('Błąd przy ocenianiu utworu:', err);
