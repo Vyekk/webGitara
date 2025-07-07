@@ -6,6 +6,7 @@ import ModalProvider from 'components/Modal/ModalProvider';
 import PrivateRoute from 'components/PrivateRoute/PrivateRoute';
 import { AuthProvider } from 'context/AuthContext';
 import ActivateAccount from 'components/ActivateAccount/ActivateAccount';
+import TermsAndPrivacyView from 'views/TermsAndPrivacyView/TermsAndPrivacyView';
 
 const App = () => {
     return (
@@ -13,6 +14,7 @@ const App = () => {
             <AuthProvider>
                 <Routes>
                     <Route path="/" element={<WebsiteView />}></Route>
+                    <Route path="/termsandprivacyview" element={<TermsAndPrivacyView />}></Route>
                     <Route path="/login" element={<LoginView />}></Route>
                     <Route path="activate" element={<ActivateAccount />} />
                     <Route element={<PrivateRoute />}>
