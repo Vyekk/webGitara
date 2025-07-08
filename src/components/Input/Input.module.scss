@@ -1,7 +1,11 @@
 .wrapper {
     margin-bottom: 5px;
+    width: 100%;
+    display: flex;
+    justify-content: flex-start;
     .input {
         padding: 10px 30px 10px 10px;
+        width: 100%;
     }
     .input:focus {
         outline: none;
