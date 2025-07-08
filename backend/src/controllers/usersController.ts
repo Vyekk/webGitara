@@ -5,7 +5,7 @@ import bcrypt from 'bcryptjs';
 import { v4 as uuidv4 } from 'uuid';
 import { db } from '../db';
 import { getTransporter } from '../utils/mailer';
-// Helper do pobierania ról użytkownika
+
 export const getUserRoles = async (idUser: string): Promise<string[]> => {
     const [rows] = await db.query(
         `SELECT r.name FROM users_roles ur
@@ -204,7 +204,6 @@ export const getAllUsers = async (req: Request, res: Response) => {
     const [rows] = await db.query('SELECT * FROM users');
     const users = rows as any[];
 
-    // Pobierz role dla wszystkich użytkowników
     const [rolesRows] = await db.query(`
         SELECT ur.idUser, r.name as roleName
         FROM users_roles ur
@@ -216,7 +215,6 @@ export const getAllUsers = async (req: Request, res: Response) => {
         rolesMap[idUser].push(roleName);
     });
 
-    // Dodaj pole roles do każdego użytkownika
     const usersWithRoles = users.map((u) => ({
         ...u,
         roles: rolesMap[u.idUser] || [],
@@ -360,17 +358,14 @@ export const updateUserRole = async (req: Request, res: Response) => {
     const { id } = req.params;
     const { role } = req.body; // role: 'admin' | 'moderator' | 'user'
 
-    // Znajdź idRole
     const [roleRows] = await db.query('SELECT idRole FROM roles WHERE name = ?', [role]);
     const roleRow = (roleRows as any[])[0];
     if (!roleRow) {
         return res.status(400).json({ error: 'Nieprawidłowa rola' });
     }
 
-    // Usuń starą rolę użytkownika (jeśli istnieje)
     await db.query('DELETE FROM users_roles WHERE idUser = ?', [id]);
 
-    // assigned_by = osoba nadająca uprawnienie (req.user.idUser)
     const assignedBy = req.user?.idUser || null;
     await db.query(
         'INSERT INTO users_roles (idUser_role, idUser, idRole, assigned_at, assigned_by) VALUES (?, ?, ?, NOW(), ?)',
@@ -389,4 +384,58 @@ export const getUserFavourites = async (req: Request, res: Response) => {
     } catch (err) {
         res.status(500).json({ error: 'Błąd pobierania favourites' });
     }
+};
+
+export const requestPasswordReset = async (req: Request, res: Response) => {
+    const { email } = req.body;
+    const [rows] = await db.query('SELECT * FROM users WHERE email = ?', [email]);
+    const user = (rows as RowDataPacket[])[0];
+    if (!user) {
+        return res.json({ message: 'Jeśli konto istnieje, wysłano link do resetu hasła.' });
+    }
+    const resetToken = uuidv4();
+    const expiresAt = new Date(Date.now() + 60 * 60 * 1000); // 1h
+    await db.query('INSERT INTO tokens (idToken, idUser, type, token, expiresAt) VALUES (?, ?, ?, ?, ?)', [
+        uuidv4(),
+        user.idUser,
+        'password_reset',
+        resetToken,
+        expiresAt,
+    ]);
+    const transporter = getTransporter();
+    const resetUrl = `https://konradkoluch.usermd.net/reset-password?token=${resetToken}`;
+    await transporter.sendMail({
+        from: 'support@konradkoluch.usermd.net',
+        to: email,
+        subject: 'Resetowanie hasła w WebGitara',
+        html: `
+            <div style="max-width:500px;margin:40px auto;padding:32px 24px;background:#fff;border:1px solid #ddd;border-radius:12px;box-shadow:0 4px 20px rgba(0,0,0,0.2);font-family:sans-serif;">
+                <h2 style="color:#2d3748;text-align:center;margin-bottom:24px;">Resetowanie hasła</h2>
+                <p style="font-size:16px;color:#333;text-align:center;">Kliknij poniższy przycisk, aby ustawić nowe hasło:</p>
+                <div style="text-align:center;margin:32px 0;">
+                    <a href="${resetUrl}" style="display:inline-block;padding:14px 32px;background:#f5513b;color:#fff;font-size:18px;border-radius:6px;text-decoration:none;font-weight:bold;box-shadow:0 2px 8px rgba(0,0,0,0.2);">Resetuj hasło</a>
+                </div>
+                <p style="font-size:14px;color:#666;text-align:center;">Jeśli nie prosiłeś o reset hasła, zignoruj tę wiadomość.</p>
+                <hr style="margin:32px 0;border:none;border-top:1px solid #eee;">
+                <div style="font-size:12px;color:#aaa;text-align:center;">&copy; ${new Date().getFullYear()} webGitara</div>
+            </div>
+        `,
+    });
+    res.json({ message: 'Jeśli konto istnieje, wysłano link do resetu hasła.' });
+};
+
+export const resetPassword = async (req: Request, res: Response) => {
+    const { token, newPassword } = req.body;
+    const [rows] = await db.query(
+        'SELECT * FROM tokens WHERE token = ? AND type = ? AND used = FALSE AND expiresAt > NOW()',
+        [token, 'password_reset'],
+    );
+    const tokenRow = (rows as any[])[0];
+    if (!tokenRow) {
+        return res.status(400).json({ error: 'Nieprawidłowy lub przeterminowany token resetu hasła' });
+    }
+    const hashed = await bcrypt.hash(newPassword, 10);
+    await db.query('UPDATE users SET password_hash = ? WHERE idUser = ?', [hashed, tokenRow.idUser]);
+    await db.query('UPDATE tokens SET used = TRUE WHERE idToken = ?', [tokenRow.idToken]);
+    res.json({ message: 'Hasło zostało zresetowane.' });
 };
