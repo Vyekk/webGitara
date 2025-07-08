@@ -21,6 +21,13 @@ const Users = () => {
     };
 
     useEffect(() => {
+        if (message) {
+            const timeout = setTimeout(() => setMessage(null), 3000); // Komunikat znika po 3 sekundach
+            return () => clearTimeout(timeout);
+        }
+    }, [message]);
+
+    useEffect(() => {
         if (!selectedUser) {
             setAccountType('user');
             return;
@@ -103,36 +110,42 @@ const Users = () => {
                     <form onSubmit={handleSaveChanges}>
                         <Title tag="h3">Typ konta</Title>
                         <label>
-                            <Input
-                                type="radio"
-                                id="isUser"
-                                name="accountType"
-                                value="user"
-                                checked={accountType === 'user'}
-                                onChange={handleAccountTypeChange}
-                            />
+                            <div className={styles.radioButtonWrapper}>
+                                <Input
+                                    type="radio"
+                                    id="isUser"
+                                    name="accountType"
+                                    value="user"
+                                    checked={accountType === 'user'}
+                                    onChange={handleAccountTypeChange}
+                                />
+                            </div>
                             Użytkownik
                         </label>
                         <label>
-                            <Input
-                                type="radio"
-                                id="isModerator"
-                                name="accountType"
-                                value="moderator"
-                                checked={accountType === 'moderator'}
-                                onChange={handleAccountTypeChange}
-                            />
+                            <div className={styles.radioButtonWrapper}>
+                                <Input
+                                    type="radio"
+                                    id="isModerator"
+                                    name="accountType"
+                                    value="moderator"
+                                    checked={accountType === 'moderator'}
+                                    onChange={handleAccountTypeChange}
+                                />
+                            </div>
                             Moderator
                         </label>
                         <label>
-                            <Input
-                                type="radio"
-                                id="isAdmin"
-                                name="accountType"
-                                value="admin"
-                                checked={accountType === 'admin'}
-                                onChange={handleAccountTypeChange}
-                            />
+                            <div className={styles.radioButtonWrapper}>
+                                <Input
+                                    type="radio"
+                                    id="isAdmin"
+                                    name="accountType"
+                                    value="admin"
+                                    checked={accountType === 'admin'}
+                                    onChange={handleAccountTypeChange}
+                                />
+                            </div>
                             Administrator
                         </label>
                         <div className={styles.buttonsWrapper}>
