@@ -156,6 +156,13 @@ const AuthForm = () => {
                         </div>
                         <Button type="submit">{activeOption === types.login ? 'Zaloguj' : 'Zarejestruj'}</Button>
                         {error && <div className={styles.error}>{error}</div>}
+                        {activeOption === types.login && (
+                            <div className={styles.resetPasswordLinkWrapper}>
+                                <Link to="/reset-password" className={styles.resetPasswordLink}>
+                                    Nie pamiętasz hasła?
+                                </Link>
+                            </div>
+                        )}
                     </form>
                 </>
             )}
