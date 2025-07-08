@@ -13,12 +13,16 @@ import {
     updateUserRole,
     getUserFavourites,
     activateUser,
+    requestPasswordReset,
+    resetPassword,
 } from '../controllers/usersController';
 
 const router = Router();
 
 router.post('/register', registerUser);
 router.post('/login', loginUser);
+router.post('/request-password-reset', requestPasswordReset);
+router.post('/reset-password', resetPassword);
 router.put('/password', authenticateToken, updatePassword);
 router.get('/', authenticateToken, getAllUsers);
 router.get('/:id', authenticateToken, getUserById);
