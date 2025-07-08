@@ -7,6 +7,7 @@ import PrivateRoute from 'components/PrivateRoute/PrivateRoute';
 import { AuthProvider } from 'context/AuthContext';
 import ActivateAccount from 'components/ActivateAccount/ActivateAccount';
 import TermsAndPrivacyView from 'views/TermsAndPrivacyView/TermsAndPrivacyView';
+import PasswordResetView from 'views/PasswordResetView/PasswordResetView';
 
 const App = () => {
     return (
@@ -17,6 +18,7 @@ const App = () => {
                     <Route path="/termsandprivacyview" element={<TermsAndPrivacyView />}></Route>
                     <Route path="/login" element={<LoginView />}></Route>
                     <Route path="activate" element={<ActivateAccount />} />
+                    <Route path="/reset-password" element={<PasswordResetView />} />
                     <Route element={<PrivateRoute />}>
                         <Route
                             path="/play/*"
