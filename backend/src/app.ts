@@ -36,7 +36,9 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 cron.schedule('0 */2 * * *', async () => {
     try {
+        console.log('Usuwanie usuniętych utworów z kosza...');
         await db.query('DELETE FROM songs WHERE deleted_by_idUser IS NOT NULL');
+        console.log('Usunięte utwory zostały usunięte.');
     } catch (err) {
         console.error('Błąd podczas usuwania utworów z kosza:', err);
     }
@@ -46,13 +48,8 @@ app.get('*', (_req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
-if (typeof PhusionPassenger !== 'undefined') {
-    app.listen('passenger');
-} else {
-    const port = process.env.PORT;
-    app.listen(port, () => {
-        console.log(`Server listening on port ${port}`);
-    });
-}
+const PORT = 5000;
 
-exports.default = app;
+app.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`);
+});
