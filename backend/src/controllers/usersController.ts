@@ -26,6 +26,7 @@ export const registerUser = async (req: Request, res: Response): Promise<void> =
         res.status(400).json({ error: 'Taki nick już istnieje' });
         return;
     }
+
     const [existingEmail] = await db.query('SELECT * FROM users WHERE email = ?', [email]);
     if ((existingEmail as RowDataPacket[]).length > 0) {
         res.status(400).json({ error: 'Konto z tym adresem email już istnieje' });
@@ -35,15 +36,24 @@ export const registerUser = async (req: Request, res: Response): Promise<void> =
     const hashedPassword = await bcrypt.hash(password, 10);
     const idUser = uuidv4();
     const activationToken = uuidv4();
+    const expiresAt = new Date(Date.now() + 24 * 60 * 60 * 1000); // 24h
 
     try {
         await db.query(
             `INSERT INTO users (
-                idUser, username, password_hash, email, isActivated, activationToken,
+                idUser, username, password_hash, email, isActivated,
                 average_published_song_rating, number_of_ratings_received
-            ) VALUES (?, ?, ?, ?, 0, ?, 0, 0)`,
-            [idUser, username, hashedPassword, email, activationToken],
+            ) VALUES (?, ?, ?, ?, 0, 0, 0)`,
+            [idUser, username, hashedPassword, email],
         );
+
+        await db.query('INSERT INTO tokens (idToken, idUser, type, token, expiresAt) VALUES (?, ?, ?, ?, ?)', [
+            uuidv4(),
+            idUser,
+            'activation',
+            activationToken,
+            expiresAt,
+        ]);
     } catch (err: any) {
         if (err.code === 'ER_DUP_ENTRY' && err.message.includes('unique_email')) {
             res.status(400).json({ error: 'Konto z tym adresem email już istnieje' });
@@ -58,7 +68,7 @@ export const registerUser = async (req: Request, res: Response): Promise<void> =
     }
 
     const [roleRows] = await db.query('SELECT idRole FROM roles WHERE name = ?', ['user']);
-    const userRole = (roleRows as any[])[0];
+    const userRole = (roleRows as RowDataPacket[])[0];
     if (userRole) {
         await db.query(
             'INSERT INTO users_roles (idUser_role, idUser, idRole, assigned_at, assigned_by) VALUES (?, ?, ?, NOW(), NULL)',
@@ -69,20 +79,21 @@ export const registerUser = async (req: Request, res: Response): Promise<void> =
     try {
         const transporter = getTransporter();
         const activationUrl = `https://konradkoluch.usermd.net/activate?token=${activationToken}`;
+
         await transporter.sendMail({
             from: 'support@konradkoluch.usermd.net',
             to: email,
             subject: 'Aktywacja konta w WebGitara',
             html: `
                 <div style="max-width:500px;margin:40px auto;padding:32px 24px;background:#fff;border:1px solid #ddd;border-radius:12px;box-shadow:0 4px 20px rgba(0,0,0,0.2);font-family:sans-serif;">
-                <h2 style="color:#2d3748;text-align:center;margin-bottom:24px;">Witaj w WebGitara!</h2>
-                <p style="font-size:16px;color:#333;text-align:center;">Dziękujemy za rejestrację.<br>Aktywuj swoje konto, klikając poniższy przycisk:</p>
-                <div style="text-align:center;margin:32px 0;">
-                    <a href="${activationUrl}" style="display:inline-block;padding:14px 32px;background:#f5513b;color:#fff;font-size:18px;border-radius:6px;text-decoration:none;font-weight:bold;box-shadow:0 2px 8px rgba(0,0,0,0.2);">Aktywuj konto</a>
-                </div>
-                <p style="font-size:14px;color:#666;text-align:center;">Jeśli nie rejestrowałeś się w serwisie WebGitara, zignoruj tę wiadomość.</p>
-                <hr style="margin:32px 0;border:none;border-top:1px solid #eee;">
-                <div style="font-size:12px;color:#aaa;text-align:center;">&copy; ${new Date().getFullYear()} webGitara</div>
+                    <h2 style="color:#2d3748;text-align:center;margin-bottom:24px;">Witaj w WebGitara!</h2>
+                    <p style="font-size:16px;color:#333;text-align:center;">Dziękujemy za rejestrację.<br>Aktywuj swoje konto, klikając poniższy przycisk:</p>
+                    <div style="text-align:center;margin:32px 0;">
+                        <a href="${activationUrl}" style="display:inline-block;padding:14px 32px;background:#f5513b;color:#fff;font-size:18px;border-radius:6px;text-decoration:none;font-weight:bold;box-shadow:0 2px 8px rgba(0,0,0,0.2);">Aktywuj konto</a>
+                    </div>
+                    <p style="font-size:14px;color:#666;text-align:center;">Jeśli nie rejestrowałeś się w serwisie WebGitara, zignoruj tę wiadomość.</p>
+                    <hr style="margin:32px 0;border:none;border-top:1px solid #eee;">
+                    <div style="font-size:12px;color:#aaa;text-align:center;">&copy; ${new Date().getFullYear()} webGitara</div>
                 </div>
             `,
         });
@@ -90,17 +101,24 @@ export const registerUser = async (req: Request, res: Response): Promise<void> =
         console.error('Błąd wysyłki maila:', err);
     }
 
-    res.status(201).json({ message: 'Rejestracja udana. Sprawdź email i aktywuj konto.', idUser });
+    res.status(201).json({
+        message: 'Rejestracja udana. Sprawdź email i aktywuj konto.',
+        idUser,
+    });
 };
 
 export const activateUser = async (req: Request, res: Response) => {
     const { token } = req.body;
-    const [rows] = await db.query('SELECT * FROM users WHERE activationToken = ?', [token]);
-    const user = (rows as any[])[0];
-    if (!user) {
-        return res.status(400).json({ error: 'Nieprawidłowy token aktywacyjny' });
+    const [rows] = await db.query(
+        'SELECT * FROM tokens WHERE token = ? AND type = ? AND used = FALSE AND expiresAt > NOW()',
+        [token, 'activation'],
+    );
+    const tokenRow = (rows as any[])[0];
+    if (!tokenRow) {
+        return res.status(400).json({ error: 'Nieprawidłowy lub przeterminowany token aktywacyjny' });
     }
-    await db.query('UPDATE users SET isActivated = 1, activationToken = NULL WHERE idUser = ?', [user.idUser]);
+    await db.query('UPDATE users SET isActivated = 1 WHERE idUser = ?', [tokenRow.idUser]);
+    await db.query('UPDATE tokens SET used = TRUE WHERE idToken = ?', [tokenRow.idToken]);
     res.json({ message: 'Konto zostało aktywowane!' });
 };
 
