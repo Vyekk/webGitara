@@ -126,7 +126,7 @@ export const loginUser = async (req: Request, res: Response): Promise<void> => {
     const { username, password } = req.body;
 
     try {
-        const [rows] = await db.query('SELECT * FROM users WHERE username = ?', [username]);
+        const [rows] = await db.query('SELECT * FROM users WHERE username = ? OR email = ?', [username, username]);
         const user = (rows as RowDataPacket[])[0];
 
         if (!user) {
