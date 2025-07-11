@@ -3,6 +3,7 @@
 #playBackground {
     min-height: 100vh;
     padding: 0;
-    background-color: $play-background;
+    background: url('../../assets/playbackground.png') no-repeat center center;
+    background-size: cover;
     font-size: $font-size-app;
 }
