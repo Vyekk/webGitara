@@ -521,7 +521,6 @@ export const getSongHistoryVersions = async (req: Request, res: Response): Promi
             res.json([]);
             return;
         }
-        // Zwróć listę wersji z numerem i datą edycji
         const versions = rows.map((row: any) => ({
             version_number: row.version_number,
             edited_at: row.edited_at,
@@ -529,6 +528,16 @@ export const getSongHistoryVersions = async (req: Request, res: Response): Promi
         res.json(versions);
     } catch (err) {
         console.error('Error fetching song history versions:', err);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+};
+
+export const getAllReportedSongs = async (req: Request, res: Response): Promise<void> => {
+    try {
+        const [rows]: DbQueryResult<any> = await db.query('SELECT * FROM reported_songs');
+        res.json(rows);
+    } catch (err) {
+        console.error('Error fetching all reported songs:', err);
         res.status(500).json({ error: 'Internal server error' });
     }
 };

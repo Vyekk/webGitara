@@ -164,4 +164,45 @@ export class SongsService {
             throw error;
         }
     }
+
+    async getUserReportedSongs(userId: string): Promise<string[]> {
+        try {
+            const response = await axios.get<string[]>(`${API_URL}/api/users/${userId}/reported_songs`, {
+                headers: this.getAuthHeaders(),
+            });
+            return response.data;
+        } catch (error) {
+            console.error('Błąd podczas pobierania reported:', error);
+            return [];
+        }
+    }
+
+    async updateUserReportedSongs(userId: string, reportedSongs: string[]): Promise<void> {
+        try {
+            console.log('Wysyłam:', { userId, reportedSongs });
+            await axios.put(
+                `${API_URL}/api/users/${userId}/reported_songs`,
+                { reportedSongs },
+                {
+                    headers: this.getAuthHeaders(),
+                },
+            );
+        } catch (error) {
+            console.error('Błąd podczas aktualizacji reported:', error);
+        }
+    }
+
+    async getAllReportedSongs(): Promise<
+        Array<{ idReportedSong: string; idSong: string; reported_by: string; created_at: string }>
+    > {
+        try {
+            const response = await axios.get(`${API_URL}/api/songs/reported_songs/all`, {
+                headers: this.getAuthHeaders(),
+            });
+            return response.data;
+        } catch (error) {
+            console.error('Błąd podczas pobierania wszystkich reported:', error);
+            return [];
+        }
+    }
 }

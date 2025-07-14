@@ -386,6 +386,46 @@ export const getUserFavourites = async (req: Request, res: Response) => {
     }
 };
 
+export const getUserReportedSongs = async (req: Request, res: Response): Promise<Response> => {
+    const userId = req.params.userId;
+    if (!userId) {
+        return res.status(400).json({ error: 'userId required' });
+    }
+    try {
+        const [rows] = await db.query('SELECT idSong FROM reported_songs WHERE reported_by = ?', [userId]);
+        const reportedSongs = (rows as { idSong: string }[]).map((row) => row.idSong);
+        return res.status(200).json(reportedSongs);
+    } catch (err) {
+        console.error('Błąd pobierania reportedSongs:', err);
+        return res.status(500).json({ error: 'Błąd pobierania reportedSongs' });
+    }
+};
+
+export const updateUserReportedSongs = async (req: Request, res: Response): Promise<void> => {
+    const userId = req.params.userId;
+    const { reportedSongs } = req.body;
+    if (!Array.isArray(reportedSongs)) {
+        res.status(400).json({ error: 'Brak poprawnej listy reportedSongs' });
+        return;
+    }
+    const conn = await db.getConnection();
+    try {
+        await conn.beginTransaction();
+        await conn.query('DELETE FROM reported_songs WHERE reported_by = ?', [userId]);
+        if (reportedSongs.length > 0) {
+            const values = reportedSongs.map((idSong: string) => [uuidv4(), idSong, userId]);
+            await conn.query('INSERT INTO reported_songs (idReportedSong, idSong, reported_by) VALUES ?', [values]);
+        }
+        await conn.commit();
+        res.status(200).json({ success: true });
+    } catch (err) {
+        await conn.rollback();
+        res.status(500).json({ error: 'Błąd aktualizacji reportedSongs' });
+    } finally {
+        conn.release();
+    }
+};
+
 export const requestPasswordReset = async (req: Request, res: Response) => {
     const { email } = req.body;
     const [rows] = await db.query('SELECT * FROM users WHERE email = ?', [email]);

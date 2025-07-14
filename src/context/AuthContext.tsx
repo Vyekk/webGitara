@@ -16,6 +16,8 @@ type AuthContextType = {
     refreshUser: () => Promise<void>;
     saveLastPlayedSong: (songId: string) => void;
     getLastPlayedSongs: () => Promise<Song[]>;
+    isReported: (idSong: string) => boolean;
+    toggleReported: (idSong: string) => Promise<void>;
 };
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -25,6 +27,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     const [token, setToken] = useState<string | null>(null);
     const [isAuthLoaded, setIsAuthLoaded] = useState(false);
     const [favourites, setFavourites] = useState<string[]>([]);
+    const [reportedSongs, setReportedSongs] = useState<string[]>([]);
 
     const authService = new AuthService();
 
@@ -41,6 +44,15 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         }
         setIsAuthLoaded(true);
     }, []);
+
+    useEffect(() => {
+        if (!user) return;
+        const fetchReported = async () => {
+            const reported = await songsService.getUserReportedSongs(user.idUser);
+            setReportedSongs(reported ?? []);
+        };
+        fetchReported();
+    }, [user]);
 
     const login = async (username: string, password: string) => {
         const authData = await authService.login({ username, password });
@@ -99,6 +111,21 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         return await songsService.getLastPlayedSongs(user.idUser);
     };
 
+    const isReported = (idSong: string) => reportedSongs.includes(idSong);
+
+    const toggleReported = async (idSong: string) => {
+        if (!user) return;
+        let updatedReported: string[];
+        if (isReported(idSong)) {
+            updatedReported = reportedSongs.filter((id) => id !== idSong);
+            await songsService.updateUserReportedSongs(user.idUser, updatedReported);
+        } else {
+            updatedReported = [...reportedSongs, idSong];
+            await songsService.updateUserReportedSongs(user.idUser, updatedReported);
+        }
+        setReportedSongs(updatedReported);
+    };
+
     return (
         <AuthContext.Provider
             value={{
@@ -113,6 +140,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
                 refreshUser,
                 saveLastPlayedSong,
                 getLastPlayedSongs,
+                isReported,
+                toggleReported,
             }}
         >
             {children}
