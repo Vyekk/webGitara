@@ -181,7 +181,7 @@ export const updateSong = async (req: Request, res: Response): Promise<void> => 
         // 3. Zapisz starą wersję do historii
         const idHistory = uuidv4();
         await db.query(
-            'INSERT INTO songs_history (idHistory, idSong, version_number, tablature, edited_by_idUser, edited_at) VALUES (?, ?, ?, ?, ?, NOW())',
+            'INSERT INTO songs_history (idHistory, idSong, version_number, tablature, edited_by, edited_at) VALUES (?, ?, ?, ?, ?, NOW())',
             [idHistory, id, newVersion, currentSong.tablature, req.user?.idUser || null],
         );
 
@@ -501,7 +501,7 @@ export const getSongHistoryVersion = async (req: Request, res: Response): Promis
             idSong: historyVersion.idSong,
             version_number: historyVersion.version_number,
             tablature: JSON.parse(historyVersion.tablature),
-            edited_by_idUser: historyVersion.edited_by_idUser,
+            edited_by: historyVersion.edited_by,
             edited_at: historyVersion.edited_at,
         });
     } catch (err) {
