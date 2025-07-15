@@ -47,7 +47,7 @@ export const registerUser = async (req: Request, res: Response): Promise<void> =
             [idUser, username, hashedPassword, email],
         );
 
-        await db.query('INSERT INTO tokens (idToken, idUser, type, token, expiresAt) VALUES (?, ?, ?, ?, ?)', [
+        await db.query('INSERT INTO tokens (idToken, idUser, type, token, expires_at) VALUES (?, ?, ?, ?, ?)', [
             uuidv4(),
             idUser,
             'activation',
@@ -71,7 +71,7 @@ export const registerUser = async (req: Request, res: Response): Promise<void> =
     const userRole = (roleRows as RowDataPacket[])[0];
     if (userRole) {
         await db.query(
-            'INSERT INTO users_roles (idUser_role, idUser, idRole, assigned_at, assigned_by) VALUES (?, ?, ?, NOW(), NULL)',
+            'INSERT INTO users_roles (idUserRole, idUser, idRole, assigned_at, assigned_by) VALUES (?, ?, ?, NOW(), NULL)',
             [uuidv4(), idUser, userRole.idRole],
         );
     }
@@ -110,7 +110,7 @@ export const registerUser = async (req: Request, res: Response): Promise<void> =
 export const activateUser = async (req: Request, res: Response) => {
     const { token } = req.body;
     const [rows] = await db.query(
-        'SELECT * FROM tokens WHERE token = ? AND type = ? AND used = FALSE AND expiresAt > NOW()',
+        'SELECT * FROM tokens WHERE token = ? AND type = ? AND used = FALSE AND expires_at > NOW()',
         [token, 'activation'],
     );
     const tokenRow = (rows as any[])[0];
@@ -368,7 +368,7 @@ export const updateUserRole = async (req: Request, res: Response) => {
 
     const assignedBy = req.user?.idUser || null;
     await db.query(
-        'INSERT INTO users_roles (idUser_role, idUser, idRole, assigned_at, assigned_by) VALUES (?, ?, ?, NOW(), ?)',
+        'INSERT INTO users_roles (idUserRole, idUser, idRole, assigned_at, assigned_by) VALUES (?, ?, ?, NOW(), ?)',
         [uuidv4(), id, roleRow.idRole, assignedBy],
     );
 
@@ -386,6 +386,46 @@ export const getUserFavourites = async (req: Request, res: Response) => {
     }
 };
 
+export const getUserReportedSongs = async (req: Request, res: Response) => {
+    const userId = req.params.userId;
+    if (!userId) {
+        return res.status(400).json({ error: 'userId required' });
+    }
+    try {
+        const [rows] = await db.query('SELECT idSong FROM reported_songs WHERE reported_by = ?', [userId]);
+        const reportedSongs = (rows as { idSong: string }[]).map((row) => row.idSong);
+        return res.status(200).json(reportedSongs);
+    } catch (err) {
+        console.error('Błąd pobierania reportedSongs:', err);
+        return res.status(500).json({ error: 'Błąd pobierania reportedSongs' });
+    }
+};
+
+export const updateUserReportedSongs = async (req: Request, res: Response) => {
+    const userId = req.params.userId;
+    const { reportedSongs } = req.body;
+    if (!Array.isArray(reportedSongs)) {
+        res.status(400).json({ error: 'Brak poprawnej listy reportedSongs' });
+        return;
+    }
+    const conn = await db.getConnection();
+    try {
+        await conn.beginTransaction();
+        await conn.query('DELETE FROM reported_songs WHERE reported_by = ?', [userId]);
+        if (reportedSongs.length > 0) {
+            const values = reportedSongs.map((idSong: string) => [uuidv4(), idSong, userId]);
+            await conn.query('INSERT INTO reported_songs (idReportedSong, idSong, reported_by) VALUES ?', [values]);
+        }
+        await conn.commit();
+        res.status(200).json({ success: true });
+    } catch (err) {
+        await conn.rollback();
+        res.status(500).json({ error: 'Błąd aktualizacji reportedSongs' });
+    } finally {
+        conn.release();
+    }
+};
+
 export const requestPasswordReset = async (req: Request, res: Response) => {
     const { email } = req.body;
     const [rows] = await db.query('SELECT * FROM users WHERE email = ?', [email]);
@@ -395,7 +435,7 @@ export const requestPasswordReset = async (req: Request, res: Response) => {
     }
     const resetToken = uuidv4();
     const expiresAt = new Date(Date.now() + 60 * 60 * 1000); // 1h
-    await db.query('INSERT INTO tokens (idToken, idUser, type, token, expiresAt) VALUES (?, ?, ?, ?, ?)', [
+    await db.query('INSERT INTO tokens (idToken, idUser, type, token, expires_at) VALUES (?, ?, ?, ?, ?)', [
         uuidv4(),
         user.idUser,
         'password_reset',
@@ -427,7 +467,7 @@ export const requestPasswordReset = async (req: Request, res: Response) => {
 export const resetPassword = async (req: Request, res: Response) => {
     const { token, newPassword } = req.body;
     const [rows] = await db.query(
-        'SELECT * FROM tokens WHERE token = ? AND type = ? AND used = FALSE AND expiresAt > NOW()',
+        'SELECT * FROM tokens WHERE token = ? AND type = ? AND used = FALSE AND expires_at > NOW()',
         [token, 'password_reset'],
     );
     const tokenRow = (rows as any[])[0];
