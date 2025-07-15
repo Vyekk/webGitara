@@ -15,6 +15,8 @@ import {
     activateUser,
     requestPasswordReset,
     resetPassword,
+    updateUserReportedSongs,
+    getUserReportedSongs,
 } from '../controllers/usersController';
 
 const router = Router();
@@ -30,6 +32,8 @@ router.put('/:id/stats', authenticateToken, updateUserStats);
 router.put('/stats/all', authenticateToken, updateAllUsersStats);
 router.put('/:userId/favourites', authenticateToken, updateUserFavourites);
 router.get('/:userId/favourites', authenticateToken, getUserFavourites);
+router.put('/:userId/reported_songs', authenticateToken, updateUserReportedSongs);
+router.get('/:userId/reported_songs', authenticateToken, getUserReportedSongs);
 router.put('/:id/role', authenticateToken, updateUserRole);
 router.delete('/:id', authenticateToken, deleteUser);
 router.post('/activate', activateUser);
