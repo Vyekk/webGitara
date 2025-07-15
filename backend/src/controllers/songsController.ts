@@ -181,7 +181,7 @@ export const updateSong = async (req: Request, res: Response): Promise<void> => 
         // 3. Zapisz starą wersję do historii
         const idHistory = uuidv4();
         await db.query(
-            'INSERT INTO songs_history (idHistory, idSong, version_number, tablature, edited_by_idUser, edited_at) VALUES (?, ?, ?, ?, ?, NOW())',
+            'INSERT INTO songs_history (idHistory, idSong, version_number, tablature, edited_by, edited_at) VALUES (?, ?, ?, ?, ?, NOW())',
             [idHistory, id, newVersion, currentSong.tablature, req.user?.idUser || null],
         );
 
@@ -501,7 +501,7 @@ export const getSongHistoryVersion = async (req: Request, res: Response): Promis
             idSong: historyVersion.idSong,
             version_number: historyVersion.version_number,
             tablature: JSON.parse(historyVersion.tablature),
-            edited_by_idUser: historyVersion.edited_by_idUser,
+            edited_by: historyVersion.edited_by,
             edited_at: historyVersion.edited_at,
         });
     } catch (err) {
@@ -521,7 +521,6 @@ export const getSongHistoryVersions = async (req: Request, res: Response): Promi
             res.json([]);
             return;
         }
-        // Zwróć listę wersji z numerem i datą edycji
         const versions = rows.map((row: any) => ({
             version_number: row.version_number,
             edited_at: row.edited_at,
@@ -529,6 +528,16 @@ export const getSongHistoryVersions = async (req: Request, res: Response): Promi
         res.json(versions);
     } catch (err) {
         console.error('Error fetching song history versions:', err);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+};
+
+export const getAllReportedSongs = async (req: Request, res: Response): Promise<void> => {
+    try {
+        const [rows]: DbQueryResult<any> = await db.query('SELECT * FROM reported_songs');
+        res.json(rows);
+    } catch (err) {
+        console.error('Error fetching all reported songs:', err);
         res.status(500).json({ error: 'Internal server error' });
     }
 };
