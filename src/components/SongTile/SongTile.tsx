@@ -7,7 +7,14 @@ import Title from 'components/Title/Title';
 import { ReactNode, useContext, useEffect, useRef, useState } from 'react';
 import { Song } from 'types';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faComment, faHeart, faPenToSquare, faTrash, faTrashCanArrowUp } from '@fortawesome/free-solid-svg-icons';
+import {
+    faComment,
+    faHeart,
+    faFlag,
+    faPenToSquare,
+    faTrash,
+    faTrashCanArrowUp,
+} from '@fortawesome/free-solid-svg-icons';
 import { useSongs } from 'context/SongsContext';
 import { useAuth } from 'context/AuthContext';
 import useRequiredUser from 'utils/useRequiredUser';
@@ -22,21 +29,25 @@ const SongTile = ({ song, isLarge }: SongTileProps) => {
     const [errorMessage, setErrorMessage] = useState<{ message: string }>({ message: '' });
     const { openModal, setModal } = useContext(ModalContext);
     const likedRef = useRef<HTMLDivElement>(null);
+    const reportedRef = useRef<HTMLDivElement>(null);
     const managementButtonsRef = useRef<HTMLDivElement>(null);
     const navigate = useNavigate();
     const handleMouseOver = () => {
         likedRef.current?.classList.add(styles.hoverItem);
+        reportedRef.current?.classList.add(styles.hoverItem);
         managementButtonsRef.current?.classList.add(styles.hoverItem);
         setIsHover(true);
     };
     const { deleteSong, restoreSong } = useSongs();
     const user = useRequiredUser();
-    const { toggleFavourite, isFavourite } = useAuth();
+    const { toggleFavourite, isFavourite, toggleReported, isReported } = useAuth();
     const liked = isFavourite(song.idSong);
+    const reported = isReported(song.idSong);
     const { saveLastPlayedSong } = useAuth();
 
     const handleMouseOut = () => {
         likedRef.current?.classList.remove(styles.hoverItem);
+        reportedRef.current?.classList.remove(styles.hoverItem);
         managementButtonsRef.current?.classList.remove(styles.hoverItem);
         setIsHover(false);
     };
@@ -45,6 +56,12 @@ const SongTile = ({ song, isLarge }: SongTileProps) => {
         event.stopPropagation();
         toggleFavourite(song.idSong);
     };
+
+    const handleReportClick = (event: React.MouseEvent) => {
+        event.stopPropagation();
+        toggleReported(song.idSong);
+    };
+
     const handleCommentsClick = (event: React.MouseEvent) => {
         event.stopPropagation();
         setModal(<CommentsSection song={song} />);
@@ -100,6 +117,13 @@ const SongTile = ({ song, isLarge }: SongTileProps) => {
                 onClick={handleLikeClick}
             >
                 <FontAwesomeIcon icon={faHeart} />
+            </div>
+            <div
+                className={`${reported ? styles.reported : styles.unreported} ${styles.reportedWrapper}`}
+                ref={reportedRef}
+                onClick={handleReportClick}
+            >
+                <FontAwesomeIcon icon={faFlag} />
             </div>
             <div className={styles.managementButtons} ref={managementButtonsRef}>
                 <div

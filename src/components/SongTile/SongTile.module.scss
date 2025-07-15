@@ -28,6 +28,12 @@
     text-align: center;
 }
 
+.reportedWrapper {
+    @extend .favouriteWrapper;
+    top: auto;
+    bottom: 5px;
+}
+
 .liked {
     color: red;
     display: none;
@@ -36,6 +42,14 @@
 .unliked {
     color: gray;
     @extend .liked;
+}
+
+.reported {
+    @extend .liked;
+}
+
+.unreported {
+    @extend .unliked;
 }
 
 .managementButtons {
