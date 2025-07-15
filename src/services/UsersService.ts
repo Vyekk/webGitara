@@ -95,20 +95,6 @@ export class UsersService {
         }
     }
 
-    async updateUserFavourites(userId: string, favourites: string[]): Promise<void> {
-        try {
-            await axios.put(
-                `${API_URL}/api/users/${userId}/favourites`,
-                { favourites },
-                {
-                    headers: this.getAuthHeaders(),
-                },
-            );
-        } catch (error: unknown) {
-            console.error('Błąd podczas aktualizacji ulubionych utworów użytkownika:', error);
-        }
-    }
-
     async updateUserRole(userId: string, newRole: 'admin' | 'moderator' | 'user'): Promise<void> {
         try {
             await axios.put(
@@ -144,6 +130,46 @@ export class UsersService {
         } catch (error) {
             console.error('Błąd podczas pobierania favourites:', error);
             return [];
+        }
+    }
+    async getUserReportedSongs(userId: string): Promise<string[]> {
+        try {
+            const response = await axios.get<string[]>(`${API_URL}/api/users/${userId}/reported_songs`, {
+                headers: this.getAuthHeaders(),
+            });
+            return response.data;
+        } catch (error) {
+            console.error('Błąd podczas pobierania reported:', error);
+            return [];
+        }
+    }
+
+    async updateUserReportedSongs(userId: string, reportedSongs: string[]): Promise<void> {
+        try {
+            console.log('Wysyłam:', { userId, reportedSongs });
+            await axios.put(
+                `${API_URL}/api/users/${userId}/reported_songs`,
+                { reportedSongs },
+                {
+                    headers: this.getAuthHeaders(),
+                },
+            );
+        } catch (error) {
+            console.error('Błąd podczas aktualizacji reported:', error);
+        }
+    }
+
+    async updateUserFavourites(userId: string, favourites: string[]): Promise<void> {
+        try {
+            await axios.put(
+                `${API_URL}/api/users/${userId}/favourites`,
+                { favourites },
+                {
+                    headers: this.getAuthHeaders(),
+                },
+            );
+        } catch (error: unknown) {
+            console.error('Błąd podczas aktualizacji ulubionych utworów użytkownika:', error);
         }
     }
 }

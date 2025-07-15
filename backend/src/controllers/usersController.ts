@@ -386,7 +386,7 @@ export const getUserFavourites = async (req: Request, res: Response) => {
     }
 };
 
-export const getUserReportedSongs = async (req: Request, res: Response): Promise<Response> => {
+export const getUserReportedSongs = async (req: Request, res: Response) => {
     const userId = req.params.userId;
     if (!userId) {
         return res.status(400).json({ error: 'userId required' });
@@ -401,7 +401,7 @@ export const getUserReportedSongs = async (req: Request, res: Response): Promise
     }
 };
 
-export const updateUserReportedSongs = async (req: Request, res: Response): Promise<void> => {
+export const updateUserReportedSongs = async (req: Request, res: Response) => {
     const userId = req.params.userId;
     const { reportedSongs } = req.body;
     if (!Array.isArray(reportedSongs)) {

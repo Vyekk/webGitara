@@ -72,6 +72,7 @@ export type AuthData = {
     token: string;
     user: User;
     favourites?: string[];
+    reportedSongs?: string[];
 };
 
 export type Credentials = {
