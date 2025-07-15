@@ -16,6 +16,8 @@ type AuthContextType = {
     refreshUser: () => Promise<void>;
     saveLastPlayedSong: (songId: string) => void;
     getLastPlayedSongs: () => Promise<Song[]>;
+    isReported: (idSong: string) => boolean;
+    toggleReported: (idSong: string) => Promise<void>;
 };
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -25,6 +27,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     const [token, setToken] = useState<string | null>(null);
     const [isAuthLoaded, setIsAuthLoaded] = useState(false);
     const [favourites, setFavourites] = useState<string[]>([]);
+    const [reportedSongs, setReportedSongs] = useState<string[]>([]);
 
     const authService = new AuthService();
 
@@ -38,6 +41,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
             setUser(authData.user);
             setToken(authData.token);
             setFavourites(authData.favourites ?? []);
+            setReportedSongs(authData.reportedSongs ?? []);
         }
         setIsAuthLoaded(true);
     }, []);
@@ -48,11 +52,18 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
             throw new Error('Konto nieaktywne.');
         }
         const backendFavourites = await usersService.getUserFavourites(authData.user.idUser);
+        const reported = await usersService.getUserReportedSongs(authData.user.idUser);
         if (!Array.isArray(authData.user.roles)) authData.user.roles = [];
         setUser(authData.user);
         setToken(authData.token);
         setFavourites(backendFavourites ?? []);
-        authService.saveAuth({ user: authData.user, token: authData.token, favourites: backendFavourites ?? [] });
+        setReportedSongs(reported ?? []);
+        authService.saveAuth({
+            user: authData.user,
+            token: authData.token,
+            favourites: backendFavourites ?? [],
+            reportedSongs: reported ?? [],
+        });
     };
 
     const logout = () => {
@@ -60,6 +71,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         setUser(null);
         setToken(null);
         setFavourites([]);
+        setReportedSongs([]);
     };
 
     const refreshUser = async () => {
@@ -70,7 +82,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
             // Wymuś obecność roles jako tablicy
             if (!Array.isArray(updatedUser.roles)) updatedUser.roles = [];
             setUser(updatedUser);
-            authService.saveAuth({ user: updatedUser, token: token ?? '', favourites });
+            authService.saveAuth({ user: updatedUser, token: token ?? '', favourites, reportedSongs });
         }
     };
 
@@ -87,7 +99,21 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         await usersService.updateUserFavourites(user.idUser, updatedFavourites);
     };
 
+    const toggleReported = async (songId: string) => {
+        if (!user) return;
+
+        const updatedReportedSongs = reportedSongs.includes(songId)
+            ? reportedSongs.filter((id) => id !== songId)
+            : [...reportedSongs, songId];
+
+        setReportedSongs(updatedReportedSongs);
+        authService.saveAuth({ user, token: token ?? '', reportedSongs: updatedReportedSongs });
+
+        await usersService.updateUserReportedSongs(user.idUser, updatedReportedSongs);
+    };
+
     const isFavourite = (songId: string) => favourites.includes(songId);
+    const isReported = (songId: string) => reportedSongs.includes(songId);
 
     const saveLastPlayedSong = (songId: string) => {
         if (!user) return;
@@ -113,6 +139,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
                 refreshUser,
                 saveLastPlayedSong,
                 getLastPlayedSongs,
+                isReported,
+                toggleReported,
             }}
         >
             {children}

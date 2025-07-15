@@ -164,4 +164,18 @@ export class SongsService {
             throw error;
         }
     }
+
+    async getAllReportedSongs(): Promise<
+        Array<{ idReportedSong: string; idSong: string; reported_by: string; created_at: string }>
+    > {
+        try {
+            const response = await axios.get(`${API_URL}/api/songs/reported_songs/all`, {
+                headers: this.getAuthHeaders(),
+            });
+            return response.data;
+        } catch (error) {
+            console.error('Błąd podczas pobierania wszystkich reported:', error);
+            return [];
+        }
+    }
 }
