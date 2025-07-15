@@ -15,6 +15,7 @@ import {
     getSongHistoryVersions,
     getSongHistoryVersion,
     downloadTablature,
+    getAllReportedSongs,
 } from '../controllers/songsController';
 
 const router = express.Router();
@@ -33,5 +34,6 @@ router.delete('/:id', authenticateToken, deleteSong);
 router.post('/:songId/comments', authenticateToken, addCommentToSong);
 router.delete('/:songId/comments/:commentId', authenticateToken, deleteCommentFromSong);
 router.post('/:id/rating', authenticateToken, rateSong);
+router.get('/reported_songs/all', authenticateToken, getAllReportedSongs);
 
 export default router;
