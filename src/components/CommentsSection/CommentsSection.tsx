@@ -8,6 +8,8 @@ import { Song } from 'types';
 import useRequiredUser from 'utils/useRequiredUser';
 import { useSongs } from 'context/SongsContext';
 import { v4 as uuidv4 } from 'uuid';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faUser } from '@fortawesome/free-solid-svg-icons';
 
 type CommentsSectionProps = {
     song: Song;
@@ -113,7 +115,11 @@ const CommentsSection = ({ song }: CommentsSectionProps) => {
                                 X
                             </div>
                         </div>
-                        <div className={styles.commentAuthorAvatar}></div>
+                        <div className={styles.commentAuthorAvatar}>
+                            <div className={styles.avatarWrapper}>
+                                <FontAwesomeIcon icon={faUser} />
+                            </div>
+                        </div>
                     </div>
                 ))}
             </div>
