@@ -2,10 +2,10 @@ const durationSymbolToValueMap: Record<string, string> = {
     '𝅝': '1n',
     '𝅗𝅥': '2n',
     '𝅘𝅥': '4n',
-    '♩': '4n',
     '𝅘𝅥𝅮': '8n',
     '𝅘𝅥𝅯': '16n',
     '𝅘𝅥𝅰': '32n',
+    '𝅘𝅥𝅱': '64n',
 };
 
 const durationValueToSymbolMap: Record<string, string> = Object.fromEntries(
