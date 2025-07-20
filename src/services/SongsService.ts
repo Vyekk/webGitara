@@ -165,9 +165,7 @@ export class SongsService {
         }
     }
 
-    async getAllReportedSongs(): Promise<
-        Array<{ idReportedSong: string; idSong: string; reported_by: string; created_at: string }>
-    > {
+    async getAllReportedSongs(): Promise<Array<{ idSong: string }>> {
         try {
             const response = await axios.get(`${API_URL}/api/songs/reported_songs/all`, {
                 headers: this.getAuthHeaders(),
