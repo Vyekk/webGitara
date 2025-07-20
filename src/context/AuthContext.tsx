@@ -37,30 +37,36 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     useEffect(() => {
         const authData = authService.loadAuth();
         if (authData) {
-            if (!Array.isArray(authData.user.roles)) authData.user.roles = [];
-            setUser(authData.user);
             setToken(authData.token);
             setFavourites(authData.favourites ?? []);
             setReportedSongs(authData.reportedSongs ?? []);
+            if (authData.idUser) {
+                usersService.getUserById(authData.idUser).then((u) => {
+                    if (u) setUser(u);
+                });
+            }
         }
         setIsAuthLoaded(true);
     }, []);
 
     const login = async (username: string, password: string) => {
         const authData = await authService.login({ username, password });
-        if (!authData.user.isActivated) {
+        if (!authData.idUser) throw new Error('Brak id użytkownika.');
+        const userFromDb = await usersService.getUserById(authData.idUser);
+        if (!userFromDb) throw new Error('Nie znaleziono użytkownika.');
+        if (!userFromDb.isActivated) {
             throw new Error('Konto nieaktywne.');
         }
-        const backendFavourites = await usersService.getUserFavourites(authData.user.idUser);
-        const reported = await usersService.getUserReportedSongs(authData.user.idUser);
-        if (!Array.isArray(authData.user.roles)) authData.user.roles = [];
-        setUser(authData.user);
+        const backendFavourites = await usersService.getUserFavourites(authData.idUser);
+        const reported = await usersService.getUserReportedSongs(authData.idUser);
+        if (!Array.isArray(userFromDb.roles)) userFromDb.roles = [];
+        setUser(userFromDb);
         setToken(authData.token);
         setFavourites(backendFavourites ?? []);
         setReportedSongs(reported ?? []);
         authService.saveAuth({
-            user: authData.user,
             token: authData.token,
+            idUser: authData.idUser,
             favourites: backendFavourites ?? [],
             reportedSongs: reported ?? [],
         });
@@ -76,39 +82,41 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
     const refreshUser = async () => {
         if (!user) return;
-
         const updatedUser = await usersService.getUserById(user.idUser);
         if (updatedUser) {
-            // Wymuś obecność roles jako tablicy
             if (!Array.isArray(updatedUser.roles)) updatedUser.roles = [];
             setUser(updatedUser);
-            authService.saveAuth({ user: updatedUser, token: token ?? '', favourites, reportedSongs });
+            // Nie zapisuj usera do localStorage
         }
     };
 
     const toggleFavourite = async (songId: string) => {
         if (!user) return;
-
         const updatedFavourites = favourites.includes(songId)
             ? favourites.filter((id) => id !== songId)
             : [...favourites, songId];
-
         setFavourites(updatedFavourites);
-        authService.saveAuth({ user, token: token ?? '', favourites: updatedFavourites });
-
+        authService.saveAuth({
+            token: token ?? '',
+            idUser: user.idUser,
+            favourites: updatedFavourites,
+            reportedSongs,
+        });
         await usersService.updateUserFavourites(user.idUser, updatedFavourites);
     };
 
     const toggleReported = async (songId: string) => {
         if (!user) return;
-
         const updatedReportedSongs = reportedSongs.includes(songId)
             ? reportedSongs.filter((id) => id !== songId)
             : [...reportedSongs, songId];
-
         setReportedSongs(updatedReportedSongs);
-        authService.saveAuth({ user, token: token ?? '', reportedSongs: updatedReportedSongs });
-
+        authService.saveAuth({
+            token: token ?? '',
+            idUser: user.idUser,
+            favourites,
+            reportedSongs: updatedReportedSongs,
+        });
         await usersService.updateUserReportedSongs(user.idUser, updatedReportedSongs);
     };
 

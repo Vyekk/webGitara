@@ -70,7 +70,7 @@ export type LastPlayedEntry = {
 
 export type AuthData = {
     token: string;
-    user: User;
+    idUser: string;
     favourites?: string[];
     reportedSongs?: string[];
 };
