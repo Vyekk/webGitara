@@ -18,6 +18,13 @@ export const getUserRoles = async (idUser: string): Promise<string[]> => {
 import { RowDataPacket } from 'mysql2';
 import jwt from 'jsonwebtoken';
 
+// Helper: get idTokenType by name
+async function getTokenTypeIdByName(name: string): Promise<string | null> {
+    const [rows] = await db.query('SELECT idTokenType FROM tokens_types WHERE name = ?', [name]);
+    const row = (rows as RowDataPacket[])[0];
+    return row ? row.idTokenType : null;
+}
+
 export const registerUser = async (req: Request, res: Response): Promise<void> => {
     const { username, password, email } = req.body;
 
@@ -47,10 +54,11 @@ export const registerUser = async (req: Request, res: Response): Promise<void> =
             [idUser, username, hashedPassword, email],
         );
 
-        await db.query('INSERT INTO tokens (idToken, idUser, type, token, expires_at) VALUES (?, ?, ?, ?, ?)', [
+        const idTokenType = await getTokenTypeIdByName('activation');
+        await db.query('INSERT INTO tokens (idToken, idUser, idTokenType, token, expires_at) VALUES (?, ?, ?, ?, ?)', [
             uuidv4(),
             idUser,
-            'activation',
+            idTokenType,
             activationToken,
             expiresAt,
         ]);
@@ -109,9 +117,10 @@ export const registerUser = async (req: Request, res: Response): Promise<void> =
 
 export const activateUser = async (req: Request, res: Response) => {
     const { token } = req.body;
+    const idTokenType = await getTokenTypeIdByName('activation');
     const [rows] = await db.query(
-        'SELECT * FROM tokens WHERE token = ? AND type = ? AND used = FALSE AND expires_at > NOW()',
-        [token, 'activation'],
+        'SELECT * FROM tokens WHERE token = ? AND idTokenType = ? AND used = FALSE AND expires_at > NOW()',
+        [token, idTokenType],
     );
     const tokenRow = (rows as any[])[0];
     if (!tokenRow) {
@@ -451,10 +460,11 @@ export const requestPasswordReset = async (req: Request, res: Response) => {
     }
     const resetToken = uuidv4();
     const expiresAt = new Date(Date.now() + 60 * 60 * 1000); // 1h
-    await db.query('INSERT INTO tokens (idToken, idUser, type, token, expires_at) VALUES (?, ?, ?, ?, ?)', [
+    const idTokenType = await getTokenTypeIdByName('password_reset');
+    await db.query('INSERT INTO tokens (idToken, idUser, idTokenType, token, expires_at) VALUES (?, ?, ?, ?, ?)', [
         uuidv4(),
         user.idUser,
-        'password_reset',
+        idTokenType,
         resetToken,
         expiresAt,
     ]);
@@ -482,9 +492,10 @@ export const requestPasswordReset = async (req: Request, res: Response) => {
 
 export const resetPassword = async (req: Request, res: Response) => {
     const { token, newPassword } = req.body;
+    const idTokenType = await getTokenTypeIdByName('password_reset');
     const [rows] = await db.query(
-        'SELECT * FROM tokens WHERE token = ? AND type = ? AND used = FALSE AND expires_at > NOW()',
-        [token, 'password_reset'],
+        'SELECT * FROM tokens WHERE token = ? AND idTokenType = ? AND used = FALSE AND expires_at > NOW()',
+        [token, idTokenType],
     );
     const tokenRow = (rows as any[])[0];
     if (!tokenRow) {
