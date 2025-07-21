@@ -6,6 +6,24 @@ import { v4 as uuidv4 } from 'uuid';
 import { db } from '../db';
 import { getTransporter } from '../utils/mailer';
 
+// Zwraca aktualnie zalogowanego użytkownika na podstawie tokena JWT
+export const getCurrentUser = async (req: Request, res: Response) => {
+    if (!req.user) {
+        return res.status(401).json({ error: 'Unauthorized' });
+    }
+    try {
+        const [rows] = await db.query('SELECT * FROM users WHERE idUser = ?', [req.user.idUser]);
+        const user = (rows as RowDataPacket[])[0];
+        if (!user) {
+            return res.status(404).json({ error: 'User not found' });
+        }
+        const roles = await getUserRoles(user.idUser);
+        res.json({ user: { ...user, roles } });
+    } catch (err) {
+        res.status(500).json({ error: 'Internal server error' });
+    }
+};
+
 export const getUserRoles = async (idUser: string): Promise<string[]> => {
     const [rows] = await db.query(
         `SELECT r.name FROM users_roles ur

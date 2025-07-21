@@ -3,6 +3,14 @@ import axios from 'axios';
 import API_URL from 'config';
 
 export class UsersService {
+    async getCurrentUser(): Promise<User | null> {
+        try {
+            const response = await axios.get<{ user: User }>(`${API_URL}/api/users/me`, { withCredentials: true });
+            return response.data.user;
+        } catch (error) {
+            return null;
+        }
+    }
     async loadUsers(): Promise<User[]> {
         try {
             const response = await axios.get(`${API_URL}/api/users`, { withCredentials: true });

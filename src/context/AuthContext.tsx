@@ -33,7 +33,20 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     const songsService = new SongsService();
 
     useEffect(() => {
-        setIsAuthLoaded(true);
+        // Przy starcie aplikacji pobierz aktualnego użytkownika z /me
+        const fetchCurrentUser = async () => {
+            const currentUser = await usersService.getCurrentUser();
+            if (currentUser) {
+                if (!Array.isArray(currentUser.roles)) currentUser.roles = [];
+                setUser(currentUser);
+                const backendFavourites = await usersService.getUserFavourites(currentUser.idUser);
+                const reported = await usersService.getUserReportedSongs(currentUser.idUser);
+                setFavourites(backendFavourites ?? []);
+                setReportedSongs(reported ?? []);
+            }
+            setIsAuthLoaded(true);
+        };
+        fetchCurrentUser();
     }, []);
 
     const login = async (username: string, password: string) => {

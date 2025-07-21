@@ -20,7 +20,7 @@ app.disable('x-powered-by');
 
 app.use(
     cors({
-        origin: 'http://localhost:3000', // Adres frontendu
+        origin: 'https://konradkoluch.usermd.net/',
         credentials: true,
     }),
 );
@@ -30,7 +30,7 @@ app.use(cookieParser());
 app.use('/api/users', userRoutes);
 app.use('/api/songs', songsRoutes);
 
-app.use(express.static(path.join(__dirname, '../../public')));
+app.use(express.static(path.join(__dirname, 'public')));
 
 (async () => {
     try {
@@ -52,21 +52,21 @@ cron.schedule('0 */2 * * *', async () => {
 });
 
 app.get('*', (_req, res) => {
-    res.sendFile(path.join(__dirname, '../../public', 'index.html'));
+    res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
-// if (typeof PhusionPassenger !== 'undefined') {
-//     app.listen('passenger');
-// } else {
-//     const port = process.env.PORT;
-//     app.listen(port, () => {
-//         console.log(`Server listening on port ${port}`);
-//     });
-// }
+if (typeof PhusionPassenger !== 'undefined') {
+    app.listen('passenger');
+} else {
+    const port = process.env.PORT;
+    app.listen(port, () => {
+        console.log(`Server listening on port ${port}`);
+    });
+}
 
-const PORT = 5000;
+// const PORT = 5000;
 
-app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
-});
-// export default app;
+// app.listen(PORT, () => {
+//     console.log(`Server is running on port ${PORT}`);
+// });
+export default app;
