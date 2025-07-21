@@ -2,10 +2,10 @@
 -- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Host: mysql18.mydevil.net
--- Generation Time: Lip 21, 2025 at 05:01 PM
--- Wersja serwera: 8.0.39
--- Wersja PHP: 8.1.31
+-- Host: 127.0.0.1
+-- Generation Time: Lip 21, 2025 at 05:27 PM
+-- Wersja serwera: 10.4.32-MariaDB
+-- Wersja PHP: 8.2.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -18,7 +18,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `m1349_webGitara`
+-- Database: `m1349_webgitara`
 --
 
 -- --------------------------------------------------------
@@ -28,11 +28,11 @@ SET time_zone = "+00:00";
 --
 
 CREATE TABLE `comments` (
-  `idComment` char(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `idSong` char(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `idUser` char(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `content` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+  `idComment` char(36) NOT NULL,
+  `idSong` char(36) NOT NULL,
+  `idUser` char(36) NOT NULL,
+  `content` varchar(100) NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -52,10 +52,10 @@ INSERT INTO `comments` (`idComment`, `idSong`, `idUser`, `content`, `created_at`
 --
 
 CREATE TABLE `favourites` (
-  `idFavourite` char(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `idUser` char(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `idSong` char(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+  `idFavourite` char(36) NOT NULL,
+  `idUser` char(36) NOT NULL,
+  `idSong` char(36) NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -72,10 +72,10 @@ INSERT INTO `favourites` (`idFavourite`, `idUser`, `idSong`, `created_at`) VALUE
 --
 
 CREATE TABLE `lastplayedsongs` (
-  `idLastPlayedSong` char(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `idUser` char(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `idSong` char(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `lastPlayed` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+  `idLastPlayedSong` char(36) NOT NULL,
+  `idUser` char(36) NOT NULL,
+  `idSong` char(36) NOT NULL,
+  `lastPlayed` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -104,10 +104,10 @@ INSERT INTO `lastplayedsongs` (`idLastPlayedSong`, `idUser`, `idSong`, `lastPlay
 --
 
 CREATE TABLE `ratings` (
-  `idRating` char(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `idUser` char(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `idSong` char(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `rating` int NOT NULL
+  `idRating` char(36) NOT NULL,
+  `idUser` char(36) NOT NULL,
+  `idSong` char(36) NOT NULL,
+  `rating` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -127,10 +127,10 @@ INSERT INTO `ratings` (`idRating`, `idUser`, `idSong`, `rating`) VALUES
 --
 
 CREATE TABLE `reported_songs` (
-  `idReportedSong` char(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `idSong` char(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `reported_by` char(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `created_at` datetime DEFAULT CURRENT_TIMESTAMP
+  `idReportedSong` char(36) NOT NULL,
+  `idSong` char(36) NOT NULL,
+  `reported_by` char(36) NOT NULL,
+  `created_at` datetime DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -147,8 +147,8 @@ INSERT INTO `reported_songs` (`idReportedSong`, `idSong`, `reported_by`, `create
 --
 
 CREATE TABLE `roles` (
-  `idRole` char(36) COLLATE utf8mb4_general_ci NOT NULL,
-  `name` varchar(50) COLLATE utf8mb4_general_ci NOT NULL
+  `idRole` char(36) NOT NULL,
+  `name` varchar(50) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -167,14 +167,14 @@ INSERT INTO `roles` (`idRole`, `name`) VALUES
 --
 
 CREATE TABLE `songs` (
-  `idSong` char(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `idUser` char(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `title` varchar(40) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `default_bpm` int NOT NULL,
-  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `tablature` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci,
-  `deleted_by_idUser` char(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `idSong` char(36) NOT NULL,
+  `idUser` char(36) NOT NULL,
+  `title` varchar(40) NOT NULL,
+  `default_bpm` int(11) NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `tablature` longtext DEFAULT NULL,
+  `deleted_by_idUser` char(36) DEFAULT NULL,
   `average_rating` decimal(3,2) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -197,12 +197,12 @@ INSERT INTO `songs` (`idSong`, `idUser`, `title`, `default_bpm`, `created_at`, `
 --
 
 CREATE TABLE `songs_history` (
-  `idHistory` char(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `idSong` char(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `version_number` int NOT NULL,
-  `tablature` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci,
-  `edited_by` char(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `edited_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+  `idHistory` char(36) NOT NULL,
+  `idSong` char(36) NOT NULL,
+  `version_number` int(11) NOT NULL,
+  `tablature` longtext DEFAULT NULL,
+  `edited_by` char(36) NOT NULL,
+  `edited_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -225,21 +225,40 @@ INSERT INTO `songs_history` (`idHistory`, `idSong`, `version_number`, `tablature
 --
 
 CREATE TABLE `tokens` (
-  `idToken` char(36) COLLATE utf8mb4_general_ci NOT NULL,
-  `idUser` char(36) COLLATE utf8mb4_general_ci NOT NULL,
-  `type` enum('activation','password_reset') COLLATE utf8mb4_general_ci NOT NULL,
-  `token` char(64) COLLATE utf8mb4_general_ci NOT NULL,
+  `idToken` char(36) NOT NULL,
+  `idUser` char(36) NOT NULL,
+  `token` char(64) NOT NULL,
   `expires_at` datetime NOT NULL,
-  `used` tinyint(1) DEFAULT '0',
-  `created_at` datetime DEFAULT CURRENT_TIMESTAMP
+  `used` tinyint(1) DEFAULT 0,
+  `created_at` datetime DEFAULT current_timestamp(),
+  `idTokenType` char(36) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `tokens`
 --
 
-INSERT INTO `tokens` (`idToken`, `idUser`, `type`, `token`, `expires_at`, `used`, `created_at`) VALUES
-('2a3ba831-2aa9-487b-b7c2-e11afb91eaf4', '535f57c9-2888-49a1-a120-3c5b34803238', 'password_reset', 'f7465104-9d4f-4852-8251-c34251b30cac', '2025-07-14 04:21:03', 1, '2025-07-14 03:21:02');
+INSERT INTO `tokens` (`idToken`, `idUser`, `token`, `expires_at`, `used`, `created_at`, `idTokenType`) VALUES
+('2a3ba831-2aa9-487b-b7c2-e11afb91eaf4', '535f57c9-2888-49a1-a120-3c5b34803238', 'f7465104-9d4f-4852-8251-c34251b30cac', '2025-07-14 04:21:03', 1, '2025-07-14 03:21:02', 'f0e9d8c7-b6a5-4321-fedc-ba9876543210');
+
+-- --------------------------------------------------------
+
+--
+-- Struktura tabeli dla tabeli `tokens_types`
+--
+
+CREATE TABLE `tokens_types` (
+  `idTokenType` char(36) NOT NULL,
+  `name` varchar(50) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `tokens_types`
+--
+
+INSERT INTO `tokens_types` (`idTokenType`, `name`) VALUES
+('a1b2c3d4-e5f6-7890-1234-567890abcdef', 'activation'),
+('f0e9d8c7-b6a5-4321-fedc-ba9876543210', 'password_reset');
 
 -- --------------------------------------------------------
 
@@ -248,14 +267,14 @@ INSERT INTO `tokens` (`idToken`, `idUser`, `type`, `token`, `expires_at`, `used`
 --
 
 CREATE TABLE `users` (
-  `idUser` char(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `username` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `password_hash` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `email` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `idUser` char(36) NOT NULL,
+  `username` varchar(32) NOT NULL,
+  `password_hash` varchar(100) NOT NULL,
+  `email` varchar(255) NOT NULL,
   `isActivated` tinyint(1) NOT NULL,
-  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
   `average_published_song_rating` decimal(3,2) NOT NULL,
-  `number_of_ratings_received` int NOT NULL
+  `number_of_ratings_received` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -275,11 +294,11 @@ INSERT INTO `users` (`idUser`, `username`, `password_hash`, `email`, `isActivate
 --
 
 CREATE TABLE `users_roles` (
-  `idUserRole` char(36) COLLATE utf8mb4_general_ci NOT NULL,
-  `idUser` char(36) COLLATE utf8mb4_general_ci NOT NULL,
-  `idRole` char(36) COLLATE utf8mb4_general_ci NOT NULL,
-  `assigned_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `assigned_by` char(36) COLLATE utf8mb4_general_ci DEFAULT NULL
+  `idUserRole` char(36) NOT NULL,
+  `idUser` char(36) NOT NULL,
+  `idRole` char(36) NOT NULL,
+  `assigned_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `assigned_by` char(36) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -363,7 +382,15 @@ ALTER TABLE `songs_history`
 --
 ALTER TABLE `tokens`
   ADD PRIMARY KEY (`idToken`),
-  ADD KEY `fk_tokens_user` (`idUser`);
+  ADD KEY `fk_tokens_user` (`idUser`),
+  ADD KEY `fk_tokens_token_type` (`idTokenType`);
+
+--
+-- Indeksy dla tabeli `tokens_types`
+--
+ALTER TABLE `tokens_types`
+  ADD PRIMARY KEY (`idTokenType`),
+  ADD UNIQUE KEY `unique_token_type_name` (`name`);
 
 --
 -- Indeksy dla tabeli `users`
@@ -438,6 +465,7 @@ ALTER TABLE `songs_history`
 -- Constraints for table `tokens`
 --
 ALTER TABLE `tokens`
+  ADD CONSTRAINT `fk_tokens_token_type` FOREIGN KEY (`idTokenType`) REFERENCES `tokens_types` (`idTokenType`) ON DELETE CASCADE,
   ADD CONSTRAINT `fk_tokens_user` FOREIGN KEY (`idUser`) REFERENCES `users` (`idUser`) ON DELETE CASCADE;
 
 --
