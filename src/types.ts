@@ -69,7 +69,6 @@ export type LastPlayedEntry = {
 };
 
 export type AuthData = {
-    token: string;
     user: User;
     favourites?: string[];
     reportedSongs?: string[];

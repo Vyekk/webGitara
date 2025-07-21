@@ -24,25 +24,15 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     const [user, setUser] = useState<User | null>(null);
-    const [token, setToken] = useState<string | null>(null);
     const [isAuthLoaded, setIsAuthLoaded] = useState(false);
     const [favourites, setFavourites] = useState<string[]>([]);
     const [reportedSongs, setReportedSongs] = useState<string[]>([]);
 
     const authService = new AuthService();
-
     const usersService = new UsersService();
     const songsService = new SongsService();
 
     useEffect(() => {
-        const authData = authService.loadAuth();
-        if (authData) {
-            if (!Array.isArray(authData.user.roles)) authData.user.roles = [];
-            setUser(authData.user);
-            setToken(authData.token);
-            setFavourites(authData.favourites ?? []);
-            setReportedSongs(authData.reportedSongs ?? []);
-        }
         setIsAuthLoaded(true);
     }, []);
 
@@ -55,60 +45,41 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         const reported = await usersService.getUserReportedSongs(authData.user.idUser);
         if (!Array.isArray(authData.user.roles)) authData.user.roles = [];
         setUser(authData.user);
-        setToken(authData.token);
         setFavourites(backendFavourites ?? []);
         setReportedSongs(reported ?? []);
-        authService.saveAuth({
-            user: authData.user,
-            token: authData.token,
-            favourites: backendFavourites ?? [],
-            reportedSongs: reported ?? [],
-        });
     };
 
-    const logout = () => {
-        authService.clearAuth();
+    const logout = async () => {
+        await authService.logout();
         setUser(null);
-        setToken(null);
         setFavourites([]);
         setReportedSongs([]);
     };
 
     const refreshUser = async () => {
         if (!user) return;
-
         const updatedUser = await usersService.getUserById(user.idUser);
         if (updatedUser) {
-            // Wymuś obecność roles jako tablicy
             if (!Array.isArray(updatedUser.roles)) updatedUser.roles = [];
             setUser(updatedUser);
-            authService.saveAuth({ user: updatedUser, token: token ?? '', favourites, reportedSongs });
         }
     };
 
     const toggleFavourite = async (songId: string) => {
         if (!user) return;
-
         const updatedFavourites = favourites.includes(songId)
             ? favourites.filter((id) => id !== songId)
             : [...favourites, songId];
-
         setFavourites(updatedFavourites);
-        authService.saveAuth({ user, token: token ?? '', favourites: updatedFavourites });
-
         await usersService.updateUserFavourites(user.idUser, updatedFavourites);
     };
 
     const toggleReported = async (songId: string) => {
         if (!user) return;
-
         const updatedReportedSongs = reportedSongs.includes(songId)
             ? reportedSongs.filter((id) => id !== songId)
             : [...reportedSongs, songId];
-
         setReportedSongs(updatedReportedSongs);
-        authService.saveAuth({ user, token: token ?? '', reportedSongs: updatedReportedSongs });
-
         await usersService.updateUserReportedSongs(user.idUser, updatedReportedSongs);
     };
 
@@ -129,7 +100,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         <AuthContext.Provider
             value={{
                 user,
-                token,
+                token: null,
                 isLoggedIn: !!user,
                 isAuthLoaded,
                 login,

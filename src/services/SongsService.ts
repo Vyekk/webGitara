@@ -1,18 +1,8 @@
 import { Song, Comment } from 'types';
 import axios from 'axios';
-import { AuthService } from './AuthService';
 import API_URL from 'config';
 
 export class SongsService {
-    private authService: AuthService;
-    constructor() {
-        this.authService = new AuthService();
-    }
-
-    private getAuthHeaders() {
-        return this.authService.getAuthHeaders();
-    }
-
     async loadSongs(): Promise<Song[]> {
         try {
             const response = await axios.get<Song[]>(`${API_URL}/api/songs`);
@@ -25,24 +15,16 @@ export class SongsService {
 
     async addSong(newSong: any): Promise<void> {
         try {
-            if (!newSong.idSong) {
-                await axios.post(`${API_URL}/api/songs`, newSong, { headers: this.getAuthHeaders() });
-            } else {
-                await axios.put(`${API_URL}/api/songs/${newSong.idSong}`, newSong, {
-                    headers: this.getAuthHeaders(),
-                });
-            }
+            await axios.post(`${API_URL}/api/songs`, newSong, { withCredentials: true });
         } catch (error) {
-            console.error('Błąd podczas dodawania/edycji piosenki:', error);
+            console.error('Błąd podczas dodawania piosenki:', error);
             throw error;
         }
     }
 
     async updateSong(updatedSong: any): Promise<void> {
         try {
-            await axios.put(`${API_URL}/api/songs/${updatedSong.idSong}`, updatedSong, {
-                headers: this.getAuthHeaders(),
-            });
+            await axios.put(`${API_URL}/api/songs/${updatedSong.idSong}`, updatedSong, { withCredentials: true });
         } catch (error) {
             console.error('Błąd podczas aktualizacji utworu:', error);
             throw error;
@@ -51,7 +33,7 @@ export class SongsService {
 
     async deleteSongById(id: string): Promise<void> {
         try {
-            await axios.delete(`${API_URL}/api/songs/${id}`, { headers: this.getAuthHeaders() });
+            await axios.delete(`${API_URL}/api/songs/${id}`, { withCredentials: true });
         } catch (error) {
             console.error('Błąd podczas usuwania piosenki:', error);
             throw error;
@@ -66,9 +48,7 @@ export class SongsService {
                     idUser: comment.author.idUser,
                     content: comment.content,
                 },
-                {
-                    headers: this.getAuthHeaders(),
-                },
+                { withCredentials: true },
             );
         } catch (error) {
             console.error('Błąd podczas dodawania komentarza:', error);
@@ -78,9 +58,7 @@ export class SongsService {
 
     async deleteCommentFromSong(songId: string, commentId: string): Promise<void> {
         try {
-            await axios.delete(`${API_URL}/api/songs/${songId}/comments/${commentId}`, {
-                headers: this.getAuthHeaders(),
-            });
+            await axios.delete(`${API_URL}/api/songs/${songId}/comments/${commentId}`, { withCredentials: true });
         } catch (error) {
             console.error('Błąd podczas usuwania komentarza:', error);
             throw error;
@@ -99,11 +77,7 @@ export class SongsService {
 
     async saveLastPlayedSong(idUser: string, idSong: string): Promise<void> {
         try {
-            await axios.post(
-                `${API_URL}/api/songs/lastplayedsongs`,
-                { idUser, idSong },
-                { headers: this.getAuthHeaders() },
-            );
+            await axios.post(`${API_URL}/api/songs/lastplayedsongs`, { idUser, idSong }, { withCredentials: true });
         } catch (error) {
             console.error('Błąd podczas zapisywania ostatnio odtwarzanego utworu:', error);
             throw error;
@@ -113,7 +87,7 @@ export class SongsService {
     async getLastPlayedSongs(idUser: string): Promise<Song[]> {
         try {
             const response = await axios.get<Song[]>(`${API_URL}/api/songs/lastplayedsongs/${idUser}`, {
-                headers: this.getAuthHeaders(),
+                withCredentials: true,
             });
             return response.data;
         } catch (error) {
@@ -124,11 +98,7 @@ export class SongsService {
 
     async rateSong(songId: string, rating: number, idUser: string): Promise<void> {
         try {
-            await axios.post(
-                `${API_URL}/api/songs/${songId}/rating`,
-                { idUser, rating },
-                { headers: this.getAuthHeaders() },
-            );
+            await axios.post(`${API_URL}/api/songs/${songId}/rating`, { idUser, rating }, { withCredentials: true });
         } catch (error) {
             console.error('Błąd podczas oceniania utworu:', error);
             throw error;
@@ -139,9 +109,7 @@ export class SongsService {
         try {
             const response = await axios.get<{ version_number: number; edited_at: string }[]>(
                 `${API_URL}/api/songs/${idSong}/history`,
-                {
-                    headers: this.getAuthHeaders(),
-                },
+                { withCredentials: true },
             );
             return response.data;
         } catch (error) {
@@ -154,9 +122,7 @@ export class SongsService {
         try {
             const response = await axios.get<{ tablature: any; [key: string]: any }>(
                 `${API_URL}/api/songs/${idSong}/history/${version}`,
-                {
-                    headers: this.getAuthHeaders(),
-                },
+                { withCredentials: true },
             );
             return response.data;
         } catch (error) {
@@ -169,9 +135,7 @@ export class SongsService {
         Array<{ idReportedSong: string; idSong: string; reported_by: string; created_at: string }>
     > {
         try {
-            const response = await axios.get(`${API_URL}/api/songs/reported_songs/all`, {
-                headers: this.getAuthHeaders(),
-            });
+            const response = await axios.get(`${API_URL}/api/songs/reported_songs/all`, { withCredentials: true });
             return response.data;
         } catch (error) {
             console.error('Błąd podczas pobierania wszystkich reported:', error);

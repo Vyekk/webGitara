@@ -1,25 +1,13 @@
 import { User } from 'types';
 import axios from 'axios';
-import { AuthService } from './AuthService';
 import API_URL from 'config';
 
 export class UsersService {
-    private authService: AuthService;
-    constructor() {
-        this.authService = new AuthService();
-    }
-
-    private getAuthHeaders() {
-        return this.authService.getAuthHeaders();
-    }
-
     async loadUsers(): Promise<User[]> {
         try {
-            const response = await axios.get(`${API_URL}/api/users`, {
-                headers: this.getAuthHeaders(),
-            });
+            const response = await axios.get(`${API_URL}/api/users`, { withCredentials: true });
             return response.data;
-        } catch (error: unknown) {
+        } catch (error) {
             console.error('Błąd podczas pobierania użytkowników:', error);
             return [];
         }
@@ -42,25 +30,93 @@ export class UsersService {
         }
     }
 
-    async getUserById(id: string): Promise<User | null> {
+    async getUserById(idUser: string): Promise<User | null> {
         try {
-            const response = await axios.get(`${API_URL}/api/users/${id}`, {
-                headers: this.getAuthHeaders(),
-            });
+            const response = await axios.get<User>(`${API_URL}/api/users/${idUser}`, { withCredentials: true });
             return response.data;
-        } catch (error: unknown) {
+        } catch (error) {
             console.error('Błąd podczas pobierania użytkownika:', error);
             return null;
         }
     }
 
-    async updateUserPassword(oldPassword: string, newPassword: string): Promise<void> {
+    async getAllUsers(): Promise<User[]> {
+        try {
+            const response = await axios.get<User[]>(`${API_URL}/api/users`, { withCredentials: true });
+            return response.data;
+        } catch (error) {
+            console.error('Błąd podczas pobierania użytkowników:', error);
+            return [];
+        }
+    }
+
+    async updateUserFavourites(idUser: string, favourites: string[]): Promise<void> {
+        try {
+            await axios.put(`${API_URL}/api/users/${idUser}/favourites`, { favourites }, { withCredentials: true });
+        } catch (error) {
+            console.error('Błąd podczas aktualizacji ulubionych:', error);
+            throw error;
+        }
+    }
+
+    async getUserFavourites(idUser: string): Promise<string[]> {
+        try {
+            const response = await axios.get<string[]>(`${API_URL}/api/users/${idUser}/favourites`, {
+                withCredentials: true,
+            });
+            return response.data;
+        } catch (error) {
+            console.error('Błąd podczas pobierania ulubionych:', error);
+            return [];
+        }
+    }
+
+    async updateUserReportedSongs(idUser: string, reportedSongs: string[]): Promise<void> {
         try {
             await axios.put(
-                `${API_URL}/api/users/password`,
-                { oldPassword, newPassword },
-                { headers: this.getAuthHeaders() },
+                `${API_URL}/api/users/${idUser}/reported_songs`,
+                { reportedSongs },
+                { withCredentials: true },
             );
+        } catch (error) {
+            console.error('Błąd podczas aktualizacji reportedSongs:', error);
+            throw error;
+        }
+    }
+
+    async getUserReportedSongs(idUser: string): Promise<string[]> {
+        try {
+            const response = await axios.get<string[]>(`${API_URL}/api/users/${idUser}/reported_songs`, {
+                withCredentials: true,
+            });
+            return response.data;
+        } catch (error) {
+            console.error('Błąd podczas pobierania reportedSongs:', error);
+            return [];
+        }
+    }
+
+    async updateUserRole(idUser: string, role: string): Promise<void> {
+        try {
+            await axios.put(`${API_URL}/api/users/${idUser}/role`, { role }, { withCredentials: true });
+        } catch (error) {
+            console.error('Błąd podczas zmiany roli użytkownika:', error);
+            throw error;
+        }
+    }
+
+    async deleteUser(idUser: string): Promise<void> {
+        try {
+            await axios.delete(`${API_URL}/api/users/${idUser}`, { withCredentials: true });
+        } catch (error) {
+            console.error('Błąd podczas usuwania użytkownika:', error);
+            throw error;
+        }
+    }
+
+    async updateUserPassword(oldPassword: string, newPassword: string): Promise<void> {
+        try {
+            await axios.put(`${API_URL}/api/users/password`, { oldPassword, newPassword }, { withCredentials: true });
         } catch (error: unknown) {
             if (
                 typeof error === 'object' &&
@@ -78,7 +134,7 @@ export class UsersService {
     async updateUserStats(userId: string): Promise<void> {
         try {
             await axios.put(`${API_URL}/api/users/${userId}/stats`, null, {
-                headers: this.getAuthHeaders(),
+                withCredentials: true,
             });
         } catch (error: unknown) {
             console.error('Błąd podczas aktualizacji statystyk użytkownika:', error);
@@ -88,88 +144,10 @@ export class UsersService {
     async updateUserSongStats(): Promise<void> {
         try {
             await axios.put(`${API_URL}/api/users/stats/all`, null, {
-                headers: this.getAuthHeaders(),
+                withCredentials: true,
             });
         } catch (error: unknown) {
             console.error('Błąd podczas aktualizacji statystyk wszystkich użytkowników:', error);
-        }
-    }
-
-    async updateUserRole(userId: string, newRole: 'admin' | 'moderator' | 'user'): Promise<void> {
-        try {
-            await axios.put(
-                `${API_URL}/api/users/${userId}/role`,
-                { role: newRole },
-                {
-                    headers: this.getAuthHeaders(),
-                },
-            );
-        } catch (error: unknown) {
-            console.error('Błąd podczas zmiany roli użytkownika:', error);
-            throw error;
-        }
-    }
-
-    async deleteUser(userId: string): Promise<void> {
-        try {
-            await axios.delete(`${API_URL}/api/users/${userId}`, {
-                headers: this.getAuthHeaders(),
-            });
-        } catch (error: unknown) {
-            console.error('Błąd podczas usuwania użytkownika:', error);
-            throw error;
-        }
-    }
-
-    async getUserFavourites(userId: string): Promise<string[]> {
-        try {
-            const response = await axios.get<string[]>(`${API_URL}/api/users/${userId}/favourites`, {
-                headers: this.getAuthHeaders(),
-            });
-            return response.data;
-        } catch (error) {
-            console.error('Błąd podczas pobierania favourites:', error);
-            return [];
-        }
-    }
-    async getUserReportedSongs(userId: string): Promise<string[]> {
-        try {
-            const response = await axios.get<string[]>(`${API_URL}/api/users/${userId}/reported_songs`, {
-                headers: this.getAuthHeaders(),
-            });
-            return response.data;
-        } catch (error) {
-            console.error('Błąd podczas pobierania reported:', error);
-            return [];
-        }
-    }
-
-    async updateUserReportedSongs(userId: string, reportedSongs: string[]): Promise<void> {
-        try {
-            console.log('Wysyłam:', { userId, reportedSongs });
-            await axios.put(
-                `${API_URL}/api/users/${userId}/reported_songs`,
-                { reportedSongs },
-                {
-                    headers: this.getAuthHeaders(),
-                },
-            );
-        } catch (error) {
-            console.error('Błąd podczas aktualizacji reported:', error);
-        }
-    }
-
-    async updateUserFavourites(userId: string, favourites: string[]): Promise<void> {
-        try {
-            await axios.put(
-                `${API_URL}/api/users/${userId}/favourites`,
-                { favourites },
-                {
-                    headers: this.getAuthHeaders(),
-                },
-            );
-        } catch (error: unknown) {
-            console.error('Błąd podczas aktualizacji ulubionych utworów użytkownika:', error);
         }
     }
 }

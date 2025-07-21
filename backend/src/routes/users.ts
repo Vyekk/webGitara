@@ -17,6 +17,7 @@ import {
     resetPassword,
     updateUserReportedSongs,
     getUserReportedSongs,
+    logoutUser,
 } from '../controllers/usersController';
 
 const router = Router();
@@ -37,5 +38,6 @@ router.get('/:userId/reported_songs', authenticateToken, getUserReportedSongs);
 router.put('/:id/role', authenticateToken, updateUserRole);
 router.delete('/:id', authenticateToken, deleteUser);
 router.post('/activate', activateUser);
+router.post('/logout', logoutUser);
 
 export default router;

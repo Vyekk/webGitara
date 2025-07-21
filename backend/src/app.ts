@@ -4,6 +4,7 @@ import path from 'path';
 import 'dotenv/config';
 import { db } from './db';
 import cron from 'node-cron';
+import cookieParser from 'cookie-parser';
 
 declare const PhusionPassenger: any;
 
@@ -17,8 +18,14 @@ import songsRoutes from './routes/songs';
 const app = express();
 app.disable('x-powered-by');
 
-app.use(cors());
+app.use(
+    cors({
+        origin: 'http://localhost:3000', // Adres frontendu
+        credentials: true,
+    }),
+);
 app.use(express.json());
+app.use(cookieParser());
 
 app.use('/api/users', userRoutes);
 app.use('/api/songs', songsRoutes);
@@ -45,7 +52,7 @@ cron.schedule('0 */2 * * *', async () => {
 });
 
 app.get('*', (_req, res) => {
-    res.sendFile(path.join(__dirname, 'public', 'index.html'));
+    res.sendFile(path.join(__dirname, '../../public', 'index.html'));
 });
 
 // if (typeof PhusionPassenger !== 'undefined') {

@@ -159,10 +159,26 @@ export const loginUser = async (req: Request, res: Response): Promise<void> => {
             { expiresIn: '24h' },
         );
 
-        res.json({ message: 'Login successful', user: { ...user, roles }, token });
+        res.cookie('token', token, {
+            httpOnly: true,
+            secure: true,
+            sameSite: 'strict',
+            maxAge: 24 * 60 * 60 * 1000,
+        });
+
+        res.json({ message: 'Login successful', user: { ...user, roles } });
     } catch (error) {
         res.status(500).json({ error: 'Internal server error' });
     }
+};
+
+export const logoutUser = async (req: Request, res: Response): Promise<void> => {
+    res.clearCookie('token', {
+        httpOnly: true,
+        secure: true,
+        sameSite: 'strict',
+    });
+    res.json({ message: 'Logout successful' });
 };
 
 export const updatePassword = async (req: Request, res: Response) => {
