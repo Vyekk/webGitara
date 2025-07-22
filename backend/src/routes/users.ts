@@ -18,6 +18,7 @@ import {
     updateUserReportedSongs,
     getUserReportedSongs,
     logoutUser,
+    getCurrentUser,
 } from '../controllers/usersController';
 
 const router = Router();
@@ -27,6 +28,7 @@ router.post('/login', loginUser);
 router.post('/request-password-reset', requestPasswordReset);
 router.post('/reset-password', resetPassword);
 router.put('/password', authenticateToken, updatePassword);
+router.get('/me', authenticateToken, getCurrentUser);
 router.get('/', authenticateToken, getAllUsers);
 router.get('/:id', authenticateToken, getUserById);
 router.put('/:id/stats', authenticateToken, updateUserStats);
