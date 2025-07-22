@@ -14,6 +14,7 @@ type SongBackendDto = {
 
 type SongHistoryVersion = { version_number: number; edited_at: string };
 
+type ReportedSong = { idSong: string };
 type SongsContextType = {
     songs: Song[];
     refreshSongs: () => Promise<void>;
@@ -28,7 +29,7 @@ type SongsContextType = {
     rateSong: (songId: string, value: number) => Promise<void>;
     getSongHistoryVersions: (idSong: string) => Promise<SongHistoryVersion[]>;
     getSongHistoryVersion: (idSong: string, version: string) => Promise<any>;
-    getAllReportedSongs?: () => Promise<Song[]>;
+    getAllReportedSongs: () => Promise<ReportedSong[]>;
 };
 
 const SongsContext = createContext<SongsContextType | undefined>(undefined);
