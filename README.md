@@ -1,3 +1,26 @@
+# Podstawowe kroki uruchomienia projektu
+
+1. Sklonuj repozytorium:
+
+   ```bash
+   git clone <adres_repozytorium>
+   ```
+
+2. Przejdź do katalogu projektu:
+
+   ```bash
+   cd webGitara
+   ```
+
+3. Zainstaluj zależności dla frontendu i backendu:
+
+   ```bash
+   npm install
+   cd backend
+   npm install
+   ```
+
+---
 # Instrukcja uruchomienia aplikacji przez Dockera
 
 ## Wymagania wstępne
