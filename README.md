@@ -1,4 +1,4 @@
-# Podstawowe kroki uruchomienia projektu
+# Podstawowe kroki uruchomienia projektu bez dockera
 
 1. Sklonuj repozytorium:
 
@@ -20,6 +20,13 @@
    npm install
    ```
 
+4. Uruchom aplikacje po stronie frontendu i backendu:
+
+   ```bash
+   npm start
+   cd backend
+   npm start
+   ```
 ---
 # Instrukcja uruchomienia aplikacji przez Dockera
 
