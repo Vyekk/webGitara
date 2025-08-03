@@ -107,11 +107,6 @@ const Settings = () => {
                             />
                             <label htmlFor="reverseGuitar">Odwróć gitarę</label>
                         </div>
-                        <div className={styles.formGroup}>
-                            <input type="checkbox" id="reverseTab" />
-
-                            <label htmlFor="reverseTab">Odwróć tabulaturę</label>
-                        </div>
                     </div>
                     <Button type="submit">Zapisz zmiany</Button>
                     {message && <p>{message}</p>}
