@@ -1,56 +1,60 @@
 import { getDurationValueFromSymbol, getSymbolFromDurationValue } from 'utils/durationMapper';
-import { Step, TabNote, Tablature } from 'types';
+import { TabNote, Tablature } from 'types';
 
 type FormDataMap = Record<string, string>;
 
+function parseFormDataKey(key: string) {
+    const match = key.match(/^string-(\d+)-column-(\d+)-line-(\d+)$/);
+    if (!match) return null;
+    return {
+        stringIndex: parseInt(match[1]),
+        columnIndex: parseInt(match[2]),
+        lineIndex: parseInt(match[3]),
+    };
+}
+
 export const convertFormDataToTablature = (formData: FormDataMap, formDataDuration: FormDataMap): Tablature => {
-    const tablature: Tablature = [];
-
-    for (let line = 0; line < 6; line++) {
-        const lineSteps: Record<number, TabNote[]> = {};
-
-        for (const key in formData) {
-            const match = key.match(/^string-(\d+)-column-(\d+)-line-(\d+)$/);
-            if (!match) continue;
-            // eslint-disable-next-line @typescript-eslint/no-unused-vars
-            const [_, stringIndexRaw, columnRaw, lineIndexRaw] = match;
-            const stringIndex = parseInt(stringIndexRaw);
-            const columnIndex = parseInt(columnRaw);
-            const lineIndex = parseInt(lineIndexRaw);
-
-            if (lineIndex !== line) continue;
-
-            const fret = formData[key];
-            if (fret === '' || fret === '|') continue;
-
-            const durationKey = `duration-${lineIndex}-${columnIndex}`;
-            const durationSymbol = formDataDuration[durationKey];
-            const duration = durationSymbol ? getDurationValueFromSymbol(durationSymbol) ?? durationSymbol : '4n';
-
-            if (!lineSteps[columnIndex]) lineSteps[columnIndex] = [];
-
-            lineSteps[columnIndex].push({
-                guitarString: stringIndex,
-                guitarFret: parseInt(fret),
-                duration,
-            });
+    const linesMap: Map<number, Map<number, TabNote[]>> = new Map();
+    for (const key in formData) {
+        const parsed = parseFormDataKey(key);
+        if (!parsed) continue;
+        const { stringIndex, columnIndex, lineIndex } = parsed;
+        const fret = formData[key];
+        if (fret === '' || fret === '|') continue;
+        const durationKey = `duration-${lineIndex}-${columnIndex}`;
+        const durationSymbol = formDataDuration[durationKey];
+        const duration = durationSymbol ? getDurationValueFromSymbol(durationSymbol) ?? durationSymbol : '4n';
+        let columnsMap = linesMap.get(lineIndex);
+        if (!columnsMap) {
+            columnsMap = new Map();
+            linesMap.set(lineIndex, columnsMap);
         }
+        let notesArr = columnsMap.get(columnIndex);
+        if (!notesArr) {
+            notesArr = [];
+            columnsMap.set(columnIndex, notesArr);
+        }
+        notesArr.push({
+            guitarString: stringIndex,
+            guitarFret: parseInt(fret),
+            duration,
+        });
+    }
 
-        const steps: Step[] = [];
-        const maxColumn = Math.max(0, ...Object.keys(lineSteps).map(Number));
-
+    const tablature: Tablature = [];
+    for (let line = 0; line < 6; line++) {
+        const columnsMap = linesMap.get(line) || new Map();
+        const maxColumn = columnsMap.size > 0 ? Math.max(...Array.from(columnsMap.keys())) : 0;
         for (let i = 1; i <= maxColumn; i++) {
-            const step = lineSteps[i];
-
+            const step = columnsMap.get(i);
             if (step && step.length > 0) {
-                steps.push(step);
+                tablature.push(step);
             } else {
                 const durationKey = `duration-${line}-${i}`;
                 const durationSymbol = formDataDuration[durationKey];
-
                 if (durationSymbol) {
                     const duration = getDurationValueFromSymbol(durationSymbol);
-                    steps.push([
+                    tablature.push([
                         {
                             rest: true,
                             duration,
@@ -59,10 +63,7 @@ export const convertFormDataToTablature = (formData: FormDataMap, formDataDurati
                 }
             }
         }
-
-        tablature.push(...steps);
     }
-
     return tablature;
 };
 
