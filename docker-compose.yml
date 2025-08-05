@@ -26,7 +26,8 @@ services:
     volumes:
       - ./:/usr/src/app
       - /usr/src/app/node_modules
-
+    stdin_open: true
+    tty: true  
   db:
     image: mysql:8.0
     container_name: webgitara-mysql
