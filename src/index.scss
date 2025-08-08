@@ -7,9 +7,22 @@
 
 html {
   font-family: 'Montserrat', sans-serif;
-  font-size: $font-size-web;
+  font-size: clamp(14px, 0.9vw + 0.4vh, 18px); // fluid instead of fixed $font-size-web
   color: $white;
   font-weight: 400;
+}
+
+@media (min-resolution: 1.25dppx) {
+  html { font-size: clamp(13px, 0.85vw + 0.35vh, 17px); }
+}
+@media (min-resolution: 1.4dppx) {
+  html { font-size: clamp(12.5px, 0.8vw + 0.3vh, 16px); }
+}
+@media (min-resolution: 1.5dppx) {
+  html { font-size: clamp(12px, 0.75vw + 0.28vh, 15px); }
+}
+@media (min-resolution: 1.6dppx) {
+  html { font-size: clamp(11.5px, 0.7vw + 0.25vh, 14.5px); }
 }
 
 button {
@@ -21,22 +34,15 @@ body {
     margin: 0;
     padding: 0;
 }
-p {
-  margin: 0;
-}
-a {
-  text-decoration: none;
-  color: $primary-color;
-}
-ul li {
-  margin-top: 10px;
-}
-input[type=checkbox] {
-  accent-color: $primary-color;
-}
+
+p { margin: 0; }
+
+a { text-decoration: none; color: $primary-color; }
+
+ul li { margin-top: 10px; }
+
+input[type=checkbox] { accent-color: $primary-color; }
 
 @media screen and (max-width: $desktop) {
-  html {
-    font-size: $mobile-font-size-web;
-  }
+  html { font-size: clamp(14px, 1.2vw + 0.3vh, 17px); }
 }

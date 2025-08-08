@@ -40,3 +40,25 @@ $b-string-color: rgb(0, 128, 0);
 $strings-height: 5, 6, 7, 8, 9, 10;
 $string-colors: $e-bottom-string-color, $b-string-color, $g-string-color, $d-string-color, $a-string-color, $e-top-string-color;
 
+
+$btn-min: 48px;
+$btn-max: 88px;
+$btn-fluid: clamp(#{$btn-min}, 5vw, #{$btn-max});
+$fretboard-min-h: 180px;
+$fretboard-max-h: 340px;
+$fretboard-fluid-h: clamp(#{$fretboard-min-h}, 22vh, #{$fretboard-max-h});
+
+
+$space-1: .25rem;
+$space-2: .5rem;
+$space-3: .75rem;
+$space-4: 1rem;
+$space-5: 1.5rem;
+$space-6: 2rem;
+
+
+@mixin fluid-size($min, $vw, $max) {
+  width: clamp($min, $vw, $max);
+  height: clamp($min, $vw, $max);
+}
+
