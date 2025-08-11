@@ -6,7 +6,7 @@ import { db } from './db';
 import cron from 'node-cron';
 import cookieParser from 'cookie-parser';
 
-declare const PhusionPassenger: any;
+declare const PhusionPassenger: { configure: (opts: { autoInstall: boolean }) => void } | undefined;
 
 if (typeof PhusionPassenger !== 'undefined') {
     PhusionPassenger.configure({ autoInstall: false });
@@ -20,7 +20,7 @@ app.disable('x-powered-by');
 
 app.use(
     cors({
-        origin: 'http://localhost:3000', // Adres frontendu
+        origin: process.env.CORS_ORIGIN || 'http://localhost:3000',
         credentials: true,
     }),
 );
@@ -34,7 +34,7 @@ app.use(express.static(path.join(__dirname, '../../public')));
 
 (async () => {
     try {
-        const [rows] = await db.query('SELECT 1');
+        await db.query('SELECT 1');
         console.log('✅ Połączono z bazą danych!');
     } catch (err) {
         console.error('❌ Błąd połączenia z bazą danych:', err);
@@ -64,7 +64,7 @@ app.get('*', (_req, res) => {
 //     });
 // }
 
-const PORT = 5000;
+const PORT = Number(process.env.PORT || 5000);
 
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);

@@ -18,7 +18,7 @@ export const getCurrentUser = async (req: Request, res: Response) => {
             return res.status(404).json({ error: 'User not found' });
         }
         const roles = await getUserRoles(user.idUser);
-        res.json({ user: { ...user, roles } });
+        res.json({ user: sanitizeUser(user, roles) });
     } catch (err) {
         res.status(500).json({ error: 'Internal server error' });
     }
@@ -35,6 +35,32 @@ export const getUserRoles = async (idUser: string): Promise<string[]> => {
 };
 import { RowDataPacket } from 'mysql2';
 import jwt from 'jsonwebtoken';
+
+type SameSite = 'lax' | 'strict' | 'none';
+const toSameSite = (val: string): SameSite => {
+    const v = (val || '').toLowerCase();
+    return v === 'none' || v === 'strict' || v === 'lax' ? (v as SameSite) : 'lax';
+};
+
+const JWT_SECRET =
+    process.env.JWT_SECRET || (process.env.NODE_ENV !== 'production' ? 'dev-secret-do-not-use-in-prod' : undefined);
+if (!JWT_SECRET) {
+    throw new Error('JWT_SECRET environment variable must be set');
+}
+
+function sanitizeUser(user: any, roles: string[]) {
+    return {
+        idUser: user.idUser,
+        username: user.username,
+        email: user.email,
+        isActivated: !!user.isActivated,
+        created_at: user.created_at,
+        average_published_song_rating: user.average_published_song_rating ?? 0,
+        number_of_ratings_received: user.number_of_ratings_received ?? 0,
+        roles,
+        password: '',
+    };
+}
 
 // Helper: get idTokenType by name
 async function getTokenTypeIdByName(name: string): Promise<string | null> {
@@ -140,7 +166,7 @@ export const activateUser = async (req: Request, res: Response) => {
         'SELECT * FROM tokens WHERE token = ? AND idTokenType = ? AND used = FALSE AND expires_at > NOW()',
         [token, idTokenType],
     );
-    const tokenRow = (rows as any[])[0];
+    const tokenRow = (rows as RowDataPacket[])[0];
     if (!tokenRow) {
         return res.status(400).json({ error: 'Nieprawidłowy lub przeterminowany token aktywacyjny' });
     }
@@ -186,10 +212,16 @@ export const loginUser = async (req: Request, res: Response): Promise<void> => {
             { expiresIn: '24h' },
         );
 
+        const isProd = process.env.NODE_ENV === 'production';
+        const cookieSecure = (process.env.COOKIE_SECURE ?? (isProd ? 'true' : 'false')).toLowerCase() === 'true';
+        const sameSiteEnv = (process.env.COOKIE_SAMESITE ?? (isProd ? 'none' : 'lax')).toLowerCase();
+        const cookieSameSite: 'lax' | 'strict' | 'none' =
+            sameSiteEnv === 'none' || sameSiteEnv === 'strict' ? (sameSiteEnv as any) : 'lax';
+
         res.cookie('token', token, {
             httpOnly: true,
-            secure: true,
-            sameSite: 'strict',
+            secure: cookieSecure,
+            sameSite: cookieSameSite,
             maxAge: 24 * 60 * 60 * 1000,
         });
 
@@ -200,10 +232,16 @@ export const loginUser = async (req: Request, res: Response): Promise<void> => {
 };
 
 export const logoutUser = async (req: Request, res: Response): Promise<void> => {
+    const isProd = process.env.NODE_ENV === 'production';
+    const cookieSecure = (process.env.COOKIE_SECURE ?? (isProd ? 'true' : 'false')).toLowerCase() === 'true';
+    const sameSiteEnv = (process.env.COOKIE_SAMESITE ?? (isProd ? 'none' : 'lax')).toLowerCase();
+    const cookieSameSite: 'lax' | 'strict' | 'none' =
+        sameSiteEnv === 'none' || sameSiteEnv === 'strict' ? (sameSiteEnv as any) : 'lax';
+
     res.clearCookie('token', {
         httpOnly: true,
-        secure: true,
-        sameSite: 'strict',
+        secure: cookieSecure,
+        sameSite: cookieSameSite,
     });
     res.json({ message: 'Logout successful' });
 };
