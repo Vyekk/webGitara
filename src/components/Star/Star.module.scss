@@ -1,3 +1,5 @@
+@use 'variables' as *;
+
 .star {
     display: inline-block;
     width: 20px;
@@ -19,9 +21,9 @@
 }
 
 .star.full {
-    background-color: #ffc700;
+    background-color: $primary-color;
 }
 
 .star.half {
-    background-color: linear-gradient(to right, #ffc700 50%, #ccc 50%);
+    background: linear-gradient(to right, #ffc700 50%, #ccc 50%);
 }

@@ -118,13 +118,15 @@ const SongTile = ({ song, isLarge }: SongTileProps) => {
             >
                 <FontAwesomeIcon icon={faHeart} />
             </div>
-            <div
-                className={`${reported ? styles.reported : styles.unreported} ${styles.reportedWrapper}`}
-                ref={reportedRef}
-                onClick={handleReportClick}
-            >
-                <FontAwesomeIcon icon={faFlag} />
-            </div>
+            {song.place === 1 || song.place === 2 || song.place === 3 ? null : (
+                <div
+                    className={`${reported ? styles.reported : styles.unreported} ${styles.reportedWrapper}`}
+                    ref={reportedRef}
+                    onClick={handleReportClick}
+                >
+                    <FontAwesomeIcon icon={faFlag} />
+                </div>
+            )}
             <div className={styles.managementButtons} ref={managementButtonsRef}>
                 <div
                     className={`${!song.deleted_by_idUser ? styles.comments : styles.hidden}`}
