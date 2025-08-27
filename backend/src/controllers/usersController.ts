@@ -12,7 +12,10 @@ export const getCurrentUser = async (req: Request, res: Response) => {
         return res.status(401).json({ error: 'Unauthorized' });
     }
     try {
-        const [rows] = await db.query('SELECT * FROM users WHERE idUser = ?', [req.user.idUser]);
+        const [rows] = await db.query(
+            'SELECT idUser, username, email, isActivated, created_at, average_published_song_rating, number_of_ratings_received FROM users WHERE idUser = ?',
+            [req.user.idUser],
+        );
         const user = (rows as RowDataPacket[])[0];
         if (!user) {
             return res.status(404).json({ error: 'User not found' });
@@ -46,13 +49,13 @@ async function getTokenTypeIdByName(name: string): Promise<string | null> {
 export const registerUser = async (req: Request, res: Response): Promise<void> => {
     const { username, password, email } = req.body;
 
-    const [existing] = await db.query('SELECT * FROM users WHERE username = ?', [username]);
+    const [existing] = await db.query('SELECT idUser FROM users WHERE username = ? LIMIT 1', [username]);
     if ((existing as RowDataPacket[]).length > 0) {
         res.status(400).json({ error: 'Taki nick już istnieje' });
         return;
     }
 
-    const [existingEmail] = await db.query('SELECT * FROM users WHERE email = ?', [email]);
+    const [existingEmail] = await db.query('SELECT idUser FROM users WHERE email = ? LIMIT 1', [email]);
     if ((existingEmail as RowDataPacket[]).length > 0) {
         res.status(400).json({ error: 'Konto z tym adresem email już istnieje' });
         return;
@@ -137,7 +140,7 @@ export const activateUser = async (req: Request, res: Response) => {
     const { token } = req.body;
     const idTokenType = await getTokenTypeIdByName('activation');
     const [rows] = await db.query(
-        'SELECT * FROM tokens WHERE token = ? AND idTokenType = ? AND used = FALSE AND expires_at > NOW()',
+        'SELECT idToken, idUser FROM tokens WHERE token = ? AND idTokenType = ? AND used = FALSE AND expires_at > NOW()',
         [token, idTokenType],
     );
     const tokenRow = (rows as any[])[0];
@@ -153,7 +156,10 @@ export const loginUser = async (req: Request, res: Response): Promise<void> => {
     const { username, password } = req.body;
 
     try {
-        const [rows] = await db.query('SELECT * FROM users WHERE username = ? OR email = ?', [username, username]);
+        const [rows] = await db.query(
+            'SELECT idUser, username, email, isActivated, created_at, average_published_song_rating, number_of_ratings_received, password_hash FROM users WHERE username = ? OR email = ?',
+            [username, username],
+        );
         const user = (rows as RowDataPacket[])[0];
 
         if (!user) {
@@ -217,7 +223,7 @@ export const updatePassword = async (req: Request, res: Response) => {
     const userId = req.user.idUser;
     const { oldPassword, newPassword } = req.body;
 
-    const [rows] = await db.query('SELECT * FROM users WHERE idUser = ?', [userId]);
+    const [rows] = await db.query('SELECT idUser, password_hash FROM users WHERE idUser = ?', [userId]);
     const user = (rows as RowDataPacket[])[0];
 
     if (!user) {
@@ -244,8 +250,10 @@ export const getAllUsers = async (req: Request, res: Response) => {
         return;
     }
 
-    const [rows] = await db.query('SELECT * FROM users');
-    const users = rows as any[];
+    const [rows] = await db.query(
+        'SELECT idUser, username, email, isActivated, created_at, average_published_song_rating, number_of_ratings_received FROM users',
+    );
+    const users = rows as RowDataPacket[];
 
     const [rolesRows] = await db.query(`
         SELECT ur.idUser, r.name as roleName
@@ -273,7 +281,10 @@ export const getUserById = async (req: Request, res: Response) => {
     }
 
     const { id } = req.params;
-    const [rows] = await db.query('SELECT * FROM users WHERE idUser = ?', [id]);
+    const [rows] = await db.query(
+        'SELECT idUser, username, email, isActivated, created_at, average_published_song_rating, number_of_ratings_received FROM users WHERE idUser = ?',
+        [id],
+    );
     const user = (rows as RowDataPacket[])[0];
 
     if (!user) {
@@ -471,7 +482,7 @@ export const updateUserReportedSongs = async (req: Request, res: Response) => {
 
 export const requestPasswordReset = async (req: Request, res: Response) => {
     const { email } = req.body;
-    const [rows] = await db.query('SELECT * FROM users WHERE email = ?', [email]);
+    const [rows] = await db.query('SELECT idUser, email FROM users WHERE email = ?', [email]);
     const user = (rows as RowDataPacket[])[0];
     if (!user) {
         return res.json({ message: 'Jeśli konto istnieje, wysłano link do resetu hasła.' });
@@ -512,7 +523,7 @@ export const resetPassword = async (req: Request, res: Response) => {
     const { token, newPassword } = req.body;
     const idTokenType = await getTokenTypeIdByName('password_reset');
     const [rows] = await db.query(
-        'SELECT * FROM tokens WHERE token = ? AND idTokenType = ? AND used = FALSE AND expires_at > NOW()',
+        'SELECT idToken, idUser FROM tokens WHERE token = ? AND idTokenType = ? AND used = FALSE AND expires_at > NOW()',
         [token, idTokenType],
     );
     const tokenRow = (rows as any[])[0];
