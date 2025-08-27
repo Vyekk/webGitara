@@ -3,6 +3,15 @@ import axios from 'axios';
 import API_URL from 'config';
 
 export class SongsService {
+    async getSongById(idSong: string): Promise<Song | null> {
+        try {
+            const response = await axios.get<Song>(`${API_URL}/api/songs/${idSong}`, { withCredentials: true });
+            return response.data;
+        } catch (error) {
+            console.error('Błąd podczas pobierania utworu:', error);
+            return null;
+        }
+    }
     async loadSongs(): Promise<Song[]> {
         try {
             const response = await axios.get<Song[]>(`${API_URL}/api/songs`);

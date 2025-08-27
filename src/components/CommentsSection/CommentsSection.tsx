@@ -8,6 +8,7 @@ import { Song } from 'types';
 import useRequiredUser from 'utils/useRequiredUser';
 import { useSongs } from 'context/SongsContext';
 import { v4 as uuidv4 } from 'uuid';
+import { SongsService } from 'services/SongsService';
 
 type CommentsSectionProps = {
     song: Song;
@@ -18,6 +19,7 @@ const CommentsSection = ({ song }: CommentsSectionProps) => {
     const [isCommenting, setIsCommenting] = useState(false);
     const { openModal, setModal } = useContext(ModalContext);
     const { addCommentToSong, deleteCommentFromSong } = useSongs();
+    const songsService = new SongsService();
     const user = useRequiredUser();
 
     const handleAddComment = () => {
@@ -43,22 +45,15 @@ const CommentsSection = ({ song }: CommentsSectionProps) => {
         };
 
         await addCommentToSong(song.idSong, newComment);
-
-        setCommentedSong((prev: Song) => ({
-            ...prev,
-            comments: prev.comments ? [...prev.comments, newComment] : [newComment],
-        }));
-
+        const updatedSong = await songsService.getSongById(song.idSong);
+        if (updatedSong) setCommentedSong(updatedSong);
         setIsCommenting(false);
     };
 
     const handleDeleteComment = async (commentId: string) => {
         await deleteCommentFromSong(song.idSong, commentId);
-
-        setCommentedSong((prev: Song) => ({
-            ...prev,
-            comments: prev.comments?.filter((c) => c.idComment !== commentId),
-        }));
+        const updatedSong = await songsService.getSongById(song.idSong);
+        if (updatedSong) setCommentedSong(updatedSong);
     };
     return (
         <div className={styles.commentsSectionWrapper}>
