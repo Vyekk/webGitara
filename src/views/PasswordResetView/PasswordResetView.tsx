@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import axios from 'axios';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import Button from 'components/Button/Button';
 import Input from 'components/Input/Input';
@@ -26,13 +27,8 @@ const PasswordResetView = () => {
         setError(null);
         setInfo(null);
         try {
-            const res = await fetch('/api/users/request-password-reset', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ email }),
-            });
-            const data = await res.json();
-            setInfo(data.message || 'Jeśli konto istnieje, wysłano link do resetu hasła.');
+            const res = await axios.post('/api/users/request-password-reset', { email });
+            setInfo(res.data.message || 'Jeśli konto istnieje, wysłano link do resetu hasła.');
         } catch (err) {
             setError('Błąd wysyłania maila.');
         }
@@ -51,20 +47,15 @@ const PasswordResetView = () => {
             return;
         }
         try {
-            const res = await fetch('/api/users/reset-password', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ token, newPassword }),
-            });
-            const data = await res.json();
-            if (res.ok) {
-                setInfo('Hasło zostało zmienione. Możesz się zalogować.');
-                setTimeout(() => navigate('/login'), 2000);
-            } else {
-                setError(data.error || 'Błąd resetowania hasła.');
-            }
+            const res = await axios.post('/api/users/reset-password', { token, newPassword });
+            setInfo('Hasło zostało zmienione. Możesz się zalogować.');
+            setTimeout(() => navigate('/login'), 2000);
         } catch (err) {
-            setError('Błąd resetowania hasła.');
+            if (axios.isAxiosError(err) && err.response?.data?.error) {
+                setError(err.response.data.error);
+            } else {
+                setError('Błąd resetowania hasła.');
+            }
         }
     };
 
