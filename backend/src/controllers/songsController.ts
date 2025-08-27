@@ -85,7 +85,7 @@ export const getSongById = async (req: Request, res: Response): Promise<void> =>
 
 export const getAllSongs = async (req: Request, res: Response): Promise<void> => {
     try {
-        const [songs]: DbQueryResult<any> = await db.query('SELECT * FROM songs');
+        const [songs]: DbQueryResult<any> = await db.query('SELECT * FROM songs WHERE deleted_by_idUser IS NULL;');
 
         const [allRatings]: DbQueryResult<any> = await db.query('SELECT idSong, idUser, rating FROM ratings');
 
