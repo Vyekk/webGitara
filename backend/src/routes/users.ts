@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import { authenticateToken } from '../middleware/authenticateToken';
+import { authLimiter, registerLimiter, passwordResetLimiter } from '../middleware/rateLimiter';
 import {
     registerUser,
     loginUser,
@@ -23,10 +24,10 @@ import {
 
 const router = Router();
 
-router.post('/register', registerUser);
-router.post('/login', loginUser);
-router.post('/request-password-reset', requestPasswordReset);
-router.post('/reset-password', resetPassword);
+router.post('/register', registerLimiter, registerUser);
+router.post('/login', authLimiter, loginUser);
+router.post('/request-password-reset', passwordResetLimiter, requestPasswordReset);
+router.post('/reset-password', passwordResetLimiter, resetPassword);
 router.put('/password', authenticateToken, updatePassword);
 router.get('/me', authenticateToken, getCurrentUser);
 router.get('/', authenticateToken, getAllUsers);
