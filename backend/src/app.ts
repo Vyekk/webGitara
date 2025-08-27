@@ -24,7 +24,7 @@ app.use(
         credentials: true,
     }),
 );
-app.use(express.json());
+app.use(express.json({ limit: '1mb' }));
 app.use(cookieParser());
 
 app.use('/api/users', userRoutes);
@@ -43,11 +43,11 @@ app.use(express.static(path.join(__dirname, '../../public')));
 
 cron.schedule('0 */2 * * *', async () => {
     try {
-        console.log('Usuwanie usuniętych utworów z kosza...');
+        console.log('Czyszczenie usuniętych utworów z kosza...');
         await db.query('DELETE FROM songs WHERE deleted_by_idUser IS NOT NULL');
-        console.log('Usunięte utwory zostały usunięte.');
+        console.log('Usunięte utwory zostały wyczyszczone.');
     } catch (err) {
-        console.error('Błąd podczas usuwania utworów z kosza:', err);
+        console.error('Błąd podczas czyszczenia utworów z kosza:', err);
     }
 });
 
