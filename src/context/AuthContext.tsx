@@ -80,11 +80,16 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
     const toggleFavourite = async (songId: string) => {
         if (!user) return;
+        const prevFavourites = [...favourites];
         const updatedFavourites = favourites.includes(songId)
             ? favourites.filter((id) => id !== songId)
             : [...favourites, songId];
         setFavourites(updatedFavourites);
-        await usersService.updateUserFavourites(user.idUser, updatedFavourites);
+        try {
+            await usersService.updateUserFavourites(user.idUser, updatedFavourites);
+        } catch (error) {
+            setFavourites(prevFavourites);
+        }
     };
 
     const toggleReported = async (songId: string) => {
