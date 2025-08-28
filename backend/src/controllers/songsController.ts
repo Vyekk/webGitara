@@ -85,22 +85,25 @@ export const getSongById = async (req: Request, res: Response): Promise<void> =>
 
 export const getAllSongs = async (req: Request, res: Response): Promise<void> => {
     try {
-        const [songs]: DbQueryResult<any> = await db.query('SELECT * FROM songs WHERE deleted_by_idUser IS NULL;');
+        const includeDeleted = req.query.deleted === 'true';
+
+        const [songs]: DbQueryResult<any> = await db.query(
+            `SELECT * FROM songs WHERE deleted_by_idUser ${includeDeleted ? 'IS NOT NULL' : 'IS NULL'};`,
+        );
 
         const [allRatings]: DbQueryResult<any> = await db.query('SELECT idSong, idUser, rating FROM ratings');
-
         const [allComments]: DbQueryResult<any> = await db.query(`
             SELECT c.idComment, c.content, c.idSong, u.idUser, u.username
             FROM comments c
             JOIN users u ON c.idUser = u.idUser
         `);
-
         const [allUsers]: DbQueryResult<any> = await db.query('SELECT idUser, username FROM users');
 
         const formattedSongs: Song[] = songs.map((song) => {
             const ratings = allRatings
                 .filter((r: any) => r.idSong === song.idSong)
                 .map((r: any) => ({ userId: r.idUser, value: r.rating }));
+
             const comments = allComments
                 .filter((c: any) => c.idSong === song.idSong)
                 .map((c: any) => ({
@@ -111,7 +114,9 @@ export const getAllSongs = async (req: Request, res: Response): Promise<void> =>
                         username: c.username,
                     },
                 }));
+
             const user = allUsers.find((u: any) => u.idUser === song.idUser);
+
             return {
                 idSong: song.idSong,
                 songTitle: song.title,
@@ -171,21 +176,18 @@ export const updateSong = async (req: Request, res: Response): Promise<void> => 
         }
         const currentSong = currentRows[0];
 
-        // 2. Pobierz aktualny numer wersji historii
         const [historyRows]: any = await db.query(
             'SELECT MAX(version_number) as maxVersion FROM songs_history WHERE idSong = ?',
             [id],
         );
         const newVersion = (historyRows[0]?.maxVersion || 0) + 1;
 
-        // 3. Zapisz starą wersję do historii
         const idHistory = uuidv4();
         await db.query(
             'INSERT INTO songs_history (idHistory, idSong, version_number, tablature, edited_by, edited_at) VALUES (?, ?, ?, ?, ?, NOW())',
             [idHistory, id, newVersion, currentSong.tablature, req.user?.idUser || null],
         );
 
-        // 4. Zaktualizuj rekord w songs
         let query = 'UPDATE songs SET title = ?, default_bpm = ?, tablature = ?, updated_at = CURRENT_TIMESTAMP';
         const params: any[] = [title, default_bpm, JSON.stringify(tablature)];
         if (typeof deleted_by_idUser !== 'undefined') {
@@ -416,15 +418,11 @@ export const getLastPlayedSongs = async (req: Request, res: Response) => {
             return;
         }
 
-        // Pobierz szczegóły piosenek
         const [songs] = await db.query(`SELECT * FROM songs WHERE idSong IN (?)`, [songIds]);
-        // Pobierz wszystkich użytkowników (idUser, username)
         const [allUsers]: DbQueryResult<any> = await db.query('SELECT idUser, username FROM users');
-        // Pobierz wszystkie oceny
         const [allRatings]: DbQueryResult<any> = await db.query('SELECT idSong, idUser, rating FROM ratings');
 
         const songsArray = songs as any[];
-        // Posortuj wg kolejności idSong i dołącz author oraz rating
         const sortedSongs = songIds
             .map((id) => {
                 const s = songsArray.find((song) => song.idSong === id);
@@ -472,7 +470,6 @@ export const rateSong = async (req: Request, res: Response): Promise<void> => {
                 rating,
             ]);
         }
-        // Przelicz średnią ocen i zaktualizuj pole average_rating w songs
         const [avgRows]: any = await db.query('SELECT AVG(rating) as avg FROM ratings WHERE idSong = ?', [id]);
         const avg = avgRows[0]?.avg || 0;
         await db.query('UPDATE songs SET average_rating = ? WHERE idSong = ?', [avg, id]);
