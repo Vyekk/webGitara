@@ -48,7 +48,7 @@ const PasswordResetView = () => {
         }
         try {
             const res = await axios.post('/api/users/reset-password', { token, newPassword });
-            setInfo('Hasło zostało zmienione. Możesz się zalogować.');
+            setInfo(`${res.data.message}. Możesz się zalogować.`);
             setTimeout(() => navigate('/login'), 2000);
         } catch (err) {
             if (axios.isAxiosError(err) && err.response?.data?.error) {
