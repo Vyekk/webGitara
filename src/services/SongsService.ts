@@ -21,6 +21,15 @@ export class SongsService {
             return [];
         }
     }
+    async loadDeletedSongs(): Promise<Song[]> {
+        try {
+            const response = await axios.get<Song[]>(`${API_URL}/api/songs?deleted=true`, { withCredentials: true });
+            return response.data;
+        } catch (error) {
+            console.error('Błąd podczas pobierania piosenek:', error);
+            return [];
+        }
+    }
 
     async addSong(newSong: any): Promise<void> {
         try {
