@@ -65,9 +65,7 @@ app.get('*', (_req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
-// Start server depending on runtime (Passenger or Node)
 if (USE_PASSENGER && typeof PhusionPassenger !== 'undefined') {
-    // Passenger will manage the socket; use the special 'passenger' name
     app.listen('passenger');
     console.log('Server is running under Phusion Passenger');
 } else {
