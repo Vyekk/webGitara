@@ -2,12 +2,12 @@ import nodemailer from 'nodemailer';
 
 export function getTransporter() {
     return nodemailer.createTransport({
-        host: 'mail18.mydevil.net',
-        port: 465,
-        secure: true,
+        host: process.env.MAIL_HOST || 'localhost',
+        port: Number(process.env.MAIL_PORT) || 465,
+        secure: (process.env.MAIL_SECURE || 'true') === 'true',
         auth: {
-            user: 'support@konradkoluch.usermd.net',
-            pass: 'webgitaraPoczta99',
+            user: process.env.MAIL_USER || '',
+            pass: process.env.MAIL_PASSWORD || '',
         },
     });
 }

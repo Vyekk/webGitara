@@ -6,9 +6,10 @@ import { db } from './db';
 import cron from 'node-cron';
 import cookieParser from 'cookie-parser';
 
-declare const PhusionPassenger: any;
+declare const PhusionPassenger: undefined | { configure: (opts: { autoInstall: boolean }) => void };
 
-if (typeof PhusionPassenger !== 'undefined') {
+const USE_PASSENGER = (process.env.USE_PASSENGER || 'false').toLowerCase() === 'true';
+if (USE_PASSENGER && typeof PhusionPassenger !== 'undefined') {
     PhusionPassenger.configure({ autoInstall: false });
 }
 
@@ -18,9 +19,18 @@ import songsRoutes from './routes/songs';
 const app = express();
 app.disable('x-powered-by');
 
+const corsOrigins = (process.env.CORS_ORIGIN || 'http://localhost:3000')
+    .split(',')
+    .map((o) => o.trim())
+    .filter(Boolean);
+
 app.use(
     cors({
-        origin: 'http://localhost:3000', // Adres frontendu
+        origin: (origin, callback) => {
+            if (!origin) return callback(null, true);
+            if (corsOrigins.includes(origin)) return callback(null, true);
+            return callback(new Error('Not allowed by CORS'));
+        },
         credentials: true,
     }),
 );
@@ -30,11 +40,11 @@ app.use(cookieParser());
 app.use('/api/users', userRoutes);
 app.use('/api/songs', songsRoutes);
 
-app.use(express.static(path.join(__dirname, '../../public')));
+app.use(express.static(path.join(__dirname, 'public')));
 
 (async () => {
     try {
-        const [rows] = await db.query('SELECT 1');
+        await db.query('SELECT 1');
         console.log('✅ Połączono z bazą danych!');
     } catch (err) {
         console.error('❌ Błąd połączenia z bazą danych:', err);
@@ -52,21 +62,18 @@ cron.schedule('0 */2 * * *', async () => {
 });
 
 app.get('*', (_req, res) => {
-    res.sendFile(path.join(__dirname, '../../public', 'index.html'));
+    res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
-// if (typeof PhusionPassenger !== 'undefined') {
-//     app.listen('passenger');
-// } else {
-//     const port = process.env.PORT;
-//     app.listen(port, () => {
-//         console.log(`Server listening on port ${port}`);
-//     });
-// }
-
-const PORT = 5000;
-
-app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
-});
-// export default app;
+// Start server depending on runtime (Passenger or Node)
+if (USE_PASSENGER && typeof PhusionPassenger !== 'undefined') {
+    // Passenger will manage the socket; use the special 'passenger' name
+    app.listen('passenger');
+    console.log('Server is running under Phusion Passenger');
+} else {
+    const PORT = Number(process.env.PORT) || 5000;
+    app.listen(PORT, () => {
+        console.log(`Server is running on port ${PORT}`);
+    });
+}
+export default app;
