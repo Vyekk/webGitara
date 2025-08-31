@@ -107,7 +107,7 @@ export const registerUser = async (req: Request, res: Response): Promise<void> =
 
     try {
         const transporter = getTransporter();
-        const activationUrl = `https://konradkoluch.usermd.net/activate?token=${activationToken}`;
+        const activationUrl = `${process.env.CORS_ORIGIN}/activate?token=${activationToken}`;
 
         await transporter.sendMail({
             from: 'support@konradkoluch.usermd.net',
@@ -192,10 +192,11 @@ export const loginUser = async (req: Request, res: Response): Promise<void> => {
             { expiresIn: '24h' },
         );
 
+        const isProd = (process.env.NODE_ENV || 'development') === 'production';
         res.cookie('token', token, {
             httpOnly: true,
-            secure: true,
-            sameSite: 'strict',
+            secure: isProd, // only secure over https in production
+            sameSite: isProd ? 'none' : 'lax', // allow cross-site cookies when using separate domains in prod
             maxAge: 24 * 60 * 60 * 1000,
         });
 
@@ -498,7 +499,7 @@ export const requestPasswordReset = async (req: Request, res: Response) => {
         expiresAt,
     ]);
     const transporter = getTransporter();
-    const resetUrl = `https://konradkoluch.usermd.net/reset-password?token=${resetToken}`;
+    const resetUrl = `${process.env.CORS_ORIGIN}/reset-password?token=${resetToken}`;
     await transporter.sendMail({
         from: 'support@konradkoluch.usermd.net',
         to: email,
