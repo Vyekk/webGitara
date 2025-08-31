@@ -1,10 +1,29 @@
 import express from 'express';
 import cors from 'cors';
 import path from 'path';
-import 'dotenv/config';
+import fs from 'fs';
+import dotenv from 'dotenv';
 import { db } from './db';
 import cron from 'node-cron';
 import cookieParser from 'cookie-parser';
+
+(() => {
+    const envName = process.env.NODE_ENV || 'development';
+    const candidates = [
+        path.resolve(process.cwd(), `.env.${envName}`),
+        path.resolve(process.cwd(), '.env'),
+        path.resolve(__dirname, `../.env.${envName}`),
+        path.resolve(__dirname, '../.env'),
+        path.resolve(__dirname, `../../.env.${envName}`),
+        path.resolve(__dirname, '../../.env'),
+    ];
+    for (const p of candidates) {
+        if (fs.existsSync(p)) {
+            dotenv.config({ path: p });
+            break;
+        }
+    }
+})();
 
 declare const PhusionPassenger: undefined | { configure: (opts: { autoInstall: boolean }) => void };
 
@@ -19,16 +38,19 @@ import songsRoutes from './routes/songs';
 const app = express();
 app.disable('x-powered-by');
 
-const corsOrigins = (process.env.CORS_ORIGIN || 'http://localhost:3000')
+// Configure CORS based on environment (allow comma-separated origins)
+const corsOrigins = (process.env.CORS_ORIGIN || 'http://localhost:3000,http://127.0.0.1:3000')
     .split(',')
-    .map((o) => o.trim())
+    .map((o) => o.trim().replace(/\/$/, '')) // strip trailing slash
     .filter(Boolean);
 
 app.use(
     cors({
         origin: (origin, callback) => {
-            if (!origin) return callback(null, true);
-            if (corsOrigins.includes(origin)) return callback(null, true);
+            const normalized = origin ? origin.replace(/\/$/, '') : '';
+            if (!normalized) return callback(null, true); // non-browser or same-origin
+            if (corsOrigins.includes(normalized)) return callback(null, true);
+            console.warn(`[CORS] Blocked origin: ${normalized}. Allowed: ${corsOrigins.join(', ')}`);
             return callback(new Error('Not allowed by CORS'));
         },
         credentials: true,
