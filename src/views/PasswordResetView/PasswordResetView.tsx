@@ -27,7 +27,7 @@ const PasswordResetView = () => {
         setError(null);
         setInfo(null);
         try {
-            const res = await axios.post('/api/users/request-password-reset', { email });
+            const res = await axios.post('/api/users/password-reset-requests', { email });
             setInfo(res.data.message || 'Jeśli konto istnieje, wysłano link do resetu hasła.');
         } catch (err) {
             setError('Błąd wysyłania maila.');

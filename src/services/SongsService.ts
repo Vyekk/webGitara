@@ -85,7 +85,9 @@ export class SongsService {
 
     async getTopRatedSongs(): Promise<Song[]> {
         try {
-            const response = await axios.get<Song[]>(`${API_URL}/api/songs/top-rated`);
+            const response = await axios.get<Song[]>(`${API_URL}/api/songs/top-rated`, {
+                withCredentials: true,
+            });
             return response.data;
         } catch (error) {
             console.error('Błąd podczas pobierania top rated songs:', error);
@@ -95,7 +97,13 @@ export class SongsService {
 
     async saveLastPlayedSong(idUser: string, idSong: string): Promise<void> {
         try {
-            await axios.post(`${API_URL}/api/songs/lastplayedsongs`, { idUser, idSong }, { withCredentials: true });
+            await axios.post(
+                `${API_URL}/api/songs/last-played`,
+                { idUser, idSong },
+                {
+                    withCredentials: true,
+                },
+            );
         } catch (error) {
             console.error('Błąd podczas zapisywania ostatnio odtwarzanego utworu:', error);
             throw error;
@@ -104,7 +112,7 @@ export class SongsService {
 
     async getLastPlayedSongs(idUser: string): Promise<Song[]> {
         try {
-            const response = await axios.get<Song[]>(`${API_URL}/api/songs/lastplayedsongs/${idUser}`, {
+            const response = await axios.get<Song[]>(`${API_URL}/api/songs/last-played/${idUser}`, {
                 withCredentials: true,
             });
             return response.data;
@@ -116,7 +124,13 @@ export class SongsService {
 
     async rateSong(songId: string, rating: number, idUser: string): Promise<void> {
         try {
-            await axios.post(`${API_URL}/api/songs/${songId}/rating`, { idUser, rating }, { withCredentials: true });
+            await axios.post(
+                `${API_URL}/api/songs/${songId}/ratings`,
+                { idUser, rating },
+                {
+                    withCredentials: true,
+                },
+            );
         } catch (error) {
             console.error('Błąd podczas oceniania utworu:', error);
             throw error;
@@ -151,7 +165,10 @@ export class SongsService {
 
     async getAllReportedSongs(): Promise<Array<{ idSong: string }>> {
         try {
-            const response = await axios.get(`${API_URL}/api/songs/reported_songs/all`, { withCredentials: true });
+            const response = await axios.get(`${API_URL}/api/songs/reported`, {
+                withCredentials: true,
+            });
+
             return response.data;
         } catch (error) {
             console.error('Błąd podczas pobierania wszystkich reported:', error);

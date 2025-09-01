@@ -5,7 +5,7 @@ import axios from 'axios';
 export class AuthService {
     async login(credentials: Credentials): Promise<AuthData> {
         try {
-            const response = await axios.post(`${API_URL}/api/users/login`, credentials, { withCredentials: true });
+            const response = await axios.post(`${API_URL}/api/users/sessions`, credentials, { withCredentials: true });
             return response.data;
         } catch (err) {
             throw new Error('Błąd logowania');
@@ -13,6 +13,8 @@ export class AuthService {
     }
 
     async logout(): Promise<void> {
-        await axios.post(`${API_URL}/api/users/logout`, {}, { withCredentials: true });
+        await axios.delete(`${API_URL}/api/users/sessions/current`, {
+            withCredentials: true,
+        });
     }
 }

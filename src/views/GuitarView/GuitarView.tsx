@@ -242,7 +242,7 @@ const GuitarView = () => {
                     </Title>
                     {song && (
                         <a
-                            href={`/api/songs/${song.idSong}/tablature/download`}
+                            href={`/api/songs/${song.idSong}/tablature`}
                             download={`${song.songTitle || 'tablature'}.json`}
                         >
                             Pobierz tabulaturę

@@ -82,7 +82,7 @@ export class UsersService {
     async updateUserReportedSongs(idUser: string, reportedSongs: string[]): Promise<void> {
         try {
             await axios.put(
-                `${API_URL}/api/users/${idUser}/reported_songs`,
+                `${API_URL}/api/users/${idUser}/reported-songs`,
                 { reportedSongs },
                 { withCredentials: true },
             );
@@ -94,7 +94,7 @@ export class UsersService {
 
     async getUserReportedSongs(idUser: string): Promise<string[]> {
         try {
-            const response = await axios.get<string[]>(`${API_URL}/api/users/${idUser}/reported_songs`, {
+            const response = await axios.get<string[]>(`${API_URL}/api/users/${idUser}/reported-songs`, {
                 withCredentials: true,
             });
             return response.data;
@@ -106,7 +106,7 @@ export class UsersService {
 
     async updateUserRole(idUser: string, role: string): Promise<void> {
         try {
-            await axios.put(`${API_URL}/api/users/${idUser}/role`, { role }, { withCredentials: true });
+            await axios.patch(`${API_URL}/api/users/${idUser}/role`, { role }, { withCredentials: true });
         } catch (error) {
             console.error('Błąd podczas zmiany roli użytkownika:', error);
             throw error;
@@ -124,7 +124,7 @@ export class UsersService {
 
     async updateUserPassword(oldPassword: string, newPassword: string): Promise<void> {
         try {
-            await axios.put(`${API_URL}/api/users/password`, { oldPassword, newPassword }, { withCredentials: true });
+            await axios.patch(`${API_URL}/api/users/password`, { oldPassword, newPassword }, { withCredentials: true });
         } catch (error: unknown) {
             if (
                 typeof error === 'object' &&
@@ -141,9 +141,7 @@ export class UsersService {
 
     async updateUserStats(userId: string): Promise<void> {
         try {
-            await axios.put(`${API_URL}/api/users/${userId}/stats`, null, {
-                withCredentials: true,
-            });
+            await axios.patch(`${API_URL}/api/users/${userId}/stats`, {}, { withCredentials: true });
         } catch (error: unknown) {
             console.error('Błąd podczas aktualizacji statystyk użytkownika:', error);
         }
@@ -151,9 +149,7 @@ export class UsersService {
 
     async updateUserSongStats(): Promise<void> {
         try {
-            await axios.put(`${API_URL}/api/users/stats/all`, null, {
-                withCredentials: true,
-            });
+            await axios.patch(`${API_URL}/api/users/stats`, {}, { withCredentials: true });
         } catch (error: unknown) {
             console.error('Błąd podczas aktualizacji statystyk wszystkich użytkowników:', error);
         }
