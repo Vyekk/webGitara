@@ -18,11 +18,10 @@ const Fretboard: React.FC<FretboardProps> = ({ numberOfStrings, numberOfFrets, n
     const doubleFretMarkPositions = [12, 24];
     const instrumentTuning = [4, 11, 7, 2, 9, 4];
     const notesSharp = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
-    const stringNames = ['E', 'B', 'G', 'D', 'A', 'E'];
 
     useEffect(() => {
         showStringsNames();
-    }, []);
+    }, [numberOfStrings, isReversed]);
 
     useLayoutEffect(() => {
         showNotes(notesToShow);
@@ -31,7 +30,8 @@ const Fretboard: React.FC<FretboardProps> = ({ numberOfStrings, numberOfFrets, n
     const showStringsNames = () => {
         const stringElements = document.querySelectorAll(`.${styles.string}`);
         stringElements.forEach((_, index) => {
-            const noteName = stringNames[index];
+            const base = instrumentTuning[index] ?? 0;
+            const noteName = generateNoteNames(base);
             const noteElement = document.querySelector(`[data-string="${index + 1}"][data-fret="0"]`) as HTMLElement;
             noteElement.innerText = noteName;
         });
@@ -115,7 +115,7 @@ const Fretboard: React.FC<FretboardProps> = ({ numberOfStrings, numberOfFrets, n
                                 className={styles.noteFret}
                                 data-string={stringIndex + 1}
                                 data-fret={fretIndex}
-                                data-note={generateNoteNames(fretIndex + instrumentTuning[stringIndex])}
+                                data-note={generateNoteNames(fretIndex + (instrumentTuning[stringIndex] ?? 0))}
                             >
                                 {singleFretMarkPositions.includes(fretIndex) &&
                                     stringIndex === (isReversed ? 0 : 5) && (
