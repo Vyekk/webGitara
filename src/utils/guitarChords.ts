@@ -1,5 +1,4 @@
 const GuitarChords = [
-    // Akordy durowe (Major)
     {
         name: 'A',
         positions: [
@@ -14,7 +13,7 @@ const GuitarChords = [
     {
         name: 'A#',
         positions: [
-            { guitarString: 6, guitarFret: '' },
+            { guitarString: 6, guitarFret: 1 },
             { guitarString: 5, guitarFret: 1 },
             { guitarString: 4, guitarFret: 3 },
             { guitarString: 3, guitarFret: 3 },
@@ -47,7 +46,7 @@ const GuitarChords = [
     {
         name: 'C#',
         positions: [
-            { guitarString: 6, guitarFret: '' },
+            { guitarString: 6, guitarFret: 4 },
             { guitarString: 5, guitarFret: 4 },
             { guitarString: 4, guitarFret: 6 },
             { guitarString: 3, guitarFret: 6 },
@@ -137,7 +136,7 @@ const GuitarChords = [
     {
         name: 'Am#',
         positions: [
-            { guitarString: 6, guitarFret: '' },
+            { guitarString: 6, guitarFret: 1 },
             { guitarString: 5, guitarFret: 1 },
             { guitarString: 4, guitarFret: 3 },
             { guitarString: 3, guitarFret: 3 },
@@ -170,7 +169,7 @@ const GuitarChords = [
     {
         name: 'Cm#',
         positions: [
-            { guitarString: 6, guitarFret: '' },
+            { guitarString: 6, guitarFret: 4 },
             { guitarString: 5, guitarFret: 4 },
             { guitarString: 4, guitarFret: 6 },
             { guitarString: 3, guitarFret: 6 },
