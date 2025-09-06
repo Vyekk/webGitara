@@ -23,7 +23,7 @@ export class UsersService {
 
     async registerUser(user: { username: string; password: string; email: string }) {
         try {
-            await axios.post(`${API_URL}/api/users/register`, user);
+            await axios.post(`${API_URL}/api/users/`, user);
         } catch (error: unknown) {
             if (
                 typeof error === 'object' &&
