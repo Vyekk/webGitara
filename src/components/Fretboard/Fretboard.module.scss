@@ -9,24 +9,24 @@
 
 .fretboard {
     display: flex;
+    position: relative;
     flex-direction: column;
     background: #c79d5e;
     width: 100%;
     max-width: 100%;
-    height: #{$fretboard-height}px; // restore fixed height for stable zoom rendering
-    min-height: unset; // remove dynamic clamp
+    height: #{$fretboard-height}px;
+    min-height: unset;
     overflow: hidden;
-    justify-content: center; // center the block of strings
-    padding: 0; // remove added padding that inflated height
+    justify-content: center;
+    padding: 0;
 }
 
 .string {
-    flex: 1 1 auto; // equal distribution again
+    flex: 1 1 auto;
     width: 100%;
     display: flex;
     position: relative;
 
-    // Color & thickness per string, now vertically centered without relying on overall fixed height
     @for $i from 1 through length($string-colors) {
         &[data-string="#{$i}"] {
             .noteFret::before { background: nth($string-colors, $i); }
@@ -34,11 +34,11 @@
             &::after {
                 background: nth($string-colors, $i);
                 height: #{nth($strings-height, $i)}px;
-                top: calc(50% - #{math.div(nth($strings-height, $i), 2)}px); // center line
+                top: calc(50% - #{math.div(nth($strings-height, $i), 2)}px);
             }
             &::before {
                 height: #{nth($strings-height, $i)}px;
-                top: calc(50% - #{math.div(nth($strings-height, $i), 2)}px); // center line
+                top: calc(50% - #{math.div(nth($strings-height, $i), 2)}px);
             }
         }
     }
@@ -94,57 +94,52 @@
     &.active::before { opacity: 1; animation: pulse 0.3s ease; }
 }
 
-// Centered fret markers
-.singleFretmark {
-    position: relative; // ensure ::after uses absolute referencing this fret cell
-    &::after {
-        content: '';
-        position: absolute;
-        width: clamp(1rem, 1.4vw, 1.4rem);
-        height: clamp(1rem, 1.4vw, 1.4rem);
-        top: 50%; // center relative to dynamic height instead of fixed $fretboard-height
-        left: 50%;
-        transform: translate(-50%, -50%);
-    }
-}
+.singleFretmark,
 .doubleFretmark {
-    position: relative;
-    &::before, &::after {
-        width: clamp(.9rem, 1.3vw, 1.2rem);
-        height: clamp(.9rem, 1.3vw, 1.2rem);
-        left: 50%;
-        transform: translate(-50%, -50%);
-    }
-    &::before { top: 35%; left: 50%; transform: translate(-50%, -50%); }
-    &::after { top: 65%; left: 50%; transform: translate(-50%, -50%); }
+  position: absolute;
+  top: calc(var(--fretboard-height) / 2);
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
 
-// Adaptive scaling for different OS zoom / devicePixelRatio
+.singleFretmark::after,
+.doubleFretmark::before,
+.doubleFretmark::after {
+  content: '';
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background-color: #7e633b;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.doubleFretmark::before { top: calc(50% - 50px); }
+.doubleFretmark::after  { top: calc(50% + 50px); }
+
 :root {
   --fretboard-height: #{$fretboard-height}px;
   --fret-marker-scale: 1;
 }
 .fretboard { height: var(--fretboard-height); }
 
-// Slight shrink when dpr >=1.25 (≈125%)
 @media (min-resolution: 1.25dppx) {
   :root {
     --fretboard-height: #{math.round($fretboard-height * 0.9)}px;
     --fret-marker-scale: .9;
   }
 }
-// More shrink when dpr >=1.4 (≈140–150%)
 @media (min-resolution: 1.4dppx) {
   :root {
-    --fretboard-height: #{math.round($fretboard-height * 0.78)}px; // was 0.8
-    --fret-marker-scale: .82; // slightly smaller markers
+    --fretboard-height: #{math.round($fretboard-height * 0.78)}px;
+    --fret-marker-scale: .82;
   }
 }
-// Override for stronger shrink at 150%+ (Windows display scale)
 @media (min-resolution: 1.5dppx) {
   :root {
-    --fretboard-height: #{math.round($fretboard-height * 0.6)}px; // was 0.72
-    --fret-marker-scale: .7; // was .78
+    --fretboard-height: #{math.round($fretboard-height * 0.6)}px;
+    --fret-marker-scale: .7;
   }
 }
 @media (min-resolution: 1.6dppx) {
@@ -153,20 +148,6 @@
     --fret-marker-scale: .65;
   }
 }
-/* Optional JS fallback (if dppx media queries not firing as expected):
-   In a useEffect add:
-   const applyFretboardScale = () => {
-     const dpr = window.devicePixelRatio || 1;
-     let base = %FRETBOARD_BASE%; // replace at build if needed
-     let factor = 1;
-     if (dpr >= 1.6) factor = 0.55; else if (dpr >= 1.5) factor = 0.6; else if (dpr >= 1.4) factor = 0.78; else if (dpr >= 1.25) factor = 0.9;
-     document.documentElement.style.setProperty('--fretboard-height', `${Math.round(base * factor)}px`);
-     document.documentElement.style.setProperty('--fret-marker-scale', factor >= 1 ? '1' : String(Math.max(0.65, factor - 0.1)));
-   };
-   applyFretboardScale();
-   window.addEventListener('resize', applyFretboardScale);
-   return () => window.removeEventListener('resize', applyFretboardScale);
-*/
-// Apply marker scale
+
 .noteFret::before, .noteFret::after { transform: scale(var(--fret-marker-scale)); }
 .noteFret.nextActive::after { transform: scale(calc(1.5 * var(--fret-marker-scale))); }
