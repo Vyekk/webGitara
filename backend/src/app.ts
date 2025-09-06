@@ -38,17 +38,16 @@ import songsRoutes from './routes/songs';
 const app = express();
 app.disable('x-powered-by');
 
-// Configure CORS based on environment (allow comma-separated origins)
 const corsOrigins = (process.env.CORS_ORIGIN || 'http://localhost:3000,http://127.0.0.1:3000')
     .split(',')
-    .map((o) => o.trim().replace(/\/$/, '')) // strip trailing slash
+    .map((o) => o.trim().replace(/\/$/, ''))
     .filter(Boolean);
 
 app.use(
     cors({
         origin: (origin, callback) => {
             const normalized = origin ? origin.replace(/\/$/, '') : '';
-            if (!normalized) return callback(null, true); // non-browser or same-origin
+            if (!normalized) return callback(null, true);
             if (corsOrigins.includes(normalized)) return callback(null, true);
             console.warn(`[CORS] Blocked origin: ${normalized}. Allowed: ${corsOrigins.join(', ')}`);
             return callback(new Error('Not allowed by CORS'));

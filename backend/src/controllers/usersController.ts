@@ -1,12 +1,9 @@
-// src/controllers/usersController.ts
-
 import { Request, Response } from 'express';
 import bcrypt from 'bcryptjs';
 import { v4 as uuidv4 } from 'uuid';
 import { db } from '../db';
 import { getTransporter } from '../utils/mailer';
 
-// Zwraca aktualnie zalogowanego użytkownika na podstawie tokena JWT
 export const getCurrentUser = async (req: Request, res: Response) => {
     if (!req.user) {
         return res.status(401).json({ error: 'Unauthorized' });
@@ -39,7 +36,6 @@ export const getUserRoles = async (idUser: string): Promise<string[]> => {
 import { RowDataPacket } from 'mysql2';
 import jwt from 'jsonwebtoken';
 
-// Helper: get idTokenType by name
 async function getTokenTypeIdByName(name: string): Promise<string | null> {
     const [rows] = await db.query('SELECT idTokenType FROM tokens_types WHERE name = ?', [name]);
     const row = (rows as RowDataPacket[])[0];
@@ -195,8 +191,8 @@ export const loginUser = async (req: Request, res: Response): Promise<void> => {
         const isProd = (process.env.NODE_ENV || 'development') === 'production';
         res.cookie('token', token, {
             httpOnly: true,
-            secure: isProd, // only secure over https in production
-            sameSite: isProd ? 'none' : 'lax', // allow cross-site cookies when using separate domains in prod
+            secure: isProd,
+            sameSite: isProd ? 'none' : 'lax',
             maxAge: 24 * 60 * 60 * 1000,
         });
 

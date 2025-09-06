@@ -168,7 +168,6 @@ export const updateSong = async (req: Request, res: Response): Promise<void> => 
         return;
     }
     try {
-        // 1. Pobierz aktualny rekord utworu
         const [currentRows]: any = await db.query('SELECT * FROM songs WHERE idSong = ?', [id]);
         if (!currentRows.length) {
             res.status(404).json({ error: 'Song not found' });
@@ -322,7 +321,6 @@ export const getTopRatedSongs = async (req: Request, res: Response): Promise<voi
         const globalAverage = totalRatings > 0 ? totalAverage / totalRatings : 0;
         const m = totalRatings / songs.length;
 
-        // Pobierz wszystkie oceny i użytkowników
         const [allRatings]: DbQueryResult<any> = await db.query('SELECT idSong, idUser, rating FROM ratings');
         const [allUsers]: DbQueryResult<any> = await db.query('SELECT idUser, username FROM users');
 
@@ -346,7 +344,6 @@ export const getTopRatedSongs = async (req: Request, res: Response): Promise<voi
             };
         });
 
-        // Odfiltruj utwory bez ocen
         const ratedSongs = weightedSongs.filter((song) => Array.isArray(song.rating) && song.rating.length > 0);
         ratedSongs.sort((a, b) => b.averageRating - a.averageRating);
         const updatedSongs = ratedSongs.map((song, idx) => ({
