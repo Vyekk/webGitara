@@ -11,6 +11,7 @@ import { Context } from 'views/PlayView/PlayView';
 import { setupSamplePlayer, playNote } from 'utils/playNote';
 import { start, Volume } from 'tone';
 import { useSongs } from 'context/SongsContext';
+import API_URL from 'config';
 
 const GuitarView = () => {
     const timeoutRef = useRef<NodeJS.Timeout | null>(null);
@@ -242,7 +243,7 @@ const GuitarView = () => {
                     </Title>
                     {song && (
                         <a
-                            href={`/api/songs/${song.idSong}/tablature`}
+                            href={`${API_URL}/api/songs/${song.idSong}/tablature`}
                             download={`${song.songTitle || 'tablature'}.json`}
                         >
                             Pobierz tabulaturę

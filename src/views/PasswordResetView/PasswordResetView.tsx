@@ -6,6 +6,7 @@ import Input from 'components/Input/Input';
 import styles from './PasswordResetView.module.scss';
 import Logo from 'components/Logo/Logo';
 import Section from 'components/Section/Section';
+import API_URL from 'config';
 
 const PasswordResetView = () => {
     const [step, setStep] = useState<'email' | 'reset'>('email');
@@ -27,7 +28,13 @@ const PasswordResetView = () => {
         setError(null);
         setInfo(null);
         try {
-            const res = await axios.post('/api/users/password-reset-requests', { email });
+            const res = await axios.post(
+                `${API_URL}/api/users/password-reset-requests`,
+                { email },
+                {
+                    withCredentials: true,
+                },
+            );
             setInfo(res.data.message || 'Jeśli konto istnieje, wysłano link do resetu hasła.');
         } catch (err) {
             setError('Błąd wysyłania maila.');
@@ -47,7 +54,13 @@ const PasswordResetView = () => {
             return;
         }
         try {
-            const res = await axios.post('/api/users/password-reset', { token, newPassword });
+            const res = await axios.post(
+                `${API_URL}/api/users/password-reset`,
+                { token, newPassword },
+                {
+                    withCredentials: true,
+                },
+            );
             setInfo(`${res.data.message}. Możesz się zalogować.`);
             setTimeout(() => navigate('/login'), 2000);
         } catch (err) {
