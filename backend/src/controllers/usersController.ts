@@ -363,7 +363,7 @@ export const updateAllUsersStats = async (req: Request, res: Response) => {
 };
 
 export const updateUserFavourites = async (req: Request, res: Response) => {
-    const userId = req.params.userId;
+    const userId = req.params.id;
     const { favourites } = req.body;
 
     if (!Array.isArray(favourites)) {
