@@ -429,7 +429,7 @@ export const updateUserRole = async (req: Request, res: Response) => {
 };
 
 export const getUserFavourites = async (req: Request, res: Response) => {
-    const userId = req.params.userId;
+    const userId = req.params.id;
     try {
         const [rows] = await db.query('SELECT idSong FROM favourites WHERE idUser = ?', [userId]);
         const favourites = (rows as { idSong: string }[]).map((row) => row.idSong);
@@ -440,7 +440,7 @@ export const getUserFavourites = async (req: Request, res: Response) => {
 };
 
 export const getUserReportedSongs = async (req: Request, res: Response) => {
-    const userId = req.params.userId;
+    const userId = req.params.id;
     if (!userId) {
         return res.status(400).json({ error: 'userId required' });
     }
@@ -455,7 +455,7 @@ export const getUserReportedSongs = async (req: Request, res: Response) => {
 };
 
 export const updateUserReportedSongs = async (req: Request, res: Response) => {
-    const userId = req.params.userId;
+    const userId = req.params.id;
     const { reportedSongs } = req.body;
     if (!Array.isArray(reportedSongs)) {
         res.status(400).json({ error: 'Brak poprawnej listy reportedSongs' });

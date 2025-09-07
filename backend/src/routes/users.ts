@@ -49,7 +49,7 @@ router.patch('/:id/stats', authenticateToken, updateUserStats);
 router.get('/:id/favourites', authenticateToken, getUserFavourites);
 router.put('/:id/favourites', authenticateToken, updateUserFavourites);
 
-router.get('/:userId/reported-songs', authenticateToken, getUserReportedSongs);
-router.put('/:userId/reported-songs', authenticateToken, updateUserReportedSongs);
+router.get('/:id/reported-songs', authenticateToken, getUserReportedSongs);
+router.put('/:id/reported-songs', authenticateToken, updateUserReportedSongs);
 
 export default router;
