@@ -103,7 +103,7 @@ export const registerUser = async (req: Request, res: Response): Promise<void> =
 
     try {
         const transporter = getTransporter();
-        const activationUrl = `${process.env.CORS_ORIGIN}/activate?token=${activationToken}`;
+        const activationUrl = `${process.env.CORS_ORIGIN}/api/users/activation?token=${activationToken}`;
 
         await transporter.sendMail({
             from: 'support@konradkoluch.usermd.net',
@@ -133,19 +133,21 @@ export const registerUser = async (req: Request, res: Response): Promise<void> =
 };
 
 export const activateUser = async (req: Request, res: Response) => {
-    const { token } = req.body;
+    const token = req.query.token;
+    if (!token) return res.status(400).json({ error: 'Brak tokena' });
+
     const idTokenType = await getTokenTypeIdByName('activation');
-    const [rows] = await db.query(
-        'SELECT idToken, idUser FROM tokens WHERE token = ? AND idTokenType = ? AND used = FALSE AND expires_at > NOW()',
-        [token, idTokenType],
-    );
+    const [rows] = await db.query('SELECT * FROM tokens WHERE token = ? AND idTokenType = ?', [token, idTokenType]);
     const tokenRow = (rows as any[])[0];
-    if (!tokenRow) {
-        return res.status(400).json({ error: 'Nieprawidłowy lub przeterminowany token aktywacyjny' });
-    }
+
+    if (!tokenRow) return res.status(400).json({ error: 'Nieprawidłowy token' });
+    if (tokenRow.used) return res.status(400).json({ error: 'Token został już użyty' });
+    if (new Date(tokenRow.expires_at) < new Date()) return res.status(400).json({ error: 'Token wygasł' });
+
     await db.query('UPDATE users SET isActivated = 1 WHERE idUser = ?', [tokenRow.idUser]);
     await db.query('UPDATE tokens SET used = TRUE WHERE idToken = ?', [tokenRow.idToken]);
-    res.json({ message: 'Konto zostało aktywowane!' });
+
+    res.redirect(`${process.env.CORS_ORIGIN}`);
 };
 
 export const loginUser = async (req: Request, res: Response): Promise<void> => {
@@ -517,18 +519,23 @@ export const requestPasswordReset = async (req: Request, res: Response) => {
 };
 
 export const resetPassword = async (req: Request, res: Response) => {
-    const { token, newPassword } = req.body;
+    const token = req.body.token || req.query.token;
+    const newPassword = req.body.newPassword;
+
+    if (!token) return res.status(400).json({ error: 'Brak tokena' });
+    if (!newPassword) return res.status(400).json({ error: 'Brak nowego hasła' });
+
     const idTokenType = await getTokenTypeIdByName('password_reset');
-    const [rows] = await db.query(
-        'SELECT idToken, idUser FROM tokens WHERE token = ? AND idTokenType = ? AND used = FALSE AND expires_at > NOW()',
-        [token, idTokenType],
-    );
+    const [rows] = await db.query('SELECT * FROM tokens WHERE token = ? AND idTokenType = ?', [token, idTokenType]);
     const tokenRow = (rows as any[])[0];
-    if (!tokenRow) {
-        return res.status(400).json({ error: 'Nieprawidłowy lub przeterminowany token resetu hasła' });
-    }
+
+    if (!tokenRow) return res.status(400).json({ error: 'Nieprawidłowy token resetu hasła' });
+    if (tokenRow.used) return res.status(400).json({ error: 'Token został już użyty' });
+    if (new Date(tokenRow.expires_at) < new Date()) return res.status(400).json({ error: 'Token wygasł' });
+
     const hashed = await bcrypt.hash(newPassword, 10);
     await db.query('UPDATE users SET password_hash = ? WHERE idUser = ?', [hashed, tokenRow.idUser]);
     await db.query('UPDATE tokens SET used = TRUE WHERE idToken = ?', [tokenRow.idToken]);
-    res.json({ message: 'Hasło zostało zresetowane.' });
+
+    res.json({ message: 'Hasło zostało zresetowane pomyślnie' });
 };

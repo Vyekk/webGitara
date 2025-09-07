@@ -31,6 +31,7 @@ router.delete('/sessions/current', authenticateToken, logoutUser);
 router.post('/password-reset-requests', passwordResetLimiter, requestPasswordReset);
 router.patch('/password', authenticateToken, updatePassword);
 router.post('/password-reset', passwordResetLimiter, resetPassword);
+router.get('/password-reset', passwordResetLimiter, resetPassword);
 router.patch('/stats', authenticateToken, updateAllUsersStats);
 
 router.get('/me', authenticateToken, getCurrentUser);
@@ -38,6 +39,7 @@ router.get('/me', authenticateToken, getCurrentUser);
 router.get('/', authenticateToken, getAllUsers);
 
 router.post('/activation', activateUser);
+router.get('/activation', activateUser);
 
 router.get('/:id', authenticateToken, getUserById);
 router.delete('/:id', authenticateToken, deleteUser);

@@ -47,7 +47,7 @@ const PasswordResetView = () => {
             return;
         }
         try {
-            const res = await axios.post('/api/users/reset-password', { token, newPassword });
+            const res = await axios.post('/api/users/password-reset', { token, newPassword });
             setInfo(`${res.data.message}. Możesz się zalogować.`);
             setTimeout(() => navigate('/login'), 2000);
         } catch (err) {
